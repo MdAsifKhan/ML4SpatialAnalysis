@@ -19,7 +19,7 @@ class ModelTrainer:
 		return self.classifier.predict(X)
 
 	def predict_proba(self, X):
-		return self.classifer.predict_proba(X)
+		return self.classifier.predict_proba(X)
 
 	def accuracy(self, X, y):
 		return self.classifier.score(X, y)

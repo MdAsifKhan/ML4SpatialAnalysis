@@ -30,10 +30,10 @@ def train(config):
 	train_acc = model.accuracy(X_train, y_train)
 	test_acc = model.accuracy(X_test, y_test)
 
-	wandb.log({'Train Accuracy'}: train_acc)
-	wandb.log({'Test Accuracy'}: test_acc)
+	wandb.log({'Train Accuracy': train_acc})
+	wandb.log({'Test Accuracy': test_acc})
 
-	wandb.log('PRcurve': wandb.plots.precision_recall(y_test, y_probs, labels))
+	wandb.log({'PRcurve': wandb.plots.precision_recall(y_test, y_probs, labels)})
 
 
 
