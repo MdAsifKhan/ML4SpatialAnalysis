@@ -1,0 +1,16 @@
+mlmodel:
+  name: 'logistic'
+  penalty: 'l1'
+  seed: 42
+  solver: 'saga'
+
+testportion: 0.3
+
+dataset:
+  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'
+  cell_filename: 'cell_table_size_normalized_cell_labels'
+  response_filename: 'processed_response'
+  knn: 6
+  method: 'knn'
+  use_graph: False
+  fcriterion: 'avgcelltype'
