@@ -1,6 +1,6 @@
 import scanpy as sc
 import numpy as np
-from data_utils import celltable_to_anndata, load_cell_data, anndata_to_datatensor
+from .utils import celltable_to_anndata, load_cell_data, anndata_to_datatensor
 
 class SpatialCellToFeatures:
 	def __init__(self, config):

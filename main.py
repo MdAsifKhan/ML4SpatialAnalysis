@@ -1,7 +1,7 @@
 import argparse
-from utils import load_config
-from models import ModelTrainer
-from dataset import SpatialCellToFeatures
+from utils.utils import load_config
+from models.factory import ModelTrainer
+from datautils.dataset import SpatialCellToFeatures
 from sklearn.model_selection import train_test_split
 import pdb
 import wandb
@@ -39,7 +39,7 @@ def train(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='config.yaml', help='Configuration file')
+    parser.add_argument('--config', type=str, default='configs/config.yaml', help='Configuration file')
     args = parser.parse_args()
     config = load_config(args.config)
     train(config)
