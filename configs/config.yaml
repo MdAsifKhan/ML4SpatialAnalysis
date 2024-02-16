@@ -1,8 +1,11 @@
+seed: 42
 mlmodel:
   name: 'logistic'
-  penalty: 'l1'
-  seed: 42
+  penalty: 'elasticnet'
+  l1_ratio: 0.5
   solver: 'saga'
+  tol: 0.000001
+
 
 testportion: 0.3
 
@@ -13,4 +16,4 @@ dataset:
   knn: 6
   method: 'knn'
   use_graph: False
-  fcriterion: 'avgcelltype'
+  fcriterion: 'flatcelltype'

@@ -131,46 +131,16 @@ def celltable_to_anndata(cell_table, biosamples):
 	adata = normalise(adata, quantile=0.95)    
 	return adata  
 
-def anndata_to_datatensor(adata):
-	"""
-	Converts AnnData object to data tensor with mean expression per "acquisition_ID" and "Pixie" combination.
-
-	Args:
-		adata: AnnData object containing gene expression data.
-
-	Returns:
-		numpy.ndarray: Data tensor with shape (n_unique_acquisition_IDs, n_unique_celltypes, n_proteins).
-	"""
-	n_proteins = adata.X.shape[1]
-	# Group by 'Leap_ID' and 'Pixie' and calculate the mean for each group
-	grouped_data = adata.obs.groupby(['acquisition_ID', 'Pixie'])
-	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
-	acqid_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
-
-	acq_to_response = {}
-	for acqid, label in zip(adata.obs['acquisition_ID'], adata.obs['Response']):
-		if acqid in acq_to_response:
-			continue
-		else:
-			acq_to_response[acqid] = label
-
-	data_tensor = np.zeros((len(acqid_idx), len(celltype_idx), n_proteins), dtype=np.float64)
-	labels = []
-	acq_prev = 'refewa'
-	for i, (acqn, celltype), idx in enumerate(grouped_data.groups.items()):
-		if i == 0:
-			acq_prev = acqn
-		if adata.obs.qc_pass[idx].all() == True:
-			data_tensor[acqid_idx[acqn], celltype_idx[celltype],:] = adata[idx].X.mean(0)
-			if acqn == acq_prev:
-				continue
-			acq_prev = acqn
-			labels.append(acq_to_response[acqn])
-	return data_tensor, acq_to_response
-
 
 from collections import OrderedDict
 
+def filter_data(adata, qc_pass=False, use_core=True):
+	if use_core:
+		adata = adata[adata.obs['SAMPLE_TYPE_(CORE/RESECTION)']=='CORE']
+	if qc_pass:
+		adata = adata[adata.obs['qc_pass']]
+	return adata
+
 def anndata_to_datatensor(adata):
 	"""
 	Converts AnnData object to data tensor with mean expression per "acquisition_ID" and "Pixie" combination.
@@ -181,9 +151,12 @@ def anndata_to_datatensor(adata):
 	Returns:
 		numpy.ndarray: Data tensor with shape (n_unique_acquisition_IDs, n_unique_celltypes, n_proteins).
 	"""
+	adata = filter_data(adata)
 	n_proteins = adata.X.shape[1]
 	# Group by 'Leap_ID' and 'Pixie' and calculate the mean for each group
 	grouped_data = adata.obs.groupby(['acquisition_ID', 'Pixie'])
+	import pdb
+	pdb.set_trace()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
 

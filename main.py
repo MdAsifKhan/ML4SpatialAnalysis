@@ -13,14 +13,14 @@ def train(config):
 	dataloader = SpatialCellToFeatures(config['dataset'])
 
 	print('Configuring models')
-	model = ModelTrainer(config['mlmodel'])
+	model = ModelTrainer(config['mlmodel'], config['seed'])
 
 	features = dataloader.featurisation()
 	labels = dataloader.label_vec
 	print('Creating data splits for training')
 	X_train, X_test, y_train, y_test = train_test_split(features, labels,
 											test_size=config['testportion'],
-											random_state=config['mlmodel']['seed'])
+											random_state=config['seed'])
 
 	print('Fitting the Model')
 
