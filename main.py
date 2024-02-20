@@ -8,15 +8,15 @@ import wandb
 
 
 def train(config):
-	logger = wandb.init(project=f"ML on TNBC Data", config=config)
+	#logger = wandb.init(project=f"ML on TNBC Data", config=config)
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])
 
 	print('Configuring models')
 	model = ModelTrainer(config['mlmodel'], config['seed'])
 
-	features = dataloader.featurisation()
 	labels = dataloader.label_vec
+	features = dataloader.featurisation()
 	print('Creating data splits for training')
 	X_train, X_test, y_train, y_test = train_test_split(features, labels,
 											test_size=config['testportion'],
@@ -30,10 +30,12 @@ def train(config):
 	train_acc = model.accuracy(X_train, y_train)
 	test_acc = model.accuracy(X_test, y_test)
 
-	wandb.log({'Train Accuracy': train_acc})
-	wandb.log({'Test Accuracy': test_acc})
+	print(f"Train Acc {train_acc:.4f}")
+	print(f"Test Acc {test_acc:.4f}")
+	#wandb.log({'Train Accuracy': train_acc})
+	#wandb.log({'Test Accuracy': test_acc})
 
-	wandb.log({'PRcurve': wandb.plots.precision_recall(y_test, y_probs, labels)})
+	#wandb.log({'PRcurve': wandb.plots.precision_recall(y_test, y_probs, labels)})
 
 
 

@@ -10,7 +10,7 @@ from phenotyping_utils import generate_anndata_from_ark_analysis
 def neighbours(fovs):
     store = {}    
     for ID in  set(fovs):
-        sub_adata = adata[adata.obs.acquisition_ID==ID]#select one acquisition
+        .#select one acquisition
         celltypes = sub_adata.obs.Pixie.value_counts()[sub_adata.obs.Pixie.value_counts()>50].index.values#take cell types that have at least 50 cells in the acquisition
         sq.gr.spatial_neighbors(sub_adata,coord_type='grid',n_neighs=6,radius = (0,cell_radius))
         sq.gr.nhood_enrichment(sub_adata, cluster_key='Pixie')

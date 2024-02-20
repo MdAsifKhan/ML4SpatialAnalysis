@@ -13,7 +13,9 @@ dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'
   cell_filename: 'cell_table_size_normalized_cell_labels'
   response_filename: 'processed_response'
+  gtype: 'celltype'
   knn: 6
   method: 'knn'
   use_graph: False
-  fcriterion: 'flatcelltype'
+  fcriterion: 'avgcelltype'
+  gcriterion: 'heat_trace'

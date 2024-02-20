@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import os
-
+import pickle
 
 ##
 # Based On Giuseppe's Code
@@ -155,8 +155,6 @@ def anndata_to_datatensor(adata):
 	n_proteins = adata.X.shape[1]
 	# Group by 'Leap_ID' and 'Pixie' and calculate the mean for each group
 	grouped_data = adata.obs.groupby(['acquisition_ID', 'Pixie'])
-	import pdb
-	pdb.set_trace()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
 
@@ -171,3 +169,47 @@ def anndata_to_datatensor(adata):
 
 	labels = [label.item() for _, label in acqnidx_label.items()]
 	return data_tensor, labels
+
+
+def celltype_graph(adata, cell_radius=20, cell_n_thr=50):
+	import squidpy as sq
+	sq.gr.spatial_neighbors(adata,coord_type='grid',n_neighs=6,radius = (0,cell_radius))
+	sq.gr.nhood_enrichment(adata, cluster_key='Pixie')
+	sq.gr.interaction_matrix(adata, cluster_key='Pixie')
+	celltypes = adata.obs.Pixie.value_counts()[adata.obs.Pixie.value_counts()>cell_n_thr].index.values
+
+	idxs = np.array(adata.obs['Pixie'].cat.categories)
+	enrichment = adata.uns['Pixie_nhood_enrichment']['zscore']
+	enrichment = pd.DataFrame(enrichment,index=idxs,columns=idxs)
+	
+	contact = adata.uns['Pixie_interactions']/adata.uns['Pixie_interactions'].sum()
+	contact = pd.DataFrame(contact,index=idxs,columns=idxs)
+
+	contact = contact.loc[celltypes,celltypes]
+	return contact
+
+def anndata_to_features(adata, gtype='cellcell', datapath='./'):
+	unique_acqns = adata.obs['acquisition_ID'].unique()
+	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
+	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
+	expressions, graphs, labels = [], [], []
+	for acq in unique_acqns:
+		adata_acq = adata[adata.obs.acquisition_ID==acq]
+		if gtype == 'cellcell':
+			expressions.append(adata_acq.X)
+			graphs.append(adata_acq.obsm['spatial'])
+		elif gtype == 'celltype':
+			exprns = [adata_acq[idx].X.mean(0) for _, idx in adata_acq.obs.groupby(['Pixie']).groups.items()]
+			expressions.append(np.array(exprns))
+			graphs.append(celltype_graph(adata_acq))
+		else:
+			assert 0,f"{gtype} Not Implemented"
+		labels.append(adata_acq.obs.Response[0])
+
+	dataset = {
+				'expressions': expressions,
+				'graphs': graphs,
+				'labels': labels}
+	with open(f"{datapath}/processed_data_{gtype}.pkl", 'wb') as f:
+		pickle.dump(dataset, f)			
+	return expressions, graphs, labels
