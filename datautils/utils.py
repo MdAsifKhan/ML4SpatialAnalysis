@@ -178,7 +178,7 @@ def anndata_to_datatensor(adata):
 	return data_tensor, labels
 
 
-def celltype_to_features(adata, datapath='./', cell_radius=20, cell_n_thr=50):
+def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_thr=50):
 	import squidpy as sq
 	acqns = adata.obs.acquisition_ID.unique()
 
@@ -218,13 +218,13 @@ def celltype_to_features(adata, datapath='./', cell_radius=20, cell_n_thr=50):
 				'expressions': expressions,
 				'graphs': graphs,
 				'labels': labels
-				}
+		}
 
-	with open(f"{datapath}/processed_data_celltype_cellr{cell_radius}_cellt{cell_n_thr}.pkl", 'wb') as f:
+	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
 	return expressions, enrichments, graphs, labels
 
-def cellcell_to_features(adata, min_cells=10, datapath='./'):
+def cellcell_to_features(adata, min_cells=10, filename='./data.pkl'):
 	unique_acqns = adata.obs['acquisition_ID'].unique()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
@@ -243,8 +243,11 @@ def cellcell_to_features(adata, min_cells=10, datapath='./'):
 	dataset = {
 				'expressions': expressions,
 				'graphs': graphs,
-				'labels': labels}
-	with open(f"{datapath}/processed_data_cellcell.pkl", 'wb') as f:
+				'labels': labels,
+				'enrichments': None
+		}
+
+	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
 	return expressions, graphs, labels
 

@@ -26,11 +26,13 @@ def compute_metrics(y_train, y_pred_train, y_test, y_pred_test):
 	}
 	return metrics
 
-# x_t = A x_t + B h_t
-# y_t = C x_t + D h_t
 
 def train(config):
-	logname = f"{config['dataset']['gtype']}_graph_{config['dataset']['use_graph']}"
+	if config['dataset']['gtype'] == 'celltype':
+		logname = f"{config['dataset']['gtype']}_fcriterion_{config['dataset']['fcriterion']}_usegraphfeatures_{config['dataset']['use_graph']}"
+	else:
+		logname = f"{config['dataset']['gtype']}_usegraphfeatures_{config['dataset']['use_graph']}"
+
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])

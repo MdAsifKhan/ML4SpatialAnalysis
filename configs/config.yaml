@@ -13,11 +13,11 @@ dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'
   cell_filename: 'cell_table_size_normalized_cell_labels'
   response_filename: 'processed_response'
-  gtype: 'cellcell'
-  knn: 6
+  gtype: 'celltype'
+  k: 7
   method: 'knn'
   use_graph: True
-  fcriterion: 'avgcelltype'
+  fcriterion: 'flatcelltype'
   gcriterion: 'laplacian_spectrum'
   cell_radius: 20
   cell_n_thr: 7

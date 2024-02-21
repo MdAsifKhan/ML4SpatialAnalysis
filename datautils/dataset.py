@@ -4,37 +4,35 @@ from .utils import celltable_to_anndata, load_cell_data, cellcell_to_features, c
 import os
 from utils.utils import graph_feature_vector, coords_to_graph
 import pickle
-
+from scipy.sparse import csr_matrix
 
 class SpatialCellToFeatures:
 	def __init__(self, config):
 		self.config = config
-		if os.path.exists(f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"):		
-			self.expressions, self.graphs, self.labels = self.load_data()
+		if self.config['gtype'] == 'cellcell':
+			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
 		else:
-			self.expressions, self.enrichments, self.graphs, self.labels = self.prepare_data()
+			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}_cellr{self.config['cell_radius']}_cellt{self.config['cell_n_thr']}.pkl"
+
+		if os.path.exists(f"{filename}"):		
+			self.expressions, self.enrichments, self.graphs, self.labels = self.load_data(filename)
+		else:
+			self.expressions, self.enrichments, self.graphs, self.labels = self.prepare_data(filename)
 
 		unique_labels = {el:i for i, el in enumerate(list(set(self.labels)))}
 		self.label_vec = np.asarray([unique_labels[label] for label in self.labels])
+
 		if self.config['use_graph']:
 			print('Preparing Graph Features')
 			self.graph_features = self.graph_features()
 
-	def load_data(self):
+	def load_data(self, filename):
 		print('Loading Expression Data From File')
-		if self.config['gtype'] == 'cellcell':
-			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
-			with open(filename, 'rb') as f:
-				dataset = pickle.load(f)
-				return dataset['expressions'], dataset['graphs'], dataset['labels']
-		else:
-			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}_cellr{self.config['cell_radius']}_cellt{self.config['cell_n_thr']}.pkl"
-			with open(filename, 'rb') as f:
-				dataset = pickle.load(f)
-				return dataset['expressions'], dataset['enrichments'], dataset['graphs'], dataset['labels']
+		with open(filename, 'rb') as f:
+			dataset = pickle.load(f)
+			return dataset['expressions'], dataset['enrichments'], dataset['graphs'], dataset['labels']
 
-
-	def prepare_data(self):
+	def prepare_data(self, filename):
 		print('Preparing Expression Data From Cell Table')
 		cell_table, biosamples = load_cell_data(self.config['DATA_PATH'],
 												self.config['cell_filename'], 
@@ -43,24 +41,24 @@ class SpatialCellToFeatures:
 		adata = celltable_to_anndata(cell_table, biosamples)
 		if self.config['gtype'] == 'cellcell':
 			expressions, graphs, labels = cellcell_to_features(adata, 
-												datapath=self.config['DATA_PATH'])
+												filename=filename)
 			enrichments = None
 			return expressions, enrichments, graphs, labels
 		if self.config['gtype'] == 'celltype':
 			expressions, enrichments, graphs, labels = celltype_to_features(adata, 
-												datapath=self.config['DATA_PATH'],
 												cell_radius=self.config['cell_radius'],
-												cell_n_thr=self.config['cell_n_thr'])
+												cell_n_thr=self.config['cell_n_thr'],
+												filename=filename)
 			return expressions, enrichments, graphs, labels
 		else:
 			assert 0, f"{self.config['gtype']} Not Implemented"	
-		
-
 
 	def graph_features(self):
 		if self.config['gtype'] == 'cellcell':
-			graphs = [coords_to_graph(coords) for coords in self.graphs]
-		gfeature = [graph_feature_vector(graph, self.config['gcriterion'], self.config['gf_dim']) for graph in graphs]
+			graphs = [coords_to_graph(coords, method=self.config['method'], radius=self.config['k']) for coords in self.graphs]
+			gfeature = [graph_feature_vector(graph, self.config['gcriterion'], self.config['gf_dim']) for graph in graphs]
+		else:
+			gfeature = [graph_feature_vector(csr_matrix(graph), self.config['gcriterion'], self.config['gf_dim']) for graph in self.graphs]
 		return np.array(gfeature)
 
 	def celltype_featurisation(self):
