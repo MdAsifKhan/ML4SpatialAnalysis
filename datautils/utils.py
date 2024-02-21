@@ -7,12 +7,19 @@ import pickle
 ##
 # Based On Giuseppe's Code
 
-MARKERS = ['CD38', 'CD14', 'Tbet', 'CD16', 'CD163',
-			'Pan-keratin', 'CD11b', 'CD107a', 'CD45', 'CD44', 'CD366',
-			'FOXP3', 'CD4', 'E-Cadherin', 'CD68', 'HLA-DR-DQ-DP', 'CD20',
-			'CD8a', 'Beta-Catenin', 'B7-H4', 'Granzyme-B',
-			'CD3', 'CD27', 'CD45RO',
-			'Alpha-SMA', 'Vimentin', 'CD31' ]
+MARKERS = ['Alpha-SMA', 'B7-H4', 'Beta-Catenin', 'CD107a', 'CD11b', 'CD14', 'CD16', 
+			'CD163', 'CD20', 'CD27', 'CD3', 'CD31', 'CD366', 'CD38', 'CD4', 'CD44', 
+			'CD45', 'CD45RO', 'CD68', 'CD8a', 'Carboplatin', 'Collage-Type_I', 
+			'DNA1', 'DNA2', 'E-Cadherin', 'EGFR', 'FOXP3', 'Granzyme-B', 'HLA-DR-DQ-DP', 
+			'Ki-67', 'PD-1', 'PD-L1', 'PD-L2', 'Pan-keratin', 'Tbet', 'VEGF', 
+			'Vimentin', 'p53']
+
+# MARKERS = ['CD38', 'CD14', 'Tbet', 'CD16', 'CD163',
+# 			'Pan-keratin', 'CD11b', 'CD107a', 'CD45', 'CD44', 'CD366',
+# 			'FOXP3', 'CD4', 'E-Cadherin', 'CD68', 'HLA-DR-DQ-DP', 'CD20',
+# 			'CD8a', 'Beta-Catenin', 'B7-H4', 'Granzyme-B',
+# 			'CD3', 'CD27', 'CD45RO',
+# 			'Alpha-SMA', 'Vimentin', 'CD31' ]
 
 def binarise(data, thr):
 	"""
@@ -106,12 +113,12 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 def celltable_to_anndata(cell_table, biosamples):
 	if 'cell_meta_cluster' in cell_table:
 		cell_table = cell_table[cell_table['cell_meta_cluster']!='Unassigned']
-		adata = sc.AnnData(cell_table.loc[:,cell_table.columns.isin(MARKERS)], obsm={"spatial": cell_table[['centroid-0', 'centroid-1']].values})
+	adata = sc.AnnData(cell_table.loc[:,cell_table.columns.isin(MARKERS)], obsm={"spatial": cell_table[['centroid-0', 'centroid-1']].values})
 	try:
 		adata.obs['Pixie'] = pd.Categorical(cell_table.cell_meta_cluster.values.astype(str))
 	except:
 		print('cell type label not present')
-	
+
 	adata.obs['acquisition_ID'] = cell_table.fov.values
 	adata.obs['Leap_ID'] = adata.obs.acquisition_ID.str.split('_',n = 1).str[0].str.upper()
 	adata.obs['Leap_ID'] = adata.obs.Leap_ID.str[:7]#leap_ID should be Leap123, anything more is stripped
@@ -171,45 +178,73 @@ def anndata_to_datatensor(adata):
 	return data_tensor, labels
 
 
-def celltype_graph(adata, cell_radius=20, cell_n_thr=50):
+def celltype_to_features(adata, datapath='./', cell_radius=20, cell_n_thr=50):
 	import squidpy as sq
-	sq.gr.spatial_neighbors(adata,coord_type='grid',n_neighs=6,radius = (0,cell_radius))
-	sq.gr.nhood_enrichment(adata, cluster_key='Pixie')
-	sq.gr.interaction_matrix(adata, cluster_key='Pixie')
-	celltypes = adata.obs.Pixie.value_counts()[adata.obs.Pixie.value_counts()>cell_n_thr].index.values
+	acqns = adata.obs.acquisition_ID.unique()
 
-	idxs = np.array(adata.obs['Pixie'].cat.categories)
-	enrichment = adata.uns['Pixie_nhood_enrichment']['zscore']
-	enrichment = pd.DataFrame(enrichment,index=idxs,columns=idxs)
-	
-	contact = adata.uns['Pixie_interactions']/adata.uns['Pixie_interactions'].sum()
-	contact = pd.DataFrame(contact,index=idxs,columns=idxs)
+	pixies = np.array(adata.obs.Pixie.cat.categories)
+	expression = pd.DataFrame(np.zeros((len(pixies), len(MARKERS))), index=pixies, columns=MARKERS)
 
-	contact = contact.loc[celltypes,celltypes]
-	return contact
+	enrichments, expressions, graphs, labels = [], [], [], []
+	for idx in acqns:
+		sub_adata = adata[adata.obs.acquisition_ID==idx]
+		celltypes = sub_adata.obs.Pixie.value_counts()[sub_adata.obs.Pixie.value_counts()>cell_n_thr].index.values
 
-def anndata_to_features(adata, gtype='cellcell', datapath='./'):
+		sq.gr.spatial_neighbors(sub_adata,coord_type='grid',n_neighs=6,radius = (0,cell_radius))
+		sq.gr.nhood_enrichment(sub_adata, cluster_key='Pixie')
+		sq.gr.interaction_matrix(sub_adata, cluster_key='Pixie')
+
+		a = np.array(sub_adata.obs['Pixie'].cat.categories)
+		enrichment = sub_adata.uns['Pixie_nhood_enrichment']['zscore']
+		enrichment = pd.DataFrame(enrichment,index=a,columns=a)
+		enrichment = enrichment.loc[celltypes, celltypes]
+		enrichments.append(enrichment)
+
+		contact = sub_adata.uns['Pixie_interactions']/sub_adata.uns['Pixie_interactions'].sum()
+		contact = pd.DataFrame(contact,index=a,columns=a)
+		contact = contact.loc[celltypes, celltypes]
+
+		graphs.append(contact)
+		label = set(sub_adata.obs.Response.values)
+		expression.loc[a,:] = np.array([sub_adata[loc].X.mean(0) for _,loc in sub_adata.obs.groupby(['Pixie']).groups.items()])
+
+		expressions.append(expression)
+		expression = pd.DataFrame(np.zeros((len(pixies), len(MARKERS))), index=pixies, columns=MARKERS)
+		if len(label) != 1:
+			assert 0, f"Acquistion {idx} has non unique labels"
+		labels.append(label.pop())
+	dataset = { 
+				'enrichments': enrichments,
+				'expressions': expressions,
+				'graphs': graphs,
+				'labels': labels
+				}
+
+	with open(f"{datapath}/processed_data_celltype_cellr{cell_radius}_cellt{cell_n_thr}.pkl", 'wb') as f:
+		pickle.dump(dataset, f)			
+	return expressions, enrichments, graphs, labels
+
+def cellcell_to_features(adata, min_cells=10, datapath='./'):
 	unique_acqns = adata.obs['acquisition_ID'].unique()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
 	expressions, graphs, labels = [], [], []
 	for acq in unique_acqns:
-		adata_acq = adata[adata.obs.acquisition_ID==acq]
-		if gtype == 'cellcell':
-			expressions.append(adata_acq.X)
-			graphs.append(adata_acq.obsm['spatial'])
-		elif gtype == 'celltype':
-			exprns = [adata_acq[idx].X.mean(0) for _, idx in adata_acq.obs.groupby(['Pixie']).groups.items()]
-			expressions.append(np.array(exprns))
-			graphs.append(celltype_graph(adata_acq))
-		else:
-			assert 0,f"{gtype} Not Implemented"
-		labels.append(adata_acq.obs.Response[0])
-
+		sub_adata = adata[adata.obs.acquisition_ID==acq]
+		coords = sub_adata.obsm['spatial']
+		if len(coords)<min_cells:
+			continue
+		expressions.append(sub_adata.X)
+		graphs.append(coords)
+		label = set(sub_adata.obs.Response.values)
+		if len(label) != 1:
+			assert 0, f"Acquistion {idx} has non unique labels"
+		labels.append(label.pop())
 	dataset = {
 				'expressions': expressions,
 				'graphs': graphs,
 				'labels': labels}
-	with open(f"{datapath}/processed_data_{gtype}.pkl", 'wb') as f:
+	with open(f"{datapath}/processed_data_cellcell.pkl", 'wb') as f:
 		pickle.dump(dataset, f)			
 	return expressions, graphs, labels
+

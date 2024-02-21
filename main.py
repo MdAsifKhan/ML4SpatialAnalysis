@@ -5,10 +5,33 @@ from datautils.dataset import SpatialCellToFeatures
 from sklearn.model_selection import train_test_split
 import pdb
 import wandb
+from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 
+
+def compute_metrics(y_train, y_pred_train, y_test, y_pred_test):
+	accuracy_train = accuracy_score(y_train, y_pred_train)
+	auc_train = roc_auc_score(y_train, y_pred_train)
+	f1_train = f1_score(y_train, y_pred_train)
+
+	accuracy_test = accuracy_score(y_test, y_pred_test)
+	auc_test = roc_auc_score(y_test, y_pred_test)
+	f1_test = f1_score(y_test, y_pred_test)
+	metrics = {
+			'Accuracy Train': accuracy_train,
+			'Accuracy Test': accuracy_test,
+			'AUC Train': auc_train,
+			'AUC Test': auc_test,
+			'F1 Score Train': f1_train,
+			'F1 Score Test': f1_test,			
+	}
+	return metrics
+
+# x_t = A x_t + B h_t
+# y_t = C x_t + D h_t
 
 def train(config):
-	#logger = wandb.init(project=f"ML on TNBC Data", config=config)
+	logname = f"{config['dataset']['gtype']}_graph_{config['dataset']['use_graph']}"
+	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])
 
@@ -26,18 +49,17 @@ def train(config):
 
 	model.fit(X_train, y_train)
 
-	y_probs = model.predict_proba(X_test)
-	train_acc = model.accuracy(X_train, y_train)
-	test_acc = model.accuracy(X_test, y_test)
+	y_pred_train = model.predict(X_train)
+	y_pred_test = model.predict(X_test)
 
-	print(f"Train Acc {train_acc:.4f}")
-	print(f"Test Acc {test_acc:.4f}")
-	#wandb.log({'Train Accuracy': train_acc})
-	#wandb.log({'Test Accuracy': test_acc})
+	metrics = compute_metrics(y_train, y_pred_train, y_test, y_pred_test)
+	print(metrics)
+	log_metrics(metrics, logger)
+	wandb.finish()
 
-	#wandb.log({'PRcurve': wandb.plots.precision_recall(y_test, y_probs, labels)})
-
-
+def log_metrics(metrics, logger):
+	metrics_table= [[key, value] for key, value in metrics.items()]
+	logger.log({'Metrics': wandb.Table(data=metrics_table, columns=["Metric", "Value"])})
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

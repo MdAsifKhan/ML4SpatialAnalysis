@@ -4,6 +4,7 @@ import scipy.sparse as sp
 
 from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
+from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph
 
 def load_config(filename):
 	with open(filename, 'r') as f:
@@ -19,7 +20,17 @@ def adjacency_to_laplacian(A, normalised=True):
 	Dsqrt[Dsqrt==np.inf] = 0
 	Dsqrt = sp.diags(Dsqrt) if sp.issparse(A) else np.diag(Dsqrt)
 	Lnorm = Dsqrt.dot(L).dot(Dsqrt)
+	return Lnorm
 
+def coords_to_graph(coords, method='knn', radius=7):
+	if method == 'radius':
+		G = radius_neighbors_graph(coords, radius, mode='connectivity',
+									include_self=True)
+	elif method == 'knn':
+		G = kneighbors_graph(coords, radius, mode='connectivity', include_self=True)
+	else:
+		assert 0, f"{method} Not Implemented"
+	return G
 
 def graph_feature_vector(graph, gcriterion='degree', feature_dim=10):
 	if not isinstance(graph, csr_matrix):
@@ -34,7 +45,8 @@ def graph_feature_vector(graph, gcriterion='degree', feature_dim=10):
 		# Compute normalized Laplacian matrix
 		laplacian = adjacency_to_laplacian(graph)
 		# Compute eigenvalues of normalized Laplacian
-		eivals, _ = eigs(laplacian, k=min(num_nodes-1, feature_dim), which='SM')
+		k = min(feature_dim, num_nodes-1)
+		eivals, _ = eigs(laplacian, k=k, which='SM')
 
 		# Compute heat trace at different timescales
 		for t, timescale in enumerate(timescales):
@@ -43,9 +55,10 @@ def graph_feature_vector(graph, gcriterion='degree', feature_dim=10):
 		# Compute normalized Laplacian matrix
 		laplacian = adjacency_to_laplacian(graph)
 		k = min(feature_dim, num_nodes-1)
-		eivals = sp.sparse.linalg.svds(laplacian, k=k, return_singular_vectors=False)
+		eivals = sp.linalg.svds(laplacian, k=k, return_singular_vectors=False)
 		feature_vector = np.zeros(feature_dim)
-		if len(eigenvalues)>1:
+
+		if len(eivals)>1:
 			feature_vector[-k:] = sorted(eivals)
 	else:
 		assert 0, f" {gcriterion} Not implemented. Valid options are `degree`, or `heat_trace`."
