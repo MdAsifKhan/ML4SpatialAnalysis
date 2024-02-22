@@ -4,7 +4,6 @@ from models.trainer import ModelTrainer
 from datautils.dataset import SpatialCellToFeatures
 import pdb
 import wandb
-from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 
 def log_metrics(metrics, logger):
 	metrics_table= [[key, value] for key, value in metrics.items()]

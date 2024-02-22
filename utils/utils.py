@@ -85,3 +85,25 @@ def categorical_accuracy(y, y_pred):
 
 def binary_accuracy(y, y_pred):
 	return (y==y_pred).sum()
+
+
+from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
+
+
+def compute_metrics(y_train, y_pred_train, y_test, y_pred_test):
+	accuracy_train = accuracy_score(y_train, y_pred_train)
+	auc_train = roc_auc_score(y_train, y_pred_train)
+	f1_train = f1_score(y_train, y_pred_train)
+
+	accuracy_test = accuracy_score(y_test, y_pred_test)
+	auc_test = roc_auc_score(y_test, y_pred_test)
+	f1_test = f1_score(y_test, y_pred_test)
+	metrics = {
+			'Accuracy Train': accuracy_train,
+			'Accuracy Test': accuracy_test,
+			'AUC Train': auc_train,
+			'AUC Test': auc_test,
+			'F1 Score Train': f1_train,
+			'F1 Score Test': f1_test,			
+	}
+	return metrics

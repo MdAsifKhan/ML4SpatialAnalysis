@@ -30,7 +30,7 @@ class SpatialCellToFeatures:
 		print('Loading Expression Data From File')
 		with open(filename, 'rb') as f:
 			dataset = pickle.load(f)
-			return dataset['expressions'], dataset['enrichments'], dataset['graphs'], dataset['labels']
+			return dataset['expressions'], dataset['enrichments'], dataset['graphs'], dataset['labels'], dataset['markers']
 
 	def prepare_data(self, filename):
 		print('Preparing Expression Data From Cell Table')
@@ -40,10 +40,10 @@ class SpatialCellToFeatures:
 
 		adata = celltable_to_anndata(cell_table, biosamples)
 		if self.config['gtype'] == 'cellcell':
-			expressions, graphs, labels = cellcell_to_features(adata, 
+			expressions, graphs, labels, markers = cellcell_to_features(adata, 
 												filename=filename)
 			enrichments = None
-			return expressions, enrichments, graphs, labels
+			return expressions, enrichments, graphs, labels, markers
 		if self.config['gtype'] == 'celltype':
 			expressions, enrichments, graphs, labels, markers = celltype_to_features(adata, 
 												cell_radius=self.config['cell_radius'],
