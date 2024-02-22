@@ -14,7 +14,7 @@ def log_features(X, y, logger):
 	df = pd.DataFrame(np.column_stack((X, y)), columns=columns)
 	logger.log({"Feature_Matrix": wandb.Table(dataframe=df)})
 
-def train(config):
+def run(config):
 	if config['dataset']['gtype'] == 'celltype':
 		logname = f"{config['dataset']['gtype']}_fcriterion_{config['dataset']['fcriterion']}_usegraphfeatures_{config['dataset']['use_graph']}"
 	else:
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=str, default='configs/config.yaml', help='Configuration file')
     args = parser.parse_args()
     config = load_config(args.config)
-    train(config)
+    run(config)
 
 
 
