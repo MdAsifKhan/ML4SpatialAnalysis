@@ -90,7 +90,7 @@ def binary_accuracy(y, y_pred):
 from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 
 
-def compute_metrics(y_train, y_pred_train, y_test, y_pred_test):
+def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 	accuracy_train = accuracy_score(y_train, y_pred_train)
 	auc_train = roc_auc_score(y_train, y_pred_train)
 	f1_train = f1_score(y_train, y_pred_train)
@@ -105,5 +105,19 @@ def compute_metrics(y_train, y_pred_train, y_test, y_pred_test):
 			'AUC Test': auc_test,
 			'F1 Score Train': f1_train,
 			'F1 Score Test': f1_test,			
+	}
+	return metrics
+
+
+
+def compute_scores_test(y, y_pred):
+	accuracy_ = accuracy_score(y, y_pred)
+	auc_ = roc_auc_score(y, y_pred)
+	f1_ = f1_score(y, y_pred)
+
+	metrics = {
+			'Accuracy': accuracy_,
+			'AUC': auc_,
+			'F1 Score': f1_,
 	}
 	return metrics

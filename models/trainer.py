@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 import pickle
 from sklearn.model_selection import KFold, train_test_split
-from utils.utils import compute_metrics
+from utils.utils import compute_scores_train, compute_scores_test
 
 class ModelTrainer:
 	def __init__(self, config, feature_names=None):
@@ -57,7 +57,7 @@ class ModelTrainer:
 			y_pred_train = self.predict(X_train)
 			print(f"Evaluating the {self.config['name']} Model")
 			y_pred_test = self.predict(X_test)
-			metrics = compute_metrics(y_train, y_pred_train, y_test, y_pred_test)
+			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
 
 			print(f"Saving the {self.config['name']} Model")
 			self.save_model(filename)
@@ -81,9 +81,14 @@ class ModelTrainer:
 				self.save_model(f"{filename}_fold_{i+1}")
 
 			print(f"Evaluating the {self.config['name']} Model")
-			metrics = compute_metrics(y_train, y_pred_train, y_test, y_pred_test)
+			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
 
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
 
 		return metrics
+
+	def test(self, X, y):
+		y_pred = self.predict(X)
+		return compute_scores_test(y, y_pred)
+
