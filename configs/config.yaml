@@ -1,19 +1,24 @@
-seed: 42
 mlmodel:
   name: 'logistic'
   penalty: null
   l1_ratio: 0.5
   solver: 'lbfgs'
   tol: 0.0000001
+  testportion: 0.3
+  seed: 42
+  folds: 5
+  eval: 'split'
+  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'
 
-
-testportion: 0.3
+attribution:
+  filename: ???
+  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'
 
 dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'
   cell_filename: 'cell_table_size_normalized_cell_labels'
   response_filename: 'processed_response'
-  gtype: 'celltype'
+  gtype: 'cellcell'
   k: 7
   method: 'knn'
   use_graph: True
