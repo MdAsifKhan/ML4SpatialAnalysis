@@ -15,9 +15,9 @@ class SpatialCellToFeatures:
 			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}_cellr{self.config['cell_radius']}_cellt{self.config['cell_n_thr']}.pkl"
 
 		if os.path.exists(f"{filename}"):		
-			self.expressions, self.enrichments, self.graphs, self.labels = self.load_data(filename)
+			self.expressions, self.enrichments, self.graphs, self.labels, self.feature_names = self.load_data(filename)
 		else:
-			self.expressions, self.enrichments, self.graphs, self.labels = self.prepare_data(filename)
+			self.expressions, self.enrichments, self.graphs, self.labels, self.feature_names = self.prepare_data(filename)
 
 		unique_labels = {el:i for i, el in enumerate(list(set(self.labels)))}
 		self.label_vec = np.asarray([unique_labels[label] for label in self.labels])
@@ -45,11 +45,11 @@ class SpatialCellToFeatures:
 			enrichments = None
 			return expressions, enrichments, graphs, labels
 		if self.config['gtype'] == 'celltype':
-			expressions, enrichments, graphs, labels = celltype_to_features(adata, 
+			expressions, enrichments, graphs, labels, markers = celltype_to_features(adata, 
 												cell_radius=self.config['cell_radius'],
 												cell_n_thr=self.config['cell_n_thr'],
 												filename=filename)
-			return expressions, enrichments, graphs, labels
+			return expressions, enrichments, graphs, labels, markers
 		else:
 			assert 0, f"{self.config['gtype']} Not Implemented"	
 
@@ -84,6 +84,8 @@ class SpatialCellToFeatures:
 			assert 0, f"{self.config['gtype']} Expression Features are invalid"
 		if self.config['use_graph']:
 			features = np.concatenate([e_features, self.graph_features], axis=1)
+			gfeatures = [f"Graphcoeff_{i}" for i in range(self.graph_features.shape[1])] 
+			self.feature_names += gfeatures
 			return features
 		return e_features
 

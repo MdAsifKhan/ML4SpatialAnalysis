@@ -217,12 +217,13 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 				'enrichments': enrichments,
 				'expressions': expressions,
 				'graphs': graphs,
-				'labels': labels
+				'labels': labels,
+				'markers': MARKERS
 		}
 
 	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
-	return expressions, enrichments, graphs, labels
+	return expressions, enrichments, graphs, labels, MARKERS
 
 def cellcell_to_features(adata, min_cells=10, filename='./data.pkl'):
 	unique_acqns = adata.obs['acquisition_ID'].unique()
@@ -244,10 +245,11 @@ def cellcell_to_features(adata, min_cells=10, filename='./data.pkl'):
 				'expressions': expressions,
 				'graphs': graphs,
 				'labels': labels,
-				'enrichments': None
+				'enrichments': None,
+				'markers': MARKERS
 		}
 
 	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
-	return expressions, graphs, labels
+	return expressions, graphs, labels, MARKERS
 
