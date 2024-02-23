@@ -22,14 +22,14 @@ def adjacency_to_laplacian(A, normalised=True):
 	Lnorm = Dsqrt.dot(L).dot(Dsqrt)
 	return Lnorm
 
-def coords_to_graph(coords, method='knn', radius=7):
-	if method == 'radius':
+def coords_to_graph(coords, gmethod='knn', radius=7):
+	if gmethod == 'radius':
 		G = radius_neighbors_graph(coords, radius, mode='connectivity',
 									include_self=True)
-	elif method == 'knn':
+	elif gmethod == 'knn':
 		G = kneighbors_graph(coords, radius, mode='connectivity', include_self=True)
 	else:
-		assert 0, f"{method} Not Implemented"
+		assert 0, f"{gmethod} Not Implemented"
 	return G
 
 def graph_feature_vector(graph, gcriterion='degree', feature_dim=10):

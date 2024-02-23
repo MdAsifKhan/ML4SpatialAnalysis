@@ -3,7 +3,8 @@ import pandas as pd
 import scanpy as sc
 import os
 import pickle
-
+from utils.utils import coords_to_graph
+from scipy.sparse import csr_matrix
 ##
 # Based On Giuseppe's Code
 
@@ -204,7 +205,7 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 		contact = pd.DataFrame(contact,index=a,columns=a)
 		contact = contact.loc[celltypes, celltypes]
 
-		graphs.append(contact)
+		graphs.append(csr_matrix(contact))
 		label = set(sub_adata.obs.Response.values)
 		expression.loc[a,:] = np.array([sub_adata[loc].X.mean(0) for _,loc in sub_adata.obs.groupby(['Pixie']).groups.items()])
 
@@ -225,7 +226,7 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 		pickle.dump(dataset, f)			
 	return expressions, enrichments, graphs, labels, MARKERS
 
-def cellcell_to_features(adata, min_cells=10, filename='./data.pkl'):
+def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./data.pkl'):
 	unique_acqns = adata.obs['acquisition_ID'].unique()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
@@ -236,7 +237,8 @@ def cellcell_to_features(adata, min_cells=10, filename='./data.pkl'):
 		if len(coords)<min_cells:
 			continue
 		expressions.append(sub_adata.X)
-		graphs.append(coords)
+		graph = coords_to_graph(coords, gmethod='knn', radius=k)
+		graphs.append(graph)
 		label = set(sub_adata.obs.Response.values)
 		if len(label) != 1:
 			assert 0, f"Acquistion {idx} has non unique labels"

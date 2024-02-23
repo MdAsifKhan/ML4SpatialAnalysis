@@ -25,7 +25,7 @@ def attribution(config):
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])
 	labels = dataloader.label_vec
-	features = dataloader.featurisation()
+	features = dataloader.expressions
 
 	print('Configuring models')
 	explainer = ModelAttribution(config['attribution'])

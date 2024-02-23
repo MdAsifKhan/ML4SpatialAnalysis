@@ -16,19 +16,21 @@ def log_features(X, y, logger):
 
 def run(config):
 	if config['dataset']['gtype'] == 'celltype':
-		logname = f"{config['dataset']['gtype']}_fcriterion_{config['dataset']['fcriterion']}_usegraphfeatures_{config['dataset']['use_graph']}"
+		logname = f"{config['dataset']['gtype']}_fcriterion_{config['model']['fcriterion']}"\
+					f"_graphfeats_{config['model']['gcriterion']}_eval_{config['model']['eval']}"
 	else:
-		logname = f"{config['dataset']['gtype']}_usegraphfeatures_{config['dataset']['use_graph']}"
+		logname = f"{config['dataset']['gtype']}_graphfeats_{config['model']['gcriterion']}"\
+					f"_eval_{config['model']['eval']}"
 
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])
 	labels = dataloader.label_vec
-	features = dataloader.featurisation()
+	features = dataloader.expressions
 
 	print('Configuring models')
-	model = ModelTrainer(config['mlmodel'])
-	metrics = model.train(features, labels, logname)
+	model = ModelTrainer(config['model'], feature_names=dataloader.feature_names)
+	metrics = model.optimise(features, labels, logname, dataloader.graphs, config['dataset']['gtype'])
 	print(metrics)
 	log_metrics(metrics, logger)
 	#log_features(features, labels, logger)
