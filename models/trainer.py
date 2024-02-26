@@ -4,12 +4,17 @@ from sklearn.model_selection import KFold, train_test_split
 from utils.utils import compute_scores_train, compute_scores_test
 import numpy as np
 from utils.utils import graph_feature_vector, coords_to_graph
-#from factory import GCN
+from .factory import tnbcGCN
 
 class ModelTrainer:
-	def __init__(self, config, feature_names=None):
+	def __init__(self, config, 
+						logger,
+						feature_names=None,
+						logfile=None):
 		self.config = config
 		self.feature_names = feature_names
+		self.logfile = logfile
+		self.logger = logger
 		if self.config['name'] == 'logistic':
 			self.classifier = LogisticRegression(
 											random_state=self.config['seed'], 
@@ -20,7 +25,10 @@ class ModelTrainer:
 											max_iter=self.config['logisitic']['max_iter']
 											)
 		elif self.config['name'] == 'gcn':
-			#self.classifier = GCN()
+			self.config['gcn']['input_dim'] = len(feature_names)
+			self.config['gcn']['hidden_dim'] = len(feature_names)
+			self.classifier = tnbcGCN(self.config['gcn'],
+									logger=self.logger)
 			pass
 		else:
 			assert 0,f"Classifer {self.config['name']} is not implemented"
@@ -41,8 +49,12 @@ class ModelTrainer:
 			return self.classifier.predict_proba(X, graphs)
 		return self.classifier.predict_proba(X)
 
-	def save_model(self, filename):
-		filename = f"{self.config['MODEL_PATH']}/{self.config['name']}_{filename}.pkl"
+	def save_model(self, fold=None):
+		if fold:
+			name = f"{self.config['name']}_{fold}"
+		else:
+			name = self.config['name']
+		filename = f"{self.config['MODEL_PATH']}/{name}_{self.logfile}.pkl"
 		out = {
 				'model': self.classifier,
 				'feature_names': self.feature_names
@@ -50,8 +62,12 @@ class ModelTrainer:
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
 
-	def load_model(self, filename):
-		filename = f"{self.config['MODEL_PATH']}/{self.config['name']}_{filename}.pkl"
+	def load_model(self, fold=None):
+		if fold:
+			name = f"{self.config['name']}_{fold}"
+		else:
+			name = self.config['name']
+		filename = f"{self.config['MODEL_PATH']}/{self.config['name']}_{self.logfile}.pkl"
 		with open(filename, 'wb') as f:
 			load = pickle.load(f)
 			self.classifier = load['model']
@@ -86,7 +102,7 @@ class ModelTrainer:
 			assert 0, f"{self.config['gtype']} Expression Features are invalid"
 		return e_features
 
-	def optimise(self, X, y, filename, graphs=None, gtype=None):
+	def optimise(self, X, y, graphs=None, gtype=None):
 		if self.config['gcriterion'] != 'gcn':
 			X = self.featurisation(X, gtype)
 
@@ -112,7 +128,6 @@ class ModelTrainer:
 
 			print(f"Fitting the {self.config['name']} Model")
 			self.fit(X_train, y_train, graphs_train)
-
 			y_pred_train = self.predict(X_train, graphs_train)
 
 			print(f"Evaluating the {self.config['name']} Model")
@@ -120,34 +135,43 @@ class ModelTrainer:
 
 			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
 			print(f"Saving the {self.config['name']} Model")
-			self.save_model(filename)
+			self.save_model()
 
 		elif self.config['eval'] == 'kfold':
 			print(f"Fitting the {self.config['name']} Model")
 			kf = KFold(n_splits=self.config['folds'], shuffle=True, random_state=self.config['seed'])
 
-			all_models = []
-			y_train, y_test, y_pred_train, y_pred_test = [], [], [], []
+			y_train, y_test, y_pred_train, y_pred_test = np.array([]),np.array([]),np.array([]),np.array([])
 			for i, (train_idx, test_idx) in enumerate(kf.split(X)):
 				X_train_i, X_test_i = X[train_idx], X[test_idx]
 				y_train_i, y_test_i = y[train_idx], y[test_idx]
-				self.fit(X_train_i, y_train_i)
+				if self.config['gcriterion'] == 'gcn':
+					if graphs_train and graphs_test:
+						graphs_train_i = graphs_train[train_idx]
+						graphs_test_i = graphs_test[test_idx]
+					else:
+						assert 0,"Graphs is None"
+				else:
+					graphs_train_i, graphs_test_i = None, None
+				self.fit(X_train_i, y_train_i, graphs_train_i)
 
 				y_train = np.concatenate([y_train, y_train_i])
 				y_test = np.concatenate([y_test, y_test_i])
 
-				y_pred_train = np.concatenate([y_pred_train, self.predict(X_train_i)])
-				y_pred_test = np.concatenate([y_pred_test, self.predict(X_test_i)])
+				y_pred_train_i = self.predict(X_train_i, graphs_train_i)
+				y_pred_test_i = self.predict(X_test_i, graphs_test_i)
 
-				self.save_model(f"{filename}_fold_{i+1}")
+				y_pred_train = np.concatenate([y_pred_train, self.predict(y_pred_train_i)])
+				y_pred_test = np.concatenate([y_pred_test, self.predict(y_pred_test_i)])
+
+				self.save_model(fold=f"fold_{i+1}")
 
 			print(f"Evaluating the {self.config['name']} Model")
 			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
-
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
 
-		return metrics
+		self.log_metrics(metrics)
 
 	def test(self, X, y, graphs=None):
 		if self.config['use_graph_features']:
@@ -156,4 +180,23 @@ class ModelTrainer:
 			X = np.concatenate([X, graph_features], axis=1)
 		y_pred = self.predict(X)
 		return compute_scores_test(y, y_pred)
+
+	def log_coefficients(self, logger):
+		if self.config['name'] == 'logistic':
+			coefficients = self.classifier.coef_.flatten()
+			coefficients_df = pd.DataFrame({'Feature': self.feature_names, 'Coefficient': coefficients})
+			logger.log({"Logistic Regression Coefficients": wandb.Table(dataframe=coefficients_df)})
+			fields = {'x': 'Features', 'value': 'Coefficients'}
+			logger.plot_table(data_table=table, fields=fields)
+		else:
+			assert 0,f"Attribution Not implemented for {self.config['name']}"
+
+	def log_metrics(self, metrics):
+		metrics_table=[[key, value] for key, value in metrics.items()]
+		self.logger.log({
+					'Metrics': 
+							wandb.Table(
+									data=metrics_table, 
+								columns=["Metric", "Value"])
+					})
 
