@@ -6,16 +6,13 @@ import pdb
 import wandb
 from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
 
-def log_metrics(metrics, logger):
-	metrics_table= [[key, value] for key, value in metrics.items()]
-	logger.log({'Metrics': wandb.Table(data=metrics_table, columns=["Metric", "Value"])})
-
-def log_features(X, y, logger):
-	columns = [f"Feature_{i}" for i in range(X.shape[1])] + ["Label"]
-	df = pd.DataFrame(np.column_stack((X, y)), columns=columns)
-	logger.log({"Feature_Matrix": wandb.Table(dataframe=df)})
-
 def attribution(config):
+	"""
+	Performs model attribution and logs results to Weights & Biases.
+
+	Args:
+		config (dict): Configuration dictionary containing model and dataset settings.
+	"""
 	if config['dataset']['gtype'] == 'celltype':
 		logname = f"{config['dataset']['gtype']}_fcriterion_{config['dataset']['fcriterion']}_usegraphfeatures_{config['dataset']['use_graph']}"
 	else:
@@ -25,7 +22,6 @@ def attribution(config):
 	print('Preparing Features')
 	dataloader = SpatialCellToFeatures(config['dataset'])
 	labels = dataloader.label_vec
-	features = dataloader.expressions
 
 	print('Configuring models')
 	explainer = ModelAttribution(config['attribution'])
@@ -38,11 +34,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = load_config(args.config)
     attribution(config)
-
-
-
-
-
-
-
-

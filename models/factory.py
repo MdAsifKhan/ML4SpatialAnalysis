@@ -9,10 +9,19 @@ import numpy as np
 import pdb
 
 class GCN(nn.Module):
-	def __init__(self, input_dim, 
-						hidden_dim, 
-						nm_class):
-		super(GCN, self).__init__()		
+	"""
+	Graph Convolutional Network (GCN) model for node classification.
+
+	Args:
+		input_dim (int): Dimensionality of the input node features.
+		hidden_dim (int): Dimensionality of the hidden layer.
+		nm_class (int): Number of classes for node classification.
+	"""
+	def __init__(self, 
+					input_dim, 
+					hidden_dim, 
+					nm_class):
+		super(GCN, self).__init__()
 		self.conv1 = GCNConv(input_dim, hidden_dim)
 		self.conv2 = GCNConv(hidden_dim, hidden_dim)
 		self.clf = nn.Linear(hidden_dim, nm_class)
@@ -24,11 +33,24 @@ class GCN(nn.Module):
 		return F.sigmoid(self.clf(x))
 
 
-
-
 class tnbcGCN:
-	def __init__(self, config,
-						logger=None):
+	"""
+	Class for training GCN models on TNBC (Triple-Negative Breast Cancer) expression and spatial data.
+
+	Args:
+		config (dict): Configuration dictionary containing model and training parameters.
+		logger (optional, Logger): Logger object for logging training information.
+	"""
+	def __init__(self, 
+					config,
+					logger=None):
+		"""
+		Initializes the TNBC GCN model and optimizer.
+
+		Args:
+			config (dict): Configuration dictionary containing odel and training parameters.
+			logger (optional, Logger): Logger object for logging training information.
+		"""
 		self.config = config
 		self.logger = logger
 		self.device = torch.device(config['device'])
@@ -40,6 +62,14 @@ class tnbcGCN:
 		self.criterion = nn.BCELoss()
 
 	def fit(self, X, y, graphs):
+		"""
+		Trains the GCN model on the provided data.
+
+		Args:
+			X (list): List of gene expression data for each sample.
+			y (list): List of labels (0 or 1) for each sample.
+			graphs (list): List of spatial adjacency matrices representing connections between samples.
+		"""
 		self.model.train()
 		dataset = self.to_pyg(X, graphs, y)
 		loader = DataLoader(dataset, batch_size=self.config['batch_size'], shuffle=True)
@@ -58,18 +88,38 @@ class tnbcGCN:
 			self.logger.log({'GCN Epoch Loss': loss.item()})
 
 	def predict(self, X, graphs):
+		"""
+		Predicts class labels using the trained GCN model.
+
+		Args:
+			X (list): List of gene expression data for each sample.
+			graphs (list): List of spatial adjacency matrices representing connections between samples.
+
+		Returns:
+			preds (np.array) : Array of predicted class labels (0 or 1) for each sample.
+		"""
 		self.model.eval()
 		dataset = self.to_pyg(X, graphs)
 		loader = DataLoader(dataset, batch_size=self.config['batch_size'], shuffle=False)
 		preds = np.array([])
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
-			pred_i = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
-			pred_i = (pred_i>0.5).astype(float)
-			preds = preds.concatenate(preds_i.cpu().numpy())
+			preds_i = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+			preds_i = (preds_i.squeeze().detach().cpu().numpy()>0.5).astype(float)
+			preds = np.concatenate([preds, preds_i])
 		return preds
 
 	def predict_proba(self, X, graphs):
+		"""
+		Predicts class probabilities using the trained GCN model.
+
+		Args:
+			X (list): List of gene expression data for each sample.
+			graphs (list): List of spatial adjacency matrices representing connections between samples.
+
+		Returns:
+			preds (np.array) : Array of predicted probability for each sample.
+		"""
 		self.model.eval()
 		dataset = self.to_pyg(X, graphs)
 		loader = DataLoader(dataset, batch_size=self.config['batch_size'], shuffle=False)
@@ -77,13 +127,23 @@ class tnbcGCN:
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
 			score = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
-			preds = score.cpu().numpy()
-			preds = preds.concatenate(preds_i)
+			preds_i = score.squeeze().detach().cpu().numpy()
+			preds = np.concatenate([preds, preds_i])
 
-			preds.append(torch.exp(score[preds]))
 		return preds
 
 	def to_pyg(self, X, graphs, labels=None):
+		"""
+			Converts input data (gene expression, graphs, and optional labels) into PyTorch Geometric Data objects.
+
+		Args:
+			X (list): List of gene expression data for each sample.
+			graphs (list): List of spatial adjacency matrices representing connections between samples.
+			labels (optional, list): List of labels (0 or 1) for each sample.
+
+		Returns:
+			dataset (list): List of PyTorch Geometric Data objects representing the samples.
+		"""
 		dataset = []
 		num_samples = len(X)
 		for i in range(num_samples):

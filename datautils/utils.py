@@ -5,6 +5,9 @@ import os
 import pickle
 from utils.utils import coords_to_graph
 from scipy.sparse import csr_matrix
+import squidpy as sq
+from collections import OrderedDict
+
 ##
 # Based On Giuseppe's Code
 
@@ -102,6 +105,17 @@ def quality_control(data, low_gene_active=0.2, high_gene_active=0.5, dna_quantil
 	return passed_qc
 
 def load_cell_data(datapath, filename_celldata, filename_biosamples):
+	"""
+	Loads cell data from CSV files and performs quality control if needed.
+
+	Args:
+		datapath (str): Path to the data directory.
+		filename_celldata (str): Name of the cell data CSV file.
+		filename_biosamples (str): Name of the biosamples CSV file.
+
+	Returns:
+		tuple: A tuple containing the loaded cell table and biosamples DataFrames.
+	"""
 	cell_table = pd.read_csv(f'{datapath}/{filename_celldata}.csv', sep=',')
 	if 'qc_pass' not in cell_table.columns:
 		qc_pass = quality_control(cell_data)
@@ -112,6 +126,16 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 	return cell_table, biosamples
 
 def celltable_to_anndata(cell_table, biosamples):
+	"""
+	Creates an AnnData object from cell data and merges metadata.
+
+	Args:
+		cell_table (pandas.DataFrame): Cell data DataFrame.
+		biosamples (pandas.DataFrame): Biosamples DataFrame.
+
+	Returns:
+		anndata.AnnData: An AnnData object containing the processed data.
+	"""
 	if 'cell_meta_cluster' in cell_table:
 		cell_table = cell_table[cell_table['cell_meta_cluster']!='Unassigned']
 	adata = sc.AnnData(cell_table.loc[:,cell_table.columns.isin(MARKERS)], obsm={"spatial": cell_table[['centroid-0', 'centroid-1']].values})
@@ -140,9 +164,19 @@ def celltable_to_anndata(cell_table, biosamples):
 	return adata  
 
 
-from collections import OrderedDict
-
 def filter_data(adata, qc_pass=False, use_core=True):
+	"""
+	Filters the AnnData object based on user-defined criteria.
+
+	Args:
+		adata (anndata.AnnData): The AnnData object containing the data.
+		qc_pass (bool, optional): If True, filter to include only high-quality cells based on the 'qc_pass' label. Defaults to False.
+		use_core (bool, optional): If True, filter to include only core biopsies based on the 'SAMPLE_TYPE_(CORE/RESECTION)' label. Defaults to True.
+
+	Returns:
+		anndata.AnnData: The filtered AnnData object.
+	"""
+
 	if use_core:
 		adata = adata[adata.obs['SAMPLE_TYPE_(CORE/RESECTION)']=='CORE']
 	if qc_pass:
@@ -180,7 +214,18 @@ def anndata_to_datatensor(adata):
 
 
 def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_thr=50):
-	import squidpy as sq
+	"""
+	Extracts features based on cell types and spatial relationships from an AnnData object.
+
+	Args:
+		adata (anndata.AnnData): AnnData object containing spatial transcriptomics data.
+		filename (str, optional): Filename to save processed data. Defaults to './data.pkl'.
+		cell_radius (int, optional): Radius for identifying spatial neighbors. Defaults to 20.
+		cell_n_thr (int, optional): Minimum number of cells for a cell type to be considered. Defaults to 50.
+
+	Returns:
+		tuple: A tuple containing expressions, enrichments, graphs, labels, and markers.
+	"""
 	acqns = adata.obs.acquisition_ID.unique()
 
 	pixies = np.array(adata.obs.Pixie.cat.categories)
@@ -227,6 +272,19 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 	return expressions, enrichments, graphs, labels, MARKERS
 
 def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./data.pkl'):
+	"""
+	Extracts features based on interactions between individual cells within each acquisition.
+
+	Args:
+		adata (anndata.AnnData): AnnData object containing spatial transcriptomics data.
+		min_cells (int, optional): Minimum number of cells required in an acquisition for processing. Defaults to 10.
+		gmethod (str, optional): Method for constructing the adjacency matrix (e.g., 'knn'). Defaults to 'knn'.
+		k (int, optional): Number of nearest neighbors for the kNN method. Defaults to 7.
+		filename (str, optional): Filename to save processed data. Defaults to './data.pkl'.
+
+	Returns:
+		tuple: A tuple containing expressions, graphs, labels, and markers.
+	"""
 	unique_acqns = adata.obs['acquisition_ID'].unique()
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}

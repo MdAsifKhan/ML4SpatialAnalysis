@@ -1,44 +1,48 @@
 model:
-  name: 'gcn'
+  name: 'gcn' # Name of the model (choices: gcn, logistic)
+  # Logistic regression hyperparameters 
   logisitic:
-    penalty: null
-    l1_ratio: 0.5
-    solver: 'lbfgs'
-    max_iter: 1000
-    tol: 0.00001
+    penalty: null     # L1 or L2 regularization penalty (None for no regularization)
+    l1_ratio: 0.5    # Ratio of L1 to L2 penalty (if penalty is not None)
+    solver: 'lbfgs'   # Optimization algorithm for logistic regression
+    max_iter: 1000   # Maximum number of iterations
+    tol: 0.00001     # Tolerance level for convergence
+  # GCN hyperparameters
   gcn:
-    lr: 0.001
-    nm_epochs: 20
-    device: 'mps'
-    hidden_dim: ???
-    input_dim: ???
-    batch_size: 16
+    lr: 0.001       # Learning rate
+    nm_epochs: 10    # Number of training epochs
+    device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
+    hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+    input_dim: ???  # Input feature dimensionality (needs to be specified)
+    batch_size: 32   # Batch size for training
 
-  testportion: 0.3
-  seed: 42
-  folds: 5
-  eval: 'split'
-  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'
-  gf_dim: 32
-  fcriterion: 'flatcelltype'
-  gcriterion: 'gcn'
+  # Data splitting parameters
+  testportion: 0.3  # Proportion of data used for testing
+  seed: 42           # Random seed for reproducibility
+  folds: 5           # Number of folds for cross-validation
+  eval: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
 
-# choices: null, laplacian_spectrum, heat_trace or gcn
+  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'  # Path to save model logs
+
+  # Graph construction parameters
+  gf_dim: 32      # Dimensionality of graph features
+  # Feature selection criteria
+  fcriterion: 'flatcelltype'  # Feature selection criterion for cell features ('flatcelltype' - flatten cell types)
+  gcriterion: 'gcn'           # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace or gcn)
   
-
+# Attribution parameters
 attribution:
-  filename: ???
-  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'
+  filename: ???  # Filename to save attribution scores (needs to be specified)
+  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'  # Path to load the model for attribution
 
+
+# Dataset parameters
 dataset:
-  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'
-  cell_filename: 'cell_table_size_normalized_cell_labels'
-  response_filename: 'processed_response'
-  gtype: 'cellcell'
-# cellcell, celltype
-  cell_radius: 20
-  cell_n_thr: 7
-  k: 7
-# knn parameter  
-  gmethod: 'knn'
-# knn, radius  
+  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
+  cell_filename: 'cell_table_size_normalized_cell_labels'  # Filename containing cell table data
+  response_filename: 'processed_response'  # Filename containing response labels
+  gtype: 'cellcell'  # Type of graph to construct ('cellcell' or 'celltype')
+  cell_radius: 20    # Radius for neighborhood definition (used for 'celltype' graphs)
+  cell_n_thr: 7      # Minimum number of cells per cell type (used for 'celltype' graphs)
+  k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' method)
+  gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' or 'radius')
