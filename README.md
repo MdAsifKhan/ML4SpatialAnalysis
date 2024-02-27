@@ -8,7 +8,7 @@ This repository implements machine learning (ML) models in the context of spatia
 1. **Create a Conda Environment:**
 
 ```bash
-conda create --name ML4SpatialAnalysis --file requirements.txt
+conda env create -f requirements.yaml
 ```
 
 ## Running the Code
