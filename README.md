@@ -1,4 +1,4 @@
-# ML4SpatialAnalysis: A Framework for Machine Learning to do Spatial Analysis of Single Cell TNBC Data
+# ML4SpatialAnalysis: A FMachine Learning Framework to do Spatial Analysis of Single Cell TNBC Data
 
 This repository implements machine learning (ML) models in the context of spatial single-cell data analysis. It streamlines the entire process, from data preparation and model training to evaluation and interpretability.
 
