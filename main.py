@@ -52,7 +52,7 @@ def run(config):
 	# Train the model and get evaluation metrics
 	model.optimise(data, config['dataset']['gtype'])
 	
-	#model.log_coefficients(logger)
+	model.log_coefficients(logger)
 
 	# Log features as a table (commented out, uncomment if needed)
 	# log_features(features, labels, logger)

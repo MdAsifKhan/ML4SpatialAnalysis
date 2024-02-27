@@ -3,8 +3,9 @@ import pickle
 from utils.utils import compute_scores_train, compute_scores_test
 import numpy as np
 from utils.utils import graph_feature_vector, coords_to_graph, train_test_split, k_fold_split
-from .factory import tnbcGCN
+from .factory import GraphConvolutionalNetwork
 import wandb
+import pandas as pd
 
 class ModelTrainer:
 	"""
@@ -47,8 +48,8 @@ class ModelTrainer:
 		elif self.config['name'] == 'gcn':
 			self.config['gcn']['input_dim'] = self.config['feature_dim']
 			self.config['gcn']['hidden_dim'] = self.config['feature_dim']
-			self.classifier = tnbcGCN(self.config['gcn'],
-										logger=self.logger)
+			self.classifier = GraphConvolutionalNetwork(self.config['gcn'],
+														logger=self.logger)
 			pass
 		else:
 			assert 0,f"Classifer {self.config['name']} is not implemented"
@@ -184,18 +185,19 @@ class ModelTrainer:
 		"""
 		self.feature_names = data['markers']
 		if gtype == 'cellcell':
-			e_features = self.cellcell_to_featurisation(data['expressions'])
+			X = self.cellcell_to_featurisation(data['expressions'])
 		elif gtype == 'celltype':
-			e_features = self.celltype_featurisation(data['expressions'])
+			X = self.celltype_featurisation(data['expressions'])
 		else:
 			assert 0, f"{self.config['gtype']} Expression Features are invalid"
 
 		if self.config['gcriterion'] in ['laplacian_spectrum', 'heat_trace']:
 			print(f"Computing Graph Features criterion {self.config['gcriterion']}")
 			graph_features = self.graph_features(data['graphs'])
-			X = np.concatenate([e_features, graph_features], axis=1)
+			X = np.concatenate([X, graph_features], axis=1)
 			self.feature_names += [f"Graphcoeff_{i}" for i in range(graph_features.shape[1])] 
-		return X, data['labels']
+
+		return X
 
 	def graph_features(self, graphs):
 		"""

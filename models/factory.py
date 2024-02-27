@@ -34,7 +34,7 @@ class GCN(nn.Module):
 		return F.sigmoid(self.clf(x))
 
 
-class tnbcGCN:
+class GraphConvolutionalNetwork:
 	"""
 	Class for training GCN models on TNBC (Triple-Negative Breast Cancer) expression and spatial data.
 
