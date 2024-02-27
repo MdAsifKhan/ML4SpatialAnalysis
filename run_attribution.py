@@ -20,12 +20,14 @@ def attribution(config):
 
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname, resume=True)
 	print('Preparing Features')
-	dataloader = SpatialCellToFeatures(config['dataset'])
-	labels = dataloader.label_vec
+	dataset = SpatialCellToFeatures(config['dataset'])
 
 	print('Configuring models')
 	explainer = ModelAttribution(config['attribution'])
 	explainer.log_coefficients(logname)
+
+	X = explainer.featurisation(dataset.data)
+	explainer.log_shap_scores(X)
 	wandb.finish()
 
 if __name__ == '__main__':
