@@ -32,12 +32,12 @@ class SpatialCellToFeatures:
 			filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}_cellr{self.config['cell_radius']}_cellt{self.config['cell_n_thr']}.pkl"
 
 		if os.path.exists(f"{filename}"):		
-			self.expressions, self.enrichments, self.graphs, self.labels, self.feature_names = self.load_data(filename)
+			self.data = self.load_data(filename)
 		else:
-			self.expressions, self.enrichments, self.graphs, self.labels, self.feature_names = self.prepare_data(filename)
+			self.data = self.prepare_data(filename)
 
-		unique_labels = {el:i for i, el in enumerate(list(set(self.labels)))}
-		self.label_vec = np.asarray([unique_labels[label] for label in self.labels])
+		self.unique_labels = {el:i for i, el in enumerate(list(set(self.data['labels'])))}
+		self.data['labels'] = np.asarray([self.unique_labels[label] for label in self.data['labels']])
 
 
 	def load_data(self, filename):
@@ -48,12 +48,12 @@ class SpatialCellToFeatures:
 			filename (str): Path to the pickle file containing the data.
 
 		Returns:
-			tuple: A tuple containing expressions, enrichments (optional), graphs (optional), labels, and feature names.
+			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
 		print('Loading Expression Data From File')
 		with open(filename, 'rb') as f:
-			dataset = pickle.load(f)
-			return dataset['expressions'], dataset['enrichments'], dataset['graphs'], dataset['labels'], dataset['markers']
+			data = pickle.load(f)
+			return data
 
 	def prepare_data(self, filename):
 		"""
@@ -63,7 +63,7 @@ class SpatialCellToFeatures:
 			filename (str): Path to the pickle file where the processed data will be saved.
 
 		Returns:
-			tuple: A tuple containing expressions, enrichments (optional), graphs (optional), labels, and feature names.
+			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
 		print('Preparing Expression Data From Cell Table')
 		cell_table, biosamples = load_cell_data(self.config['DATA_PATH'],
@@ -72,18 +72,18 @@ class SpatialCellToFeatures:
 
 		adata = celltable_to_anndata(cell_table, biosamples)
 		if self.config['gtype'] == 'cellcell':
-			expressions, graphs, labels, markers = cellcell_to_features(adata, 
-															gmethod=self.config['gmethod'], 
-															k=self.config['k'],
-															filename=filename)
-			enrichments = None
-			return expressions, enrichments, graphs, labels, markers
+			data = cellcell_to_features(adata, 
+											gmethod=self.config['gmethod'], 
+											k=self.config['k'],
+											filename=filename)
+
+			return dataset
 		if self.config['gtype'] == 'celltype':
-			expressions, enrichments, graphs, labels, markers = celltype_to_features(adata, 
+			data = celltype_to_features(adata, 
 												cell_radius=self.config['cell_radius'],
 												cell_n_thr=self.config['cell_n_thr'],
 												filename=filename)
-			return expressions, enrichments, graphs, labels, markers
+			return data
 		else:
 			assert 0, f"{self.config['gtype']} Not Implemented"	
 

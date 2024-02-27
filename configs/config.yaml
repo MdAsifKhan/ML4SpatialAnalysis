@@ -1,5 +1,6 @@
 model:
   name: 'gcn' # Name of the model (choices: gcn, logistic)
+  feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
   logisitic:
     penalty: null     # L1 or L2 regularization penalty (None for no regularization)
@@ -9,15 +10,15 @@ model:
     tol: 0.00001     # Tolerance level for convergence
   # GCN hyperparameters
   gcn:
-    lr: 0.001       # Learning rate
-    nm_epochs: 10    # Number of training epochs
+    lr: 0.01       # Learning rate
+    nm_epochs: 100    # Number of training epochs
     device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
     hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
     input_dim: ???  # Input feature dimensionality (needs to be specified)
-    batch_size: 32   # Batch size for training
+    batch_size: 64   # Batch size for training
 
   # Data splitting parameters
-  testportion: 0.3  # Proportion of data used for testing
+  test_ratio: 0.3  # Proportion of data used for testing
   seed: 42           # Random seed for reproducibility
   folds: 5           # Number of folds for cross-validation
   eval: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)

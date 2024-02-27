@@ -18,13 +18,6 @@ MARKERS = ['Alpha-SMA', 'B7-H4', 'Beta-Catenin', 'CD107a', 'CD11b', 'CD14', 'CD1
 			'Ki-67', 'PD-1', 'PD-L1', 'PD-L2', 'Pan-keratin', 'Tbet', 'VEGF', 
 			'Vimentin', 'p53']
 
-# MARKERS = ['CD38', 'CD14', 'Tbet', 'CD16', 'CD163',
-# 			'Pan-keratin', 'CD11b', 'CD107a', 'CD45', 'CD44', 'CD366',
-# 			'FOXP3', 'CD4', 'E-Cadherin', 'CD68', 'HLA-DR-DQ-DP', 'CD20',
-# 			'CD8a', 'Beta-Catenin', 'B7-H4', 'Granzyme-B',
-# 			'CD3', 'CD27', 'CD45RO',
-# 			'Alpha-SMA', 'Vimentin', 'CD31' ]
-
 def binarise(data, thr):
 	"""
 	Binarise the data to 0/1
@@ -260,8 +253,8 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 			assert 0, f"Acquistion {idx} has non unique labels"
 		labels.append(label.pop())
 	dataset = { 
-				'enrichments': enrichments,
 				'expressions': expressions,
+				'enrichments': enrichments,
 				'graphs': graphs,
 				'labels': labels,
 				'markers': MARKERS
@@ -269,7 +262,7 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 
 	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
-	return expressions, enrichments, graphs, labels, MARKERS
+	return dataset
 
 def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./data.pkl'):
 	"""
@@ -311,5 +304,5 @@ def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./da
 
 	with open(f"{filename}", 'wb') as f:
 		pickle.dump(dataset, f)			
-	return expressions, graphs, labels, MARKERS
+	return dataset
 

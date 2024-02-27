@@ -5,6 +5,8 @@ import scipy.sparse as sp
 from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
 from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph
+import numpy as np
+
 
 def load_config(filename):
 	"""
@@ -166,3 +168,82 @@ def compute_scores_test(y, y_pred):
 			'F1 Score': f1_,
 	}
 	return metrics
+
+
+
+def train_test_split(dataset, test_size=0.2, random_state=None):
+	"""
+	Custom train-test split for a dictionary-like dataset.
+
+	Args:
+		dataset (dict): Dictionary where keys represent different data matrices or labels.
+		test_size (float): Ratio of the dataset to include in the test set.
+		random_state (int or None): Random seed for reproducibility.
+
+	Returns:
+		train_set (dict): Dictionary containing train split for each key.
+		test_set (dict): Dictionary containing test split for each key.
+	"""
+	np.random.seed(random_state)
+
+	nm_samples =  len(dataset['labels'])
+
+	test_size = int(test_size * nm_samples)
+	indices = np.random.permutation(nm_samples)
+
+	train_indices, test_indices = indices[test_size:], indices[:test_size]
+
+
+	train_set = {}
+	test_set = {}
+
+	for key, data in dataset.items():
+		if data is None:
+			train_set[key] = None
+			test_set[key] = None
+		elif key == 'markers':
+			train_set[key] = data
+			test_set[key] = data
+		else:
+			train_set[key] = [data[i] for i in train_indices]
+			test_set[key] = [data[i] for i in test_indices]
+	return train_set, test_set
+
+import numpy as np
+
+def k_fold_split(dataset, k=5, random_state=None):
+	"""
+	Custom k-fold split for a dictionary-like dataset.
+
+	Args:
+		dataset (dict): Dictionary where keys represent different data matrices or labels.
+		k (int): Number of folds.
+		random_state (int or None): Random seed for reproducibility.
+
+	Returns:
+		fold_sets (list): List of k fold sets, where each fold set is a tuple containing train and test splits for each key.
+	"""
+	np.random.seed(random_state)
+	num_samples = len(dataset['labels'])
+	indices = np.random.permutation(num_samples)
+
+	fold_indices = np.array_split(indices, k)
+
+	fold_sets = []
+	for fold_idx in range(k):
+		test_indices = fold_indices[fold_idx]
+		train_indices = np.concatenate([fold_indices[i] for i in range(k) if i != fold_idx])
+
+		train_set = {}
+		test_set = {}
+
+		for key, data in dataset.items():
+			if data is None:
+			    train_set[key] = None
+			    test_set[key] = None
+			else:
+				train_set[key] = [data[i] for i in train_indices]
+				test_set[key] = [data[i] for i in test_indices]
+
+	fold_sets.append((train_set, test_set))
+	return fold_sets

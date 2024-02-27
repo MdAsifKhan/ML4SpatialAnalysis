@@ -40,19 +40,17 @@ def run(config):
 	# Initialize W&B logger with project name, entity, configuration, and log name
 	logger = wandb.init(entity="tnbcspatialcell", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
-	dataloader = SpatialCellToFeatures(config['dataset'])
-	labels = dataloader.label_vec
-	features = dataloader.expressions
-
+	dataset = SpatialCellToFeatures(config['dataset'])
+	data = dataset.data
+	config['model']['feature_dim'] = len(data['markers'])
 	print('Configuring models')
 	# Configure the model trainer
 	model = ModelTrainer(config['model'], 
-									logger=logger,
-									feature_names=dataloader.feature_names,
-									logfile=logname)
+							logger=logger,
+							logfile=logname)
 	
 	# Train the model and get evaluation metrics
-	model.optimise(features, labels, dataloader.graphs, config['dataset']['gtype'])
+	model.optimise(data, config['dataset']['gtype'])
 	
 	#model.log_coefficients(logger)
 
