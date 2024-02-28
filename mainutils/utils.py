@@ -1,12 +1,11 @@
 import yaml
 import numpy as np
 import scipy.sparse as sp
-
 from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
 from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph
 import numpy as np
-
+import networkx as nx
 
 def load_config(filename):
 	"""
@@ -94,22 +93,39 @@ def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
 		k = min(feature_dim, num_nodes-1)
 		eivals, _ = eigs(laplacian, k=k, which='SM')
 
+		feature_names = []
 		# Compute heat trace at different timescales
 		for t, timescale in enumerate(timescales):
 			feature_vector[t] = np.sum(np.exp(-timescale * eivals.real))
+			feature_names.append(f"_HeatTrace_{timescale:.3f}")
+
 	elif gcriterion == 'laplacian_spectrum':
 		# Compute normalized Laplacian matrix
 		laplacian = adjacency_to_laplacian(graph)
 		k = min(feature_dim, num_nodes-1)
 		eivals = sp.linalg.svds(laplacian, k=k, return_singular_vectors=False)
 		feature_vector = np.zeros(feature_dim)
-
 		if len(eivals)>1:
 			feature_vector[-k:] = sorted(eivals)
+		feature_names = [f"_eigen_{i}" for i in range(feature_dim)]
+
+	elif gcriterion == 'graphproperties':
+		num_edges = graph.getnnz() / 2.0  # Divide by 2 since the matrix is symmetric
+		num_nodes = graph.shape[0]
+		density = num_edges / (num_nodes * (num_nodes - 1) / 2)  # Complete graph denominator
+
+		average_degree = np.mean(np.sum(graph != 0, axis=0))
+		graphnx = nx.from_numpy_array(graph.toarray())
+		clustering_coefficient = nx.average_clustering(graphnx)
+		avg_path = nx.average_shortest_path_length(graphnx)
+		#connectivity = 1.0 if nx.is_connected(graphnx) else 0.0
+
+		feature_vector = np.array([num_nodes, num_edges, density, clustering_coefficient, average_degree])
+		feature_names = ['_num_nodes', '_num_edges', '_density', '_clustcoeff', '_avgdegree']
 	else:
 		assert 0, f" {gcriterion} Not implemented. Valid options are `degree`, or `heat_trace`."
 
-	return feature_vector
+	return feature_vector, feature_names
 
 
 from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
@@ -188,11 +204,17 @@ def train_test_split(dataset, test_size=0.2, random_state=None):
 
 	nm_samples =  len(dataset['labels'])
 
-	test_size = int(test_size * nm_samples)
-	indices = np.random.permutation(nm_samples)
+	patient_ids = dataset['patient']
+	unique_patient_ids = np.unique(patient_ids)
+	test_size = int(test_size * len(unique_patient_ids))
 
-	train_indices, test_indices = indices[test_size:], indices[:test_size]
+	indices = np.random.permutation(unique_patient_ids)
 
+	train_patient_ids = unique_patient_ids[test_size:]
+	test_patient_ids = unique_patient_ids[:test_size]
+
+	train_indices = [i for i, patient in enumerate(patient_ids) if patient in train_patient_ids]
+	test_indices = [i for i, patient in enumerate(patient_ids) if patient in test_patient_ids]
 
 	train_set = {}
 	test_set = {}
@@ -225,25 +247,31 @@ def k_fold_split(dataset, k=5, random_state=None):
 	"""
 	np.random.seed(random_state)
 	num_samples = len(dataset['labels'])
-	indices = np.random.permutation(num_samples)
+	unique_ids, inverse_indices = np.unique(np.array(dataset['patient']), return_inverse=True)
 
-	fold_indices = np.array_split(indices, k)
+	fold_indices = np.array_split(np.random.permutation(len(unique_ids)), k)
 
 	fold_sets = []
 	for fold_idx in range(k):
-		test_indices = fold_indices[fold_idx]
-		train_indices = np.concatenate([fold_indices[i] for i in range(k) if i != fold_idx])
+		test_unique_ids = unique_ids[fold_indices[fold_idx]]
+		train_unique_ids = unique_ids[np.concatenate([fold_indices[i] for i in range(k) if i != fold_idx])]
+
+		test_indices = np.where(np.isin(dataset['patient'], test_unique_ids))[0]
+		train_indices = np.where(np.isin(dataset['patient'], train_unique_ids))[0]
 
 		train_set = {}
 		test_set = {}
 
 		for key, data in dataset.items():
 			if data is None:
-			    train_set[key] = None
-			    test_set[key] = None
+				train_set[key] = None
+				test_set[key] = None
+			elif key == 'markers':
+				train_set[key] = data
+				test_set[key] = data
 			else:
 				train_set[key] = [data[i] for i in train_indices]
 				test_set[key] = [data[i] for i in test_indices]
 
-	fold_sets.append((train_set, test_set))
+		fold_sets.append((train_set, test_set))
 	return fold_sets
