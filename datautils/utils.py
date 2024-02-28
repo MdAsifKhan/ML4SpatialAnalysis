@@ -3,7 +3,7 @@ import pandas as pd
 import scanpy as sc
 import os
 import pickle
-from utils.utils import coords_to_graph
+from mainutils.utils import coords_to_graph
 from scipy.sparse import csr_matrix
 import squidpy as sq
 from collections import OrderedDict
@@ -219,17 +219,19 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 	Returns:
 		tuple: A tuple containing expressions, enrichments, graphs, labels, and markers.
 	"""
-	acqns = adata.obs.acquisition_ID.unique()
+	unique_acqns = adata.obs.acquisition_ID.unique()
+	unique_leaps = list(set([acqn.split('_')[0] for acqn in unique_acqns]))
+	leap_to_patient = {leap: f"patient_{i+1}" for i, leap in enumerate(unique_leaps)}
 
 	pixies = np.array(adata.obs.Pixie.cat.categories)
 	expression = pd.DataFrame(np.zeros((len(pixies), len(MARKERS))), index=pixies, columns=MARKERS)
 
-	enrichments, expressions, graphs, labels = [], [], [], []
-	for idx in acqns:
-		sub_adata = adata[adata.obs.acquisition_ID==idx]
+	enrichments, expressions, graphs, labels, patient_id = [], [], [], [], []
+	for acqn in unique_acqns:
+		sub_adata = adata[adata.obs.acquisition_ID==acqn]
 		celltypes = sub_adata.obs.Pixie.value_counts()[sub_adata.obs.Pixie.value_counts()>cell_n_thr].index.values
 
-		sq.gr.spatial_neighbors(sub_adata,coord_type='grid',n_neighs=6,radius = (0,cell_radius))
+		sq.gr.spatial_neighbors(sub_adata,coord_type='grid',n_neighs=cell_radius,radius = (0,cell_radius))
 		sq.gr.nhood_enrichment(sub_adata, cluster_key='Pixie')
 		sq.gr.interaction_matrix(sub_adata, cluster_key='Pixie')
 
@@ -242,7 +244,6 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 		contact = sub_adata.uns['Pixie_interactions']/sub_adata.uns['Pixie_interactions'].sum()
 		contact = pd.DataFrame(contact,index=a,columns=a)
 		contact = contact.loc[celltypes, celltypes]
-
 		graphs.append(csr_matrix(contact))
 		label = set(sub_adata.obs.Response.values)
 		expression.loc[a,:] = np.array([sub_adata[loc].X.mean(0) for _,loc in sub_adata.obs.groupby(['Pixie']).groups.items()])
@@ -250,14 +251,16 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 		expressions.append(expression)
 		expression = pd.DataFrame(np.zeros((len(pixies), len(MARKERS))), index=pixies, columns=MARKERS)
 		if len(label) != 1:
-			assert 0, f"Acquistion {idx} has non unique labels"
+			assert 0, f"Acquistion {acqn} has non unique response labels"
 		labels.append(label.pop())
+		patient_id.append(leap_to_patient[acqn.split('_')[0]])
 	dataset = { 
 				'expressions': expressions,
 				'enrichments': enrichments,
 				'graphs': graphs,
 				'labels': labels,
-				'markers': MARKERS
+				'markers': MARKERS,
+				'patient': patient_id
 		}
 
 	with open(f"{filename}", 'wb') as f:
@@ -279,9 +282,13 @@ def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./da
 		tuple: A tuple containing expressions, graphs, labels, and markers.
 	"""
 	unique_acqns = adata.obs['acquisition_ID'].unique()
+	unique_leaps = list(set([acqn.split('_')[0] for acqn in unique_acqns]))
+	leap_to_patient = {leap: f"patient_{i+1}" for i, leap in enumerate(unique_leaps)}
+
 	celltype_idx = {celltype:j for j, celltype in enumerate(adata.obs['Pixie'].unique())}
 	acqn_idx = {acqid: i for i, acqid in enumerate(adata.obs['acquisition_ID'].unique())}
-	expressions, graphs, labels = [], [], []
+
+	expressions, graphs, labels, patient_id = [], [], [], []
 	for acq in unique_acqns:
 		sub_adata = adata[adata.obs.acquisition_ID==acq]
 		coords = sub_adata.obsm['spatial']
@@ -294,12 +301,14 @@ def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./da
 		if len(label) != 1:
 			assert 0, f"Acquistion {idx} has non unique labels"
 		labels.append(label.pop())
+		patient_id.append(leap_to_patient[acq.split('_')[0]])
 	dataset = {
 				'expressions': expressions,
 				'graphs': graphs,
 				'labels': labels,
 				'enrichments': None,
-				'markers': MARKERS
+				'markers': MARKERS,
+				'patient': patient_id
 		}
 
 	with open(f"{filename}", 'wb') as f:

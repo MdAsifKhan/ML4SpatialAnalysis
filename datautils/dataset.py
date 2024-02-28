@@ -36,7 +36,7 @@ class SpatialCellToFeatures:
 		else:
 			self.data = self.prepare_data(filename)
 
-		self.unique_labels = {el:i for i, el in enumerate(list(set(self.data['labels'])))}
+		self.unique_labels = {'pCR': 1, 'Non-Responder': 0}
 		self.data['labels'] = np.asarray([self.unique_labels[label] for label in self.data['labels']])
 
 
@@ -77,12 +77,12 @@ class SpatialCellToFeatures:
 											k=self.config['k'],
 											filename=filename)
 
-			return dataset
+			return data
 		if self.config['gtype'] == 'celltype':
 			data = celltype_to_features(adata, 
-												cell_radius=self.config['cell_radius'],
-												cell_n_thr=self.config['cell_n_thr'],
-												filename=filename)
+											cell_radius=self.config['cell_radius'],
+											cell_n_thr=self.config['cell_n_thr'],
+											filename=filename)
 			return data
 		else:
 			assert 0, f"{self.config['gtype']} Not Implemented"	
