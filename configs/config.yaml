@@ -1,7 +1,8 @@
 model:
-  name: 'gcn' # Name of the model (choices: gcn, logistic)
+  name: 'logistic' # Name of the model (choices: gcn, logistic)
   feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
+  normalise_features: True
   logisitic:
     penalty: null     # L1 or L2 regularization penalty (None for no regularization)
     l1_ratio: 0.5    # Ratio of L1 to L2 penalty (if penalty is not None)
@@ -28,8 +29,8 @@ model:
   # Graph construction parameters
   gf_dim: 32      # Dimensionality of graph features
   # Feature selection criteria
-  fcriterion: 'flatcelltype'  # Feature selection criterion for cell features ('flatcelltype' - flatten cell types)
-  gcriterion: 'gcn'           # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace or gcn)
+  fcriterion: 'avgcelltype'  # Feature selection criterion for cell features ('flatcelltype' - flatten cell types)
+  gcriterion: 'heat_trace'           # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace or gcn)
   
 # Attribution parameters
 attribution:
