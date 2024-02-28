@@ -1,9 +1,11 @@
-from sklearn.linear_model import LogisticRegression
+
 import pickle
-from utils.utils import compute_scores_train, compute_scores_test
 import numpy as np
-from utils.utils import graph_feature_vector, coords_to_graph, train_test_split, k_fold_split
+from mainutils.utils import compute_scores_train, compute_scores_test
+from mainutils.utils import graph_feature_vector, coords_to_graph, train_test_split, k_fold_split
 from .factory import GraphConvolutionalNetwork
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 import wandb
 import pandas as pd
 
@@ -32,6 +34,7 @@ class ModelTrainer:
 
 		self.config = config
 		self.feature_names = None
+		self.scaler = None
 		self.logfile = logfile
 		self.logger = logger
 
@@ -64,13 +67,13 @@ class ModelTrainer:
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
 			gtype (str, optional): Type of graph (cellcell or celltype). Defaults to None.
 		"""
-		data_train, data_test = train_test_split(data, 
-												test_size=self.config['test_ratio'], 
-												random_state=self.config['seed'])
-
-		print(f"Fitting Model with {self.config['eval']} training")
 
 		if self.config['eval'] == 'split':
+			print(f"Fitting Model with {self.config['eval']} training")
+
+			data_train, data_test = train_test_split(data, 
+													test_size=self.config['test_ratio'], 
+													random_state=self.config['seed'])
 			print(f"Fitting the {self.config['name']} Model")
 			self.fit(data_train)
 			y_pred_train = self.predict(data_train)
@@ -134,6 +137,10 @@ class ModelTrainer:
 			return
 		if self.config['name'] == 'logistic':
 			X = self.featurisation(data)
+			if self.config['normalise_features']:
+				self.scaler = StandardScaler()
+				self.scaler.fit(X)
+				X = self.scaler.transform(X)
 			self.classifier.fit(X, data['labels'])
 			return 
 
@@ -152,6 +159,8 @@ class ModelTrainer:
 			return self.classifier.predict(data)
 		if self.config['name'] == 'logistic':
 			X = self.featurisation(data)
+			if self.config['normalise_features']:
+				X = self.scaler.transform(X)
 			return self.classifier.predict(X)
 
 	def predict_proba(self, data):
@@ -169,6 +178,8 @@ class ModelTrainer:
 			return self.classifier.predict_proba(data)
 		if self.config['name'] == 'logistic':
 			X = self.featurisation(data)
+			if self.config['normalise_features']:
+				X = self.scaler.transform(X)
 			return self.classifier.predict_proba(X)
 
 	def featurisation(self, data, gtype='cellcell'):
@@ -191,12 +202,11 @@ class ModelTrainer:
 		else:
 			assert 0, f"{self.config['gtype']} Expression Features are invalid"
 
-		if self.config['gcriterion'] in ['laplacian_spectrum', 'heat_trace']:
+		if self.config['gcriterion'] in ['laplacian_spectrum', 'heat_trace', 'graphproperties']:
 			print(f"Computing Graph Features criterion {self.config['gcriterion']}")
-			graph_features = self.graph_features(data['graphs'])
+			graph_features, gfname = self.graph_features(data['graphs'])
 			X = np.concatenate([X, graph_features], axis=1)
-			self.feature_names += [f"Graphcoeff_{i}" for i in range(graph_features.shape[1])] 
-
+			self.feature_names += gfname
 		return X
 
 	def graph_features(self, graphs):
@@ -209,8 +219,11 @@ class ModelTrainer:
 		Returns:
 			np.ndarray: Array containing the computed graph features.
 		"""
-		gfeature = [graph_feature_vector(graph, self.config['gcriterion'], self.config['gf_dim']) for graph in graphs]
-		return np.array(gfeature)
+		gfeature_all = []
+		for graph in graphs:
+			gfeature, gfname = graph_feature_vector(graph, self.config['gcriterion'], self.config['gf_dim']) 
+			gfeature_all.append(gfeature)
+		return np.array(gfeature_all), gfname
 
 
 	def celltype_featurisation(self, X):
@@ -255,12 +268,15 @@ class ModelTrainer:
 		"""
 		if self.config['name'] == 'logistic':
 			coefficients = self.classifier.coef_.flatten()
-			coefficients_df = pd.DataFrame({'Feature': self.feature_names, 'Coefficient': coefficients})
-			logger.log({"Logistic Regression Coefficients": wandb.Table(dataframe=coefficients_df)})
-			fields = {'x': 'Features', 'value': 'Coefficients'}
-			logger.plot_table(data_table=table, fields=fields)
+			sorted_indices = np.argsort(coefficients)
+			coefficients_df = pd.DataFrame({'Feature': np.array(self.feature_names)[sorted_indices], 'Coefficient': coefficients[sorted_indices]})
+			table = wandb.Table(dataframe=coefficients_df)
+			logger.log({'Logistic Regression Coefficients': table})
+			# fields = {'x': 'Features', 'value': 'Coefficients'}
+			# logger.plot_table(data_table=table, fields=fields, vega_spec_name="coefficients of logistic")
 		else:
 			assert 0,f"Attribution Not implemented for {self.config['name']}"
+
 
 	def log_metrics(self, metrics):
 		"""
@@ -274,7 +290,7 @@ class ModelTrainer:
 					'Metrics': 
 							wandb.Table(
 									data=metrics_table, 
-								columns=["Metric", "Value"])
+								columns=['Metric', 'Value'])
 					})
 
 	def save_model(self, fold=None):
@@ -291,7 +307,8 @@ class ModelTrainer:
 		filename = f"{self.config['MODEL_PATH']}/{name}_{self.logfile}.pkl"
 		out = {
 				'model': self.classifier,
-				'feature_names': self.feature_names
+				'feature_names': self.feature_names,
+				'scaler': self.scaler
 				}
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
@@ -312,3 +329,5 @@ class ModelTrainer:
 			load = pickle.load(f)
 			self.classifier = load['model']
 			self.feature_names = load['feature_names']
+			self.scaler = load['scaler']
+

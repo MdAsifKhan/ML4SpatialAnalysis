@@ -1,22 +1,22 @@
 import argparse
-from utils.utils import load_config
+import pandas as pd
+import numpy as np
+import wandb
+from mainutils.utils import load_config
 from models.trainer import ModelTrainer
 from datautils.dataset import SpatialCellToFeatures
-import pdb
-import wandb
 
-
-def log_features(X, y, logger):
+def log_features(features, labels, logger):
 	"""
 	Logs features and labels as a table in W&B for better visualization.
 
 	Args:
-		X (np.array): Array of features.
-		y (np.array): Array of labels.
+		features (np.array): Array of features.
+		labels (np.array): Array of labels.
 		logger (wandb.Logger): W&B logger object.
 	"""
-	columns = [f"Feature_{i}" for i in range(X.shape[1])] + ["Label"]
-	df = pd.DataFrame(np.column_stack((X, y)), columns=columns)
+	columns = [f"Feature_{i}" for i in range(features.shape[1])] + ["Label"]
+	df = pd.DataFrame(np.column_stack((features, labels)), columns=columns)
 	logger.log({"Feature_Matrix": wandb.Table(dataframe=df)})
 
 
@@ -41,6 +41,8 @@ def run(config):
 	logger = wandb.init(entity="tnbcspatialcell", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'])
+	print('Feature Class Labels')
+	print(dataset.unique_labels)
 	data = dataset.data
 	config['model']['feature_dim'] = len(data['markers'])
 	print('Configuring models')
@@ -64,5 +66,5 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--config', type=str, default='configs/config.yaml', help='Configuration file')
 	args = parser.parse_args()
-	config = load_config(args.config)
-	run(config)
+	config_file = load_config(args.config)
+	run(config_file)
