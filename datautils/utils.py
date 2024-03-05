@@ -11,9 +11,16 @@ from collections import OrderedDict
 ##
 # Based On Giuseppe's Code
 
+# MARKERS = ['Alpha-SMA', 'B7-H4', 'Beta-Catenin', 'CD107a', 'CD11b', 'CD14', 'CD16', 
+# 			'CD163', 'CD20', 'CD27', 'CD3', 'CD31', 'CD366', 'CD38', 'CD4', 'CD44', 
+# 			'CD45', 'CD45RO', 'CD68', 'CD8a', 'Carboplatin', 'Collage-Type_I', 
+# 			'DNA1', 'DNA2', 'E-Cadherin', 'EGFR', 'FOXP3', 'Granzyme-B', 'HLA-DR-DQ-DP', 
+# 			'Ki-67', 'PD-1', 'PD-L1', 'PD-L2', 'Pan-keratin', 'Tbet', 'VEGF', 
+# 			'Vimentin', 'p53']
+
 MARKERS = ['Alpha-SMA', 'B7-H4', 'Beta-Catenin', 'CD107a', 'CD11b', 'CD14', 'CD16', 
 			'CD163', 'CD20', 'CD27', 'CD3', 'CD31', 'CD366', 'CD38', 'CD4', 'CD44', 
-			'CD45', 'CD45RO', 'CD68', 'CD8a', 'Carboplatin', 'Collage-Type_I', 
+			'CD45', 'CD45RO', 'CD68', 'CD8a', 'Collage-Type_I', 
 			'DNA1', 'DNA2', 'E-Cadherin', 'EGFR', 'FOXP3', 'Granzyme-B', 'HLA-DR-DQ-DP', 
 			'Ki-67', 'PD-1', 'PD-L1', 'PD-L2', 'Pan-keratin', 'Tbet', 'VEGF', 
 			'Vimentin', 'p53']
@@ -217,7 +224,7 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 		cell_n_thr (int, optional): Minimum number of cells for a cell type to be considered. Defaults to 50.
 
 	Returns:
-		tuple: A tuple containing expressions, enrichments, graphs, labels, and markers.
+		dict: A dict containing expressions, enrichments, graphs, labels, and markers.
 	"""
 	unique_acqns = adata.obs.acquisition_ID.unique()
 	unique_leaps = list(set([acqn.split('_')[0] for acqn in unique_acqns]))
@@ -260,7 +267,8 @@ def celltype_to_features(adata, filename='./data.pkl', cell_radius=20, cell_n_th
 				'graphs': graphs,
 				'labels': labels,
 				'markers': MARKERS,
-				'patient': patient_id
+				'patient': patient_id,
+				'celltypes': pixies
 		}
 
 	with open(f"{filename}", 'wb') as f:
@@ -279,7 +287,7 @@ def cellcell_to_features(adata, min_cells=10, gmethod='knn', k=7, filename='./da
 		filename (str, optional): Filename to save processed data. Defaults to './data.pkl'.
 
 	Returns:
-		tuple: A tuple containing expressions, graphs, labels, and markers.
+		dict: A dict containing expressions, graphs, labels, and markers.
 	"""
 	unique_acqns = adata.obs['acquisition_ID'].unique()
 	unique_leaps = list(set([acqn.split('_')[0] for acqn in unique_acqns]))
