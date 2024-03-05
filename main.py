@@ -45,6 +45,7 @@ def run(config):
 	print(dataset.unique_labels)
 	data = dataset.data
 	config['model']['feature_dim'] = len(data['markers'])
+	config['model']['gtype'] = config['dataset']['gtype']
 	print('Configuring models')
 	# Configure the model trainer
 	model = ModelTrainer(config['model'], 
@@ -52,9 +53,9 @@ def run(config):
 							logfile=logname)
 	
 	# Train the model and get evaluation metrics
-	model.optimise(data, config['dataset']['gtype'])
+	model.optimise(data)
 	
-	model.log_coefficients(logger)
+	#model.log_coefficients(logger)
 
 	# Log features as a table (commented out, uncomment if needed)
 	# log_features(features, labels, logger)

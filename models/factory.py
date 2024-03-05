@@ -7,6 +7,7 @@ from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
 import numpy as np
 import pdb
+import wandb
 
 class GCN(nn.Module):
 	"""
@@ -23,13 +24,13 @@ class GCN(nn.Module):
 					nm_class):
 		super(GCN, self).__init__()
 		self.conv1 = GCNConv(input_dim, hidden_dim)
-		self.conv2 = GCNConv(hidden_dim, hidden_dim)
+		#self.conv2 = GCNConv(hidden_dim, hidden_dim)
 		self.clf = nn.Linear(hidden_dim, nm_class)
 
 	def forward(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
 		x = F.relu(x)
-		x = self.conv2(x, edge_index, edge_weight)
+		#x = self.conv2(x, edge_index, edge_weight)
 		x = global_mean_pool(x, batch)
 		return F.sigmoid(self.clf(x))
 
@@ -83,6 +84,7 @@ class GraphConvolutionalNetwork:
 				logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				y_batch = x_batch.y.unsqueeze(1)
 				loss = self.criterion(logits, y_batch)
+				loss.backward()
 				self.optim.step()
 				self.logger.log({'GCN Iteration Loss': loss.item()})
 				loss_epoch += loss.item()
@@ -130,10 +132,65 @@ class GraphConvolutionalNetwork:
 		preds = np.array([])
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
+			# x_batch
 			score = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 			preds_i = score.squeeze().detach().cpu().numpy()
 			preds = np.concatenate([preds, preds_i])
 		return preds
+
+	def attribution(self, data):
+		feature_names = data['markers']
+		import matplotlib.pyplot as plt
+		self.model.eval()
+		pyg_dataset = self.to_pyg(data)
+		loader = DataLoader(pyg_dataset, batch_size=1, shuffle=False)
+		avg_node_gradients = []
+		y_all = []
+		for i, x_batch in enumerate(loader):
+			x_batch = x_batch.to(self.device)
+			self.model.zero_grad()
+			x_batch.x.requires_grad = True
+			logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+			logits[0].backward()
+			y_all.append(x_batch.y)
+			node_gradients = x_batch.x.grad
+			avg_node_gradients.append(node_gradients.abs().mean(0))
+
+			plt.imshow(node_gradients.T.cpu().numpy(), cmap='hot', aspect='auto')
+			plt.xlabel('Node Index')
+			plt.ylabel('Attribute Index')
+			plt.yticks(ticks=range(len(feature_names)), labels=feature_names, fontsize=8)
+			#plt.xticks(range(len(feature_names)), feature_names, rotation=90)
+			plt.title('Gradient of Node Attributes with Respect to log prob of a responder')
+			plt.tight_layout() 
+			plt.colorbar(label='Gradient')
+			self.logger.log({f"Attribution GCN batch {i}": plt})
+			if i == 16:
+				break
+			plt.clf()
+		avg_node_gradients = torch.stack(avg_node_gradients).cpu().numpy()
+		y_all = torch.stack(y_all).cpu().squeeze().numpy().astype('int')
+
+		avg_node_gradients_resp = avg_node_gradients[y_all].mean(0)
+		avg_node_gradients_noresp = avg_node_gradients[1 - y_all].mean(0)
+
+		import pandas as pd
+		grad_df = pd.DataFrame({'Feature': np.array(feature_names), 
+									'Accumulated Gradients pCR': avg_node_gradients_resp, 
+									'Accumulated Gradients Non-Responder': avg_node_gradients_noresp
+								})
+		grad_df.set_index('Feature', inplace=True)
+		plt.figure(figsize=(10, 6))
+		grad_df.plot(kind='bar', rot=0)
+		table = wandb.Table(dataframe=grad_df)
+		plt.xlabel('Feature Name', fontsize=12)
+		plt.ylabel('Feature Value', fontsize=12)
+		plt.title('Comparison of Feature Values under Two Conditions', fontsize=14)
+		plt.legend(title='Conditions', fontsize=10)
+		plt.xticks(ticks=np.arange(len(feature_names)), labels=grad_df['Feature'], rotation=45)
+		plt.tight_layout()
+		self.logger.log({'Average gradients across cells': plt})
+
 
 	def to_pyg(self, data_dict):
 		"""

@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 import wandb
 import pandas as pd
+from torch_geometric.seed import seed_everything
 
 class ModelTrainer:
 	"""
@@ -51,13 +52,14 @@ class ModelTrainer:
 		elif self.config['name'] == 'gcn':
 			self.config['gcn']['input_dim'] = self.config['feature_dim']
 			self.config['gcn']['hidden_dim'] = self.config['feature_dim']
+			seed_everything(self.config['seed'])
 			self.classifier = GraphConvolutionalNetwork(self.config['gcn'],
 														logger=self.logger)
 			pass
 		else:
 			assert 0,f"Classifer {self.config['name']} is not implemented"
 
-	def optimise(self, data, gtype=None):
+	def optimise(self, data):
 		"""
 		Optimizes the model by fitting, evaluating, and potentially saving it.
 
@@ -65,7 +67,6 @@ class ModelTrainer:
 			data (dict): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
 							expressions is a Feature matrix or a list of node attribute matrix.
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-			gtype (str, optional): Type of graph (cellcell or celltype). Defaults to None.
 		"""
 
 		if self.config['eval'] == 'split':
@@ -109,6 +110,7 @@ class ModelTrainer:
 
 		self.log_metrics(metrics)
 		print(metrics)
+		self.attribution(data_test)
 
 	def test(self, data):
 		"""
@@ -118,7 +120,6 @@ class ModelTrainer:
 			data (dict): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
 							expressions is a Feature matrix or a list of node attribute matrix.
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-			gtype (str, optional): Type of graph (cellcell or celltype). Defaults to None.
 		"""
 		y_pred = self.predict(X)
 		return compute_scores_test(y, y_pred)
@@ -182,22 +183,23 @@ class ModelTrainer:
 				X = self.scaler.transform(X)
 			return self.classifier.predict_proba(X)
 
-	def featurisation(self, data, gtype='cellcell'):
+	def featurisation(self, data):
 		"""
 		Performs feature extraction based on the specified type and criterion.
 
 		Args:
 			data (dict): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
 							expressions is a Feature matrix or a list of node attribute matrix.
-			gtype (str, optional): Type of graph (cellcell or celltype). Defaults to 'cellcell'.
 
 		Returns:
 			np.ndarray: Array containing the extracted features.
 		"""
+		if (self.config['fcriterion'] is None) and (self.config['gcriterion'] is None):
+			assert 0,"Need one of expression or graph features"
 		self.feature_names = data['markers']
-		if gtype == 'cellcell':
+		if self.config['gtype'] == 'cellcell':
 			X = self.cellcell_to_featurisation(data['expressions'])
-		elif gtype == 'celltype':
+		elif self.config['gtype'] == 'celltype':
 			X = self.celltype_featurisation(data['expressions'])
 		else:
 			assert 0, f"{self.config['gtype']} Expression Features are invalid"
@@ -242,6 +244,8 @@ class ModelTrainer:
 			data_mat = np.array(X)
 			n_samples, n_celltype, n_proteins = data_mat.shape
 			return data_mat.reshape(n_samples, n_celltype*n_proteins)
+		elif self.config['fcriterion'] is None:
+			return np.array([])
 		else:
 			assert 0,f"{self.config['fcriterion']} Not Implemented"
 
@@ -255,8 +259,14 @@ class ModelTrainer:
 		Returns:
 			np.ndarray: Array containing the extracted features.
 		"""
-		data_mat = [expr.mean(axis=0) for expr in X]
-		return np.asarray(data_mat)
+		if self.config['fcriterion'] == 'avgcelltype':
+			data_mat = np.asarray([expr.mean(axis=0) for expr in X])
+		elif self.config['fcriterion'] is None:
+			data_mat = np.array([])
+		else:
+			assert 0, f"{self.config['fcriterion']} Expression Features are invalid"
+
+		return data_mat
 
 
 	def log_coefficients(self, logger):
@@ -272,10 +282,32 @@ class ModelTrainer:
 			coefficients_df = pd.DataFrame({'Feature': np.array(self.feature_names)[sorted_indices], 'Coefficient': coefficients[sorted_indices]})
 			table = wandb.Table(dataframe=coefficients_df)
 			logger.log({'Logistic Regression Coefficients': table})
+			logger.logwandb.plot.bar(table, 'Feature', 'Accumulated Gradients')
 			# fields = {'x': 'Features', 'value': 'Coefficients'}
 			# logger.plot_table(data_table=table, fields=fields, vega_spec_name="coefficients of logistic")
 		else:
-			assert 0,f"Attribution Not implemented for {self.config['name']}"
+			assert 0,f"Coefficients are not valid for {self.config['name']}"
+
+
+	def attribution(self, data):
+		"""
+		Computes SHAP scores for a given data set.
+
+		Args:
+			data (np.ndarray): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
+							expressions is a Feature matrix or a list of node attribute matrix.
+		"""
+
+		if self.config['name'] == 'logistic':
+			import shap
+			X = self.featurisation(data)
+			explainer = shap.KernelExplainer(self.classifier.predict_proba, X)
+			shap_values = explainer.shap_values(X)
+			logger.log({'Shapley Score':shap_values})
+		elif self.config['name'] == 'gcn':
+			self.classifier.attribution(data)			
+		else:
+			assert 0,f"Attribution Not implemented for {self.clf_name}"
 
 
 	def log_metrics(self, metrics):
