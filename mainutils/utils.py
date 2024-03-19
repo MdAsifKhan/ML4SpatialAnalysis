@@ -5,7 +5,13 @@ from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
 from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph
 import numpy as np
+import matplotlib.pyplot as plt
 import networkx as nx
+from scipy.sparse import csr_matrix
+from matplotlib.cm import ScalarMappable
+import matplotlib.patches as patches
+
+
 
 def load_config(filename):
 	"""
@@ -20,6 +26,13 @@ def load_config(filename):
 	with open(filename, 'r') as f:
 		return yaml.safe_load(f)
 
+
+def edge_index_to_adj(edge_index, num_nodes):
+	row = edge_index[0].cpu().numpy()
+	col = edge_index[1].cpu().numpy()
+	data = np.ones_like(row)
+	adj = csr_matrix((data, (row, col)), shape=(num_nodes, num_nodes))
+	return adj
 
 def adjacency_to_laplacian(A, normalised=True):
 	"""
@@ -85,19 +98,19 @@ def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
 	feature_vector = np.zeros(feature_dim, dtype=np.float64)
 	if gcriterion == 'heat_trace':
 		# Compute heat trace on the graph at different timescales
-		timescales = np.logspace(0, 2, num=feature_dim)
+		timescales = np.logspace(-2, 2, num=feature_dim)
 
 		# Compute normalized Laplacian matrix
 		laplacian = adjacency_to_laplacian(graph)
 		# Compute eigenvalues of normalized Laplacian
-		k = min(feature_dim, num_nodes-1)
+		k = min(feature_dim, num_nodes-2)
 		eivals, _ = eigs(laplacian, k=k, which='SM')
 
 		feature_names = []
 		# Compute heat trace at different timescales
 		for t, timescale in enumerate(timescales):
 			feature_vector[t] = np.sum(np.exp(-timescale * eivals.real))
-			feature_names.append(f"_HeatTrace_{timescale:.3f}")
+			feature_names.append(f"_HeatTrace_{t:.3f}")
 
 	elif gcriterion == 'laplacian_spectrum':
 		# Compute normalized Laplacian matrix
@@ -117,11 +130,11 @@ def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
 		average_degree = np.mean(np.sum(graph != 0, axis=0))
 		graphnx = nx.from_numpy_array(graph.toarray())
 		clustering_coefficient = nx.average_clustering(graphnx)
-		avg_path = nx.average_shortest_path_length(graphnx)
-		#connectivity = 1.0 if nx.is_connected(graphnx) else 0.0
+		#avg_path = nx.average_shortest_path_length(graphnx)
+		connectivity = 1.0 if nx.is_connected(graphnx) else 0.0
 
-		feature_vector = np.array([num_nodes, num_edges, density, clustering_coefficient, average_degree])
-		feature_names = ['_num_nodes', '_num_edges', '_density', '_clustcoeff', '_avgdegree']
+		feature_vector = np.array([num_nodes, num_edges, density, clustering_coefficient, average_degree, connectivity])
+		feature_names = ['_num_nodes', '_num_edges', '_density', '_clustcoeff', '_avgdegree', '_connectivity']
 	else:
 		assert 0, f" {gcriterion} Not implemented. Valid options are `degree`, or `heat_trace`."
 
@@ -163,7 +176,7 @@ def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 
 
 
-def compute_scores_test(y, y_pred):
+def compute_scores(y, y_pred, mode='Train'):
 	"""
 	Computes evaluation scores for a single test set.
 
@@ -179,9 +192,9 @@ def compute_scores_test(y, y_pred):
 	f1_ = f1_score(y, y_pred)
 
 	metrics = {
-			'Accuracy': accuracy_,
-			'AUC': auc_,
-			'F1 Score': f1_,
+			f"{mode} Accuracy": accuracy_,
+			f"{mode} AUC": auc_,
+			f"{mode} F1 Score": f1_,
 	}
 	return metrics
 
@@ -223,12 +236,13 @@ def train_test_split(dataset, test_size=0.2, random_state=None):
 		if data is None:
 			train_set[key] = None
 			test_set[key] = None
-		elif key == 'markers':
+		elif key == 'markers' or key=='celltypes':
 			train_set[key] = data
 			test_set[key] = data
 		else:
 			train_set[key] = [data[i] for i in train_indices]
 			test_set[key] = [data[i] for i in test_indices]
+
 	return train_set, test_set
 
 import numpy as np
@@ -275,3 +289,58 @@ def k_fold_split(dataset, k=5, random_state=None):
 
 		fold_sets.append((train_set, test_set))
 	return fold_sets
+
+
+def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True):
+	"""
+	Visualizes a cell graph using NetworkX and Matplotlib.
+
+	Args:
+		graph: A scipy.sparse matrix representing the cell graph.
+		random_state: An integer seed for reproducibility of the layout algorithm (default: 42).
+		node_labels: An optional numpy array of node labels to color-code the nodes.
+	"""
+	np.random.seed(random_state)
+
+	edges = []
+	for i in range(graph.shape[0]):
+		for j in graph.indices[graph.indptr[i]:graph.indptr[i+1]]:
+			edges.append((i, j))
+
+	# Create a NetworkX graph and add edges
+	G = nx.Graph()
+	G.add_edges_from(edges)
+	G.remove_edges_from(nx.selfloop_edges(G))
+
+	# Set appropriate figure size for large graphs
+	fig, ax = plt.subplots(figsize=(10, 6))
+	# Use a layout that handles large graphs relatively well
+	pos = nx.spring_layout(G, k=0.15, iterations=200)
+	# Create a color mapper for normalization
+	if node_labels is not None:
+		# Choose a colormap (modify as needed)
+		cmap = plt.cm.tab10  # Select a colormap from matplotlib.cm
+		unique_labels = set(node_labels)
+		norm = plt.Normalize(vmin=0, vmax=len(set(node_labels)) - 1) 
+		sm = ScalarMappable(cmap=cmap, norm=norm)
+
+		# Draw nodes with colors based on labels and colormap
+		node_colors = [sm.to_rgba(i) for i in range(len(node_labels))]
+		nx.draw_networkx_nodes(G, pos, node_size=5, node_color=node_colors)
+	else:
+		nx.draw_networkx_nodes(G, pos, node_size=5)
+
+	nx.draw_networkx_edges(G, pos, width=0.2, alpha=0.5, edge_color='gray')
+	if node_labels is not None:
+		legend_handles = []
+		for i, label in enumerate(unique_labels):
+			legend_handles.append(patches.Patch(color=sm.to_rgba(i), label=label))
+
+		legend_ax = fig.add_axes([0.1, 0.05, 0.8, 0.1])
+		# Add legend (adjust location as needed)
+		legend_ax.legend(handles=legend_handles, ncol=5, loc='upper center')
+		legend_ax.axis('off')
+	ax.axis('off')
+	if show:
+		plt.show()
+	return plt

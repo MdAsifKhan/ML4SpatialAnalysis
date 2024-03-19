@@ -1,5 +1,5 @@
 import argparse
-from utils.utils import load_config
+from mainutils.utils import load_config
 from models.trainer import ModelTrainer
 from datautils.dataset import SpatialCellToFeatures
 import pdb
@@ -21,13 +21,11 @@ def attribution(config):
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname, resume=True)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'])
-
+	print('Feature Class Labels')
+	print(dataset.unique_labels)
 	print('Configuring models')
-	explainer = ModelAttribution(config['attribution'])
-	explainer.log_coefficients(logname)
-
-	X = explainer.featurisation(dataset.data)
-	explainer.log_shap_scores(X)
+	explainer = ModelAttribution(config)
+	explainer.run_attribution(dataset.data_test)
 	wandb.finish()
 
 if __name__ == '__main__':
