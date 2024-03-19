@@ -1,6 +1,6 @@
 import argparse
 from mainutils.utils import load_config
-from models.trainer import ModelTrainer
+from models.evaluation import ModelAttribution
 from datautils.dataset import SpatialCellToFeatures
 import pdb
 import wandb
