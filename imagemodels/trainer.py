@@ -50,8 +50,8 @@ class ImageTrainer:
 				outputs = self.classifier(images)
 				predictions = torch.round(torch.sigmoid(outputs.squeeze())).cpu().numpy()
 
-				all_predictions.extend(predictions)
-				all_labels.extend(labels.squeeze().cpu().numpy())		
+				all_predictions.append(predictions)
+				all_labels.append(labels.squeeze().cpu().numpy())		
 		metrics = compute_scores(all_predictions, all_labels, mode)
 		metrics_table=[[key, value] for key, value in metrics.items()]
 		self.logger.log({
