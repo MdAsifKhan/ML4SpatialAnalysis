@@ -1,8 +1,21 @@
 model:
-  name: 'logistic' # Name of the model (choices: gcn, logistic)
+  name: 'gcn' # Name of the model (choices: gcn, logistic, randomforest, xgboost)
   feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
   normalise_features: True
+  # Data splitting parameters
+  seed: 42           # Random seed for reproducibility
+  eval: ??? # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
+
+  LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
+
+  # Graph construction parameters
+  # Feature selection criteria
+  fcriterion: 'minmaxcellexpression'  # Feature selection criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
+  gtype: ???
+  gcriterion: 'gcn'   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
+  gf_dim: 32      # Dimensionality of graph features
+
   logisitic:
     penalty: null     # L1 or L2 regularization penalty (None for no regularization)
     l1_ratio: 0.5    # Ratio of L1 to L2 penalty (if penalty is not None)
@@ -12,28 +25,37 @@ model:
   # GCN hyperparameters
   gcn:
     lr: 0.01       # Learning rate
-    nm_epochs: 100    # Number of training epochs
+    nm_epochs: 20    # Number of training epochs
     device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
     hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
     input_dim: ???  # Input feature dimensionality (needs to be specified)
-    batch_size: 64   # Batch size for training
+    batch_size: 128   # Batch size for training
+  randomforest:
+    n_estimators: 100          # Number of trees in the forest
+    criterion: 'gini'          # Criterion for splitting: 'gini' (Gini impurity) or 'entropy' (information gain)
+    max_depth: null            # Maximum depth of the tree. None means unlimited depth.
+    min_samples_split: 2       # Minimum number of samples required to split an internal node
+    min_samples_leaf: 1        # Minimum number of samples required to be at a leaf node
+    min_weight_fraction_leaf: 0 # Minimum weighted fraction of the sum total of weights (for each class) required to be at a leaf node
+    max_features: 'sqrt'       # Number of features to consider when looking for the best split: 'auto' (sqrt(n_features)), 'sqrt', 'log2', None, int, float
+    max_leaf_nodes: null       # Grow trees with max_leaf_nodes in best-first fashion
+    min_impurity_decrease: 0   # A node will be split if this split induces a decrease of the impurity greater than or equal to this value
+    bootstrap: True            # Whether bootstrap samples are used when building trees
+    oob_score: False           # Whether to use out-of-bag samples to estimate the generalization accuracy
+    n_jobs: 12               # Number of jobs to run in parallel for both fit and predict. None means 1 unless in a joblib.parallel_backend context
+    warm_start: False          # When set to True, reuse the solution of the previous call to fit and add more estimators to the ensemble
+    class_weight: null         # Weights associated with classes in the form {class_label: weight}
+    ccp_alpha: 0.0               # Complexity parameter used for Minimal Cost-Complexity Pruning. Higher values increase the number of nodes pruned  
+    random_state: ???
+  xgboost:
+    objective: 'binary:logistic'  # For binary classification
+    max_depth: 3                   # Maximum depth of a tree
+    learning_rate: 0.1             # Learning rate
+    n_estimators: 100               # Number of boosting rounds
 
-  # Data splitting parameters
-  test_ratio: 0.3  # Proportion of data used for testing
-  seed: 42           # Random seed for reproducibility
-  folds: 5           # Number of folds for cross-validation
-  eval: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
-
-  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'  # Path to save model logs
-
-  # Graph construction parameters
-  gf_dim: 32      # Dimensionality of graph features
-  # Feature selection criteria
-  fcriterion: 'avgcelltype'  # Feature selection criterion for cell features ('flatcelltype' - flatten cell types)
-  gcriterion: 'heat_trace'           # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace or gcn)
-  
 # Attribution parameters
 attribution:
+  top_k: 10
   filename: ???  # Filename to save attribution scores (needs to be specified)
   MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'  # Path to load the model for attribution
 
@@ -41,10 +63,12 @@ attribution:
 # Dataset parameters
 dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
-  cell_filename: 'cell_table_size_normalized_cell_labels'  # Filename containing cell table data
+  cell_filename: 'cell_table_size_normalized_cell_labels_corrected_labels'  # Filename containing cell table data
   response_filename: 'processed_response'  # Filename containing response labels
   gtype: 'cellcell'  # Type of graph to construct ('cellcell' or 'celltype')
-  cell_radius: 20    # Radius for neighborhood definition (used for 'celltype' graphs)
-  cell_n_thr: 7      # Minimum number of cells per cell type (used for 'celltype' graphs)
   k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' method)
   gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' or 'radius')
+  datasplit: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
+  seed: ???
+  test_ratio: 0.3  # Proportion of data used for testing
+  folds: 5           # Number of folds for cross-validation
