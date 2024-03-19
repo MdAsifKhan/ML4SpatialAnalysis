@@ -141,9 +141,7 @@ def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
 	return feature_vector, feature_names
 
 
-from sklearn.metrics import accuracy_score, roc_auc_score, f1_score
-
-
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
 def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 	"""
 	Computes various evaluation scores for both training and test sets.
@@ -158,15 +156,19 @@ def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 		metrics (dict): Dictionary containing evaluation metrics for both sets.
 	"""
 	accuracy_train = accuracy_score(y_train, y_pred_train)
+	balanced_accuracy_train = balanced_accuracy_score(y_train, y_pred_train)
 	auc_train = roc_auc_score(y_train, y_pred_train)
 	f1_train = f1_score(y_train, y_pred_train)
 
 	accuracy_test = accuracy_score(y_test, y_pred_test)
+	balanced_accuracy_test = balanced_accuracy_score(y_test, y_pred_test)
 	auc_test = roc_auc_score(y_test, y_pred_test)
 	f1_test = f1_score(y_test, y_pred_test)
 	metrics = {
 			'Accuracy Train': accuracy_train,
+			'Balanced_Accuracy Train': balanced_accuracy_train,
 			'Accuracy Test': accuracy_test,
+			'Balanced_Accuracy Test': balanced_accuracy_test,
 			'AUC Train': auc_train,
 			'AUC Test': auc_test,
 			'F1 Score Train': f1_train,
@@ -188,6 +190,7 @@ def compute_scores(y, y_pred, mode='Train'):
 		metrics (dict): Dictionary containing evaluation metrics.
 	"""
 	accuracy_ = accuracy_score(y, y_pred)
+	balanced_accuracy_ = balanced_accuracy_score(y, y_pred)
 	auc_ = roc_auc_score(y, y_pred)
 	f1_ = f1_score(y, y_pred)
 
