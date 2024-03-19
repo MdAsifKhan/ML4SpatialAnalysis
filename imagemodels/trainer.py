@@ -5,6 +5,9 @@ from captum.attr import IntegratedGradients
 
 from imagemodels.models import ResNetClassifier
 from mainutils.utils import compute_scores
+import numpy as np
+import wandb
+
 MODELS = {
 	"ResNetClassifier": ResNetClassifier,
 }
@@ -33,7 +36,7 @@ class ImageTrainer:
 				self.optimizer.step()
 				self.logger.log({'Train Iteration Loss': loss.item()})
 				batch_loss += loss.item()
-			self.evaluate(train_loader, mode='train')
+			self.evaluate(train_loader, mode='Train')
 			self.logger.log({'Train Epoch Loss': batch_loss/len(train_loader)})
 
 			if (epoch + 1) % self.config['test_every'] == 0:
@@ -42,20 +45,20 @@ class ImageTrainer:
 
 	def evaluate(self, data_loader, mode='train'):
 		with torch.no_grad():
-			all_predictions, all_labels = [], []
+			all_predictions, all_labels = np.array([]), np.array([])
 			for images, labels in data_loader:
 				images = images.to(self.config['device'])
 				labels = labels.to(self.config['device'])
 
 				outputs = self.classifier(images)
-				predictions = torch.round(torch.sigmoid(outputs.squeeze())).cpu().numpy()
+				
+				if len(outputs)>1:
+					outputs = outputs.squeeze()
+					labels = labels.squeeze()
 
-				all_predictions.append(predictions)
-				all_labels.append(labels.squeeze().cpu().numpy())
-		import wandb
-		wandb.finish()
-		import pdb
-		pdb.set_trace()		
+				predictions = torch.round(torch.sigmoid(outputs)).cpu().numpy()
+				all_predictions = np.concatenate([all_predictions, predictions])
+				all_labels = np.concatenate([all_labels, labels.cpu().numpy()])
 		metrics = compute_scores(all_predictions, all_labels, mode)
 		metrics_table=[[key, value] for key, value in metrics.items()]
 		self.logger.log({

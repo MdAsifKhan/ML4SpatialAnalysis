@@ -11,7 +11,11 @@ class ResNetClassifier(nn.Module):
         self.resnet = models.resnet18(pretrained=self.config['pretrained'])
         in_features = self.resnet.fc.in_features
         self.resnet.fc = nn.Identity()
-        self.final_layer = nn.Linear(self.config['nm_markers']*in_features, 1)
+        self.final_layer = nn.Sequential(
+                            nn.Linear(self.config['nm_markers']*in_features, self.config['nm_markers']),
+                            nn.LeakyReLU(0.2),
+                            nn.Linear(self.config['nm_markers'], 1)
+                    )
 
     def forward(self, x):
         batch_size, marker_images, C, W, H = x.size()
