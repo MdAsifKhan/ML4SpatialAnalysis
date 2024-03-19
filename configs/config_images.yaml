@@ -1,0 +1,22 @@
+trainer:
+  model_name: 'ResNetClassifier'
+  device: 'mps'
+  nm_epochs: 20
+  test_every: 2
+  LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
+  ResNetClassifier:
+    pretrained: False
+    nm_markers: ???
+    num_classes: 1
+  optim:
+    lr: 0.001
+
+# Dataset parameters
+dataset:
+  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
+  seed: 42
+  test_ratio: 0.3
+  batch_size: 2
+  response_filename: 'processed_response'  # Filename containing response labels
+  img_foldername: 'Img_Denoised'
+  nm_markers: 38
