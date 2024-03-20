@@ -1,3 +1,4 @@
+seed: 42
 trainer:
   model_name: 'ResNetClassifier'
   device: 'mps'
@@ -14,7 +15,6 @@ trainer:
 # Dataset parameters
 dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
-  seed: 42
   test_ratio: 0.3
   batch_size: 2
   response_filename: 'processed_response'  # Filename containing response labels

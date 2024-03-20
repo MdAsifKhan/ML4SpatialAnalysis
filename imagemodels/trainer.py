@@ -15,7 +15,7 @@ MODELS = {
 class ImageTrainer:
 	def __init__(self, config, train_patients, test_patients, logger):
 		self.config = config
-		self.logger = logger
+		self.logger = logger	
 		self.train_patients = train_patients
 		self.test_patients = test_patients
 
@@ -46,7 +46,9 @@ class ImageTrainer:
 	def evaluate(self, data_loader, mode='train'):
 		with torch.no_grad():
 			all_predictions, all_labels = np.array([]), np.array([])
+			i = 0
 			for images, labels in data_loader:
+				i += 1
 				images = images.to(self.config['device'])
 				labels = labels.to(self.config['device'])
 
@@ -59,7 +61,8 @@ class ImageTrainer:
 				predictions = torch.round(torch.sigmoid(outputs)).cpu().numpy()
 				all_predictions = np.concatenate([all_predictions, predictions])
 				all_labels = np.concatenate([all_labels, labels.cpu().numpy()])
-		metrics = compute_scores(all_predictions, all_labels, mode)
+
+		metrics = compute_scores(all_labels, all_predictions, mode)
 		metrics_table=[[key, value] for key, value in metrics.items()]
 		self.logger.log({
 					'Metrics': 
@@ -88,7 +91,7 @@ class ImageTrainer:
 		unique_labels = {1: 'Responder', 0: 'Non-Responder'}
 		# Compute saliency map
 		saliency_map = IntegratedGradients(self.classifier)
-		attributions = saliency.attribute(sample_image, target=sample_label)
+		attributions = saliency_map.attribute(sample_image, target=sample_label)
 		# Log saliency map to WandB
 		wandb.log({f"Saliency Map {sample_label}": [wandb.Image(saliency_map.cpu().detach().numpy())]})
 

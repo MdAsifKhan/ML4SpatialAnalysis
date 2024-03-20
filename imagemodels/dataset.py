@@ -12,7 +12,8 @@ def create_patient_split(data_path, img_folder, test_ratio=0.3, random_state=42)
 	patients = []
 	for roi in leap_folders:
 		patient_id = roi.split('_')[0].lower()
-		patients.append(patient_id)
+		if 'leap' in patient_id:
+			patients.append(patient_id)
 	unique_patients = list(set(patients))
 	random.seed(random_state)
 	random.shuffle(unique_patients)
