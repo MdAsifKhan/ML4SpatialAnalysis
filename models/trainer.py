@@ -16,6 +16,10 @@ from PIL import Image
 from models.gcn import GraphConvolutionalNetwork
 from models.abstract import AbstractModel
 
+# MODELS_DICT = {
+	
+# }
+
 class ModelTrainer(AbstractModel):
 	"""
 	This class handles training, testing, and evaluation of models.
@@ -28,7 +32,8 @@ class ModelTrainer(AbstractModel):
 	"""
 	def __init__(self, config, 
 						logger,
-						logfile=None):
+						logfile=None,
+						seed=42):
 		"""
 		Initializes the ModelTrainer object.
 
@@ -39,11 +44,11 @@ class ModelTrainer(AbstractModel):
 			logfile (str, optional): Name of the log file. Defaults to None.
 		"""
 		super().__init__(config, logger)
-
+		self.seed = seed
 		# Choose and initialize classifier based on configuration
 		if self.config['name'] == 'logistic':
 			self.classifier = LogisticRegression(
-											random_state=self.config['seed'], 
+											random_state=seed, 
 											penalty=self.config['logisitic']['penalty'],
 											solver=self.config['logisitic']['solver'],
 											l1_ratio=self.config['logisitic']['l1_ratio'],
@@ -51,21 +56,21 @@ class ModelTrainer(AbstractModel):
 											max_iter=self.config['logisitic']['max_iter']
 										)
 		elif self.config['name'] == 'randomforest':
-			self.config['randomforest']['random_state'] = self.config['seed']
+			self.config['randomforest']['random_state'] = seed
 			self.classifier = RandomForestClassifier(**self.config['randomforest'])
 		elif self.config['name'] == 'xgboost':
 			self.classifier = xgb.XGBClassifier(**self.config['xgboost'])
 		elif self.config['name'] == 'gcn':
 			self.config['gcn']['input_dim'] = self.config['feature_dim']
 			self.config['gcn']['hidden_dim'] = 2*self.config['feature_dim']
-			seed_everything(self.config['seed'])
+			self.config['gcn']['fnorm'] = self.config['fnorm']
+			seed_everything(self.seed)
 			self.classifier = GraphConvolutionalNetwork(self.config['gcn'],
 														logger=self.logger)
-			pass
 		else:
 			assert 0,f"Classifer {self.config['name']} is not implemented"
 
-	def optimise(self, data):
+	def optimise(self, dataset):
 		"""
 		Optimizes the model by fitting, evaluating, and potentially saving it.
 
@@ -77,14 +82,13 @@ class ModelTrainer(AbstractModel):
 
 		print(f"Fitting {self.config['name']} with {self.config['eval']} training")
 		if self.config['eval'] == 'split':
-			self.fit(data)
-			y_pred = self.predict(data)
-
-			metrics = compute_scores(data['labels'], y_pred, mode='train')
-			print(f"Saving the {self.config['name']} Model")
-			self.save_model()
+			self.fit(dataset['train'])
+			self.evaluate(dataset['train'], mode='Train')
+			print(f"Evaluating on Test Set")
+			self.evaluate(dataset['test'], mode='Test')
 
 		elif self.config['eval'] == 'kfold':
+			data = dataset['folds']
 			y_train, y_test, y_pred_train, y_pred_test = np.array([]),np.array([]),np.array([]),np.array([])
 
 			for i, (train_i, test_i) in enumerate(data):
@@ -101,72 +105,12 @@ class ModelTrainer(AbstractModel):
 
 			print(f"Evaluating the {self.config['name']} Model")
 			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
+			self.log_metrics(metrics, mode='kFold')
+			print(metrics)
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
 
-		self.log_metrics(metrics)
-		print(metrics)
-
-	def fit(self, data):
-		"""
-		Fits the model to the training data.
-
-		Args:
-			X (np.ndarray): Feature matrix or a list of node attribute matrix.
-			y (np.ndarray): Labels.
-			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-		"""
-		if self.config['name'] == 'gcn':
-			self.classifier.fit(data)
-			return
-		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
-			X = self.featurisation(data)
-			if self.config['normalise_features']:
-				self.scaler = StandardScaler()
-				self.scaler.fit(X)
-				X = self.scaler.transform(X)
-			self.classifier.fit(X, data['labels'])
-			return 
-
-	def predict(self, data):
-		"""
-		Predicts labels for new data points.
-
-		Args:
-			X (np.ndarray): Feature matrix or a list of node attribute matrix.
-			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-
-		Returns:
-			np.ndarray: Predicted labels.
-		"""
-		if self.config['name'] == 'gcn':
-			return self.classifier.predict(data)
-		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
-			X = self.featurisation(data)
-			if self.config['normalise_features']:
-				X = self.scaler.transform(X)
-			return self.classifier.predict(X)
-
-	def predict_proba(self, data):
-		"""
-		Predicts class probabilities for new data points.
-
-		Args:
-			X (np.ndarray): Feature matrix or a list of node attribute matrix.
-			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-
-		Returns:
-			np.ndarray: Predicted class probabilities.
-		"""
-		if self.config['name'] == 'gcn':
-			return self.classifier.predict_proba(data)
-		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
-			X = self.featurisation(data)
-			if self.config['normalise_features']:
-				X = self.scaler.transform(X)
-			return self.classifier.predict_proba(X)
-
-	def test(self, data):
+	def evaluate(self, data, mode='Test'):
 		"""
 		Tests the model on new data and returns evaluation metrics.
 
@@ -176,6 +120,8 @@ class ModelTrainer(AbstractModel):
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
 		"""
 		y_pred = self.predict(data)
-		metrics = compute_scores(data['labels'], y_pred, mode='Test')
-		self.log_metrics(metrics)
-		self.attribution(data)
+		metrics = compute_scores(data['labels'], y_pred, mode)
+		self.log_metrics(metrics, mode)
+		print(metrics)
+		if mode == 'Test':
+			self.attribution(data)

@@ -27,37 +27,37 @@ def run(config):
 	Args:
 		config (dict): Configuration dictionary containing training parameters.
 	"""
+
+
 	logname = f"_model_{config['model']['name']}"\
 				f"_graphtype_{config['dataset']['gtype']}"\
-				f"_fcriterion_{config['model']['fcriterion']}"\
+				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
-				f"_eval_{config['model']['eval']}"\
-				f"_seed_{config['model']['seed']}"
+				f"_eval_{config['dataset']['datasplit']}"\
+				f"_seed_{config['seed']}"
 
 	# Initialize W&B logger with project name, entity, configuration, and log name
 	logger = wandb.init(entity="tnbcspatialcell", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
-	config['dataset'] = config['model']['seed']
-	dataset = SpatialCellToFeatures(config['dataset'])
+	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
+	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
+	config['model']['gtype'] = config['dataset']['gtype']
+	config['model']['eval'] = config['dataset']['datasplit']
 
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
-	data_train, data_test = dataset.data_train, dataset.data_test
-
-	config['model']['feature_dim'] = len(data_train['markers'])
-	config['model']['gtype'] = config['dataset']['gtype']
-	config['model']['eval'] = config['dataset']['datasplit']
 
 	print('Configuring models')
 	# Configure the model trainer
 	model = ModelTrainer(config['model'], 
 							logger=logger,
-							logfile=logname)
+							logfile=logname,
+							seed=config['seed'])
 	
 	# Train the model and get evaluation metrics
-	model.optimise(data_train)
-	if config['dataset']['datasplit'] == 'split':
-		model.test(data_test)
+	model.optimise(dataset.data)
+	print(f"Saving the {config['model']['name']} Model")
+	model.save_model(logname=logname)
 	wandb.finish()
 
 

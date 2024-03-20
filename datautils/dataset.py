@@ -18,7 +18,7 @@ class SpatialCellToFeatures:
 		feature_names (list): List of feature names.
 		label_vec (np.ndarray): One-hot encoded labels.
 	"""
-	def __init__(self, config):
+	def __init__(self, config, random_state=42):
 		"""
 		Initializes the SpatialCellToFeatures object.
 
@@ -27,21 +27,15 @@ class SpatialCellToFeatures:
 		"""
 
 		self.config = config
-		filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
-
-		if os.path.exists(f"{filename}"):		
-			self.data_train, self.data_test = self.load_split_data(filename)
-		else:
-			self.data_train, self.data_test = self.prepare_data(filename)
-
-		# if os.path.exists(f"{filename}"):		
-		# 	self.data = self.load_data(filename)
-		# else:
-		# 	self.data = self.prepare_data(filename)
-
+		self.seed = random_state
 		self.unique_labels = {'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
-		self.data['labels'] = np.asarray([self.unique_labels[label] for label in self.data['labels']])
-
+		#filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
+		filename = f"{self.config['DATA_PATH']}/{self.config['gtype']}_processed_{self.config['datasplit']}.pkl"
+		if os.path.exists(f"{filename}"):		
+			self.data = self.load_split_data(filename)
+		else:
+			self.data = self.prepare_data(filename)
+		
 
 	def load_data(self, filename):
 		"""
@@ -67,11 +61,12 @@ class SpatialCellToFeatures:
 
 		Returns:
 			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
+					train and test data accessed as: data['train'], data['test']
 		"""
 		print('Loading Expression Data From File')
 		with open(filename, 'rb') as f:
 			data = pickle.load(f)
-			return data['train'], data['test']
+			return data
 
 	def prepare_data(self, filename):
 		"""
@@ -83,40 +78,48 @@ class SpatialCellToFeatures:
 		Returns:
 			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
-		print('Loading Cell Table')
-		cell_table = load_cell_data(self.config['DATA_PATH'],
-												self.config['cell_filename'], 
-												self.config['response_filename'])
+		datafile = f"{self.config['DATA_PATH']}/old_processed_data_{self.config['gtype']}.pkl"
+		if os.path.exists(datafile):
+			data = self.load_data(datafile)
+		else:
+			print('Loading Cell Table')
+			cell_table = load_cell_data(self.config['DATA_PATH'],
+													self.config['cell_filename'], 
+													self.config['response_filename'])
 
-		print('Preparing Expression Data From Cell Table and saving to disk')
-		data = cellcell_to_features(cell_table, 
-										gmethod=self.config['gmethod'], 
-										k=self.config['k'],
-										filename=filename)
+			print('Preparing Expression Data From Cell Table and saving to disk')
+			data = cellcell_to_features(cell_table, 
+											gmethod=self.config['gmethod'], 
+											k=self.config['k'],
+											filename=datafile)
 
-		print('Split Expression Data and save to disk')
+			print('Split Expression Data and save to disk')
+
+		data['labels'] = np.asarray([self.unique_labels[label] for label in data['labels']])
 		if self.config['datasplit'] == 'split':
 			data_train, data_test = train_test_split(data, 
 													test_size=self.config['test_ratio'], 
-													random_state=self.config['seed'])
+													random_state=self.seed)
 
 			dataset = {
 						'train': data_train,
 						'test': data_test
 			}
 
-			with open(f"{self.config['DATA_PATH']}/{self.config['gtype']}_processed_split.pkl") as f:
+			with open(filename, 'wb') as f:
 				pickle.dump(dataset, f)
-			return data_train, data_test
+			return dataset
 
 		print('Split Expression Data and save to disk')
 		if self.config['datasplit'] == 'kfold':
 			folds = k_fold_split(data, 
 									test_size=self.config['test_ratio'], 
-									random_state=self.config['seed'])
+									random_state=self.seed)
 
-
-			with open(f"{self.config['DATA_PATH']}/{self.config['gtype']}_processed_split.pkl") as f:
+			dataset = {
+						'folds': folds,
+			}
+			with open(filename, 'wb') as f:
 				pickle.dump(dataset, f)
-			return folds, None
+			return dataset
 

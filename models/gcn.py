@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 import torch.nn as nn
 import torch
-from torch_geometric.nn import GCNConv, global_mean_pool
+from torch_geometric.nn import GCNConv, global_mean_pool, SSGConv
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
@@ -32,6 +32,32 @@ class GCN(nn.Module):
 		super(GCN, self).__init__()
 		self.conv1 = GCNConv(input_dim, hidden_dim)
 		self.conv2 = GCNConv(hidden_dim, hidden_dim)
+		self.clf = nn.Linear(hidden_dim, nm_class)
+
+	def forward(self, x, edge_index, edge_weight, batch):
+		x = self.conv1(x, edge_index, edge_weight)
+		x = F.relu(x)
+		x = self.conv2(x, edge_index, edge_weight)
+		x = global_mean_pool(x, batch)
+		return F.sigmoid(self.clf(x))
+
+
+class SSGCN(nn.Module):
+	"""
+	Simple Spectral Graph Convolution (SSGCN) model for node classification.
+
+	Args:
+		input_dim (int): Dimensionality of the input node features.
+		hidden_dim (int): Dimensionality of the hidden layer.
+		nm_class (int): Number of classes for node classification.
+	"""
+	def __init__(self, 
+					input_dim, 
+					hidden_dim, 
+					nm_class):
+		super(SSGCN, self).__init__()
+		self.conv1 = SSGConv(input_dim, hidden_dim, K=2, alpha=0.4)
+		self.conv2 = SSGConv(hidden_dim, hidden_dim, K=2, alpha=0.4)
 		self.clf = nn.Linear(hidden_dim, nm_class)
 
 	def forward(self, x, edge_index, edge_weight, batch):
@@ -93,14 +119,21 @@ class GraphConvolutionalNetwork:
 			# import pdb
 			# pdb.set_trace()
 			graph_attributes = torch.tensor(data_dict['expressions'][i]).float()
-			min_marker, _ = torch.min(graph_attributes, dim=0)
-			max_marker, _ = torch.max(graph_attributes, dim=0)
-			graph_attributes = (graph_attributes - min_marker)/(max_marker - min_marker + 1e-8)
-			#graph_attributes = torch.log1p(graph_attributes)
-			#graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
+			if self.config['fnorm'] == 'minmax':
+				min_marker, _ = torch.min(graph_attributes, dim=0)
+				max_marker, _ = torch.max(graph_attributes, dim=0)
+				graph_attributes = (graph_attributes - min_marker)/(max_marker - min_marker + 1e-8)
+			elif self.config['fnorm'] == 'log1p':
+				graph_attributes = torch.log1p(graph_attributes)
+				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
+			elif self.config['fnorm'] == 'znorm':
+				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
+			elif self.config['fnorm'] == 'raw':
+				pass
+			else:
+				assert 0, f"{self.config['fnorm']} not implemented"
 			graph = data_dict['graphs'][i]
 			graph = graph.tocoo()
-
 			label = torch.tensor(data_dict['labels'][i]).float()
 			row, col, data = graph.row, graph.col, graph.data
 			edge_index = torch.tensor((row, col)).long()
@@ -127,7 +160,7 @@ class GraphConvolutionalNetwork:
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				self.optim.zero_grad()
-				logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+				logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				y_batch = x_batch.y.unsqueeze(1)
 				loss = self.criterion(logits, y_batch)
 				loss.backward()
@@ -179,7 +212,7 @@ class GraphConvolutionalNetwork:
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
 			# x_batch
-			score = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+			score = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 			preds_i = score.squeeze().detach().cpu().numpy()
 			preds = np.concatenate([preds, preds_i])
 		return preds
@@ -206,7 +239,7 @@ class GraphConvolutionalNetwork:
 		labels_dict = {1:'Responder', 0:'Non-Responder'}
 		for i, x_batch in enumerate(loader):
 			x_batch = x_batch.to(self.device)
-			kwargs = {'edge_weight':x_batch.edge_weight, 'batch': x_batch.batch}
+			kwargs = {'edge_weight':x_batch.edge_attr, 'batch': x_batch.batch}
 			explanation = explainer(x_batch.x, x_batch.edge_index, index=None, **kwargs)
 			scores, labels = explanation.visualize_feature_importance()
 			scores = scores.cpu().numpy()
@@ -253,7 +286,6 @@ class GraphConvolutionalNetwork:
 
 		feature_names = data['markers']
 
-
 		df = pd.DataFrame({'Feature': np.array(feature_names), 
 									'Mean Score pCR': mu_resp,
 									'Std Score pCR': std_resp,
@@ -289,7 +321,7 @@ class GraphConvolutionalNetwork:
 			x_batch = x_batch.to(self.device)
 			self.model.zero_grad()
 			x_batch.x.requires_grad = True
-			logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+			logits = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 			logits[0].backward()
 			y_all.append(x_batch.y)
 			node_gradients = x_batch.x.grad
@@ -340,8 +372,6 @@ class GraphConvolutionalNetwork:
 		plt.legend(fontsize=12, prop={'size': 8})
 		plt.xticks(ticks=np.arange(len(feature_names)), labels=grad_df.index, rotation=45, ha='right')
 		plt.tight_layout()
-		import io
-		from PIL import Image
 		buffer = io.BytesIO()
 		buffer.seek(0)
 		plt.savefig(buffer, format='png')

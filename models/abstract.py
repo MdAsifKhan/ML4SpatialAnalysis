@@ -1,19 +1,12 @@
 import pickle
 import numpy as np
-from mainutils.utils import compute_scores_train, compute_scores_test
-from mainutils.utils import graph_feature_vector, coords_to_graph, train_test_split, k_fold_split
-from .factory import GraphConvolutionalNetwork
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-import xgboost as xgb
-from sklearn.preprocessing import StandardScaler
+from mainutils.utils import graph_feature_vector
 import wandb
-import pandas as pd
-from torch_geometric.seed import seed_everything
 import matplotlib.pyplot as plt
 import io
 from PIL import Image
 from abc import ABC
+from sklearn.preprocessing import StandardScaler
 
 
 class AbstractModel(ABC):
@@ -41,18 +34,18 @@ class AbstractModel(ABC):
 		Returns:
 			np.ndarray: Array containing the extracted features.
 		"""
-		if self.config['fcriterion'] == 'avgcellexpression':
+		if self.config['fnorm'] == 'raw':
 			data_mat = np.asarray([expr.mean(axis=0) for expr in X])
-		elif self.config['fcriterion'] == 'avgnormcellexpression':
-			data_mat = np.asarray([((expr - expr.mean(axis=0, keepdims=True))/(1e-8 + expr.std(axis=0, keepdims=True))).mean(axis=0) for expr in X])
-		elif self.config['fcriterion'] == 'avglog1pcellexpression':
+		elif self.config['fnorm'] == 'znorm':
+			data_mat = np.asarray([((expr - np.mean(expr, axis=0, keepdims=True))/(1e-8 + np.std(expr, axis=0, keepdims=True))).mean(axis=0) for expr in X])
+		elif self.config['fnorm'] == 'log1p':
 			data_mat = np.asarray([np.log1p(expr).mean(axis=0) for expr in X])
-		elif self.config['fcriterion'] == 'minmaxcellexpression':
+		elif self.config['fnorm'] == 'minmax':
 			data_mat = np.asarray([((expr - expr.min(axis=0))/(expr.max(axis=0) - expr.min(axis=0) + 1e-8)).mean(axis=0) for expr in X])
-		elif self.config['fcriterion'] is None:
+		elif self.config['fnorm'] is None:
 			data_mat = np.array([])
 		else:
-			assert 0, f"{self.config['fcriterion']} Expression Features are invalid"
+			assert 0, f"{self.config['fnorm']} Expression Features are invalid"
 
 		return data_mat
 
@@ -73,6 +66,64 @@ class AbstractModel(ABC):
 			gfeature_all.append(gfeature)
 		return np.array(gfeature_all), gfname
 
+	def fit(self, data):
+		"""
+		Fits the model to the training data.
+
+		Args:
+			X (np.ndarray): Feature matrix or a list of node attribute matrix.
+			y (np.ndarray): Labels.
+			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
+		"""
+		if self.config['name'] == 'gcn':
+			self.classifier.fit(data)
+			return
+		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
+			X = self.cellcell_to_featurisation(data['expressions'])
+			if self.config['normalise_features']:
+				self.scaler = StandardScaler()
+				self.scaler.fit(X)
+				X = self.scaler.transform(X)
+			self.classifier.fit(X, data['labels'])
+			return 
+
+	def predict(self, data):
+		"""
+		Predicts labels for new data points.
+
+		Args:
+			X (np.ndarray): Feature matrix or a list of node attribute matrix.
+			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
+
+		Returns:
+			np.ndarray: Predicted labels.
+		"""
+		if self.config['name'] == 'gcn':
+			return self.classifier.predict(data)
+		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
+			X = self.cellcell_to_featurisation(data['expressions'])
+			if self.config['normalise_features']:
+				X = self.scaler.transform(X)
+			return self.classifier.predict(X)
+
+	def predict_proba(self, data):
+		"""
+		Predicts class probabilities for new data points.
+
+		Args:
+			X (np.ndarray): Feature matrix or a list of node attribute matrix.
+			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
+
+		Returns:
+			np.ndarray: Predicted class probabilities.
+		"""
+		if self.config['name'] == 'gcn':
+			return self.classifier.predict_proba(data)
+		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
+			X = self.cellcell_to_featurisation(data['expressions'])
+			if self.config['normalise_features']:
+				X = self.scaler.transform(X)
+			return self.classifier.predict_proba(X)
 
 	def attribution(self, data):
 		"""
@@ -91,11 +142,10 @@ class AbstractModel(ABC):
 				feature_importances = self.classifier.coef_.flatten()
 			else:
 				feature_importances = self.classifier.feature_importances_
+			feature_names = data['markers']
 			sorted_indices = feature_importances.argsort()[::-1][:10]
-			if self.config['gtype'] == 'celltype':
-				sorted_indices = sorted_indices[:64]
 			sorted_feature_importances = feature_importances[sorted_indices]
-			sorted_feature_names = np.array(self.feature_names)[sorted_indices]
+			sorted_feature_names = np.array(feature_names)[sorted_indices]
 			plt.figure(figsize=(16, 10))
 			plt.bar(range(len(sorted_feature_importances)), sorted_feature_importances, tick_label=sorted_feature_names)
 			plt.xlabel('Proteins', fontsize=28)
@@ -107,12 +157,12 @@ class AbstractModel(ABC):
 			buffer = io.BytesIO()
 			buffer.seek(0)
 			plt.savefig(buffer, format='png')
-			self.logger.log({f"Importance Scores {self.config['name']} Classifer": wandb.Image(Image.open(buffer))})
+			self.logger.log({f"Importance scores {self.config['name']} classifer": wandb.Image(Image.open(buffer))})
 		else:
-			assert 0,f"Attribution Not implemented for {self.config['name']}"
+			assert 0,f"Attribution not implemented for {self.config['name']}"
 
 
-	def save_model(self, fold=None):
+	def save_model(self, logname, fold=None):
 		"""
 		Saves the trained model and feature names to a file.
 
@@ -123,17 +173,16 @@ class AbstractModel(ABC):
 			name = f"{self.config['name']}_{fold}"
 		else:
 			name = self.config['name']
-		filename = f"{self.config['LOG_PATH']}/{name}_{self.logfile}.pkl"
+		filename = f"{self.config['LOG_PATH']}/{name}_{logname}.pkl"
 		out = {
 				'model': self.classifier,
-				'feature_names': self.feature_names,
 				'scaler': self.scaler
 				}
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
 
 
-	def log_metrics(self, metrics):
+	def log_metrics(self, metrics, mode='Train'):
 		"""
 		Logs the evaluation metrics to W&B.
 
@@ -142,7 +191,7 @@ class AbstractModel(ABC):
 		"""
 		metrics_table=[[key, value] for key, value in metrics.items()]
 		self.logger.log({
-					'Metrics': 
+					f"{mode} Metrics": 
 							wandb.Table(
 									data=metrics_table, 
 								columns=['Metric', 'Value'])
