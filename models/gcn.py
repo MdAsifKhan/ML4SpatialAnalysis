@@ -54,10 +54,10 @@ class SSGCN(nn.Module):
 	def __init__(self, 
 					input_dim, 
 					hidden_dim, 
-					nm_class):
+					nm_class=1):
 		super(SSGCN, self).__init__()
-		self.conv1 = SSGConv(input_dim, hidden_dim, K=2, alpha=0.4)
-		self.conv2 = SSGConv(hidden_dim, hidden_dim, K=2, alpha=0.4)
+		self.conv1 = SSGConv(input_dim, hidden_dim, K=1, alpha=0.4)
+		self.conv2 = SSGConv(hidden_dim, hidden_dim, K=1, alpha=0.4)
 		self.clf = nn.Linear(hidden_dim, nm_class)
 
 	def forward(self, x, edge_index, edge_weight, batch):
@@ -67,34 +67,43 @@ class SSGCN(nn.Module):
 		x = global_mean_pool(x, batch)
 		return F.sigmoid(self.clf(x))
 
+GCN_DICT = {
+			'gcn': GCN,
+			'ssgcn': SSGCN,
+}
 
 class GraphConvolutionalNetwork:
 	"""
 	Class for training GCN models on TNBC (Triple-Negative Breast Cancer) expression and spatial data.
 
 	Args:
-		config (dict): Configuration dictionary containing model and training parameters.
 		logger (optional, Logger): Logger object for logging training information.
 	"""
 
-	def __init__(self, 
-					config,
-					logger=None):
+	def __init__(self,
+					gconv, 
+					lr,
+					nm_epochs,
+					batch_size,
+					fnorm,
+					logger=None,
+					device='cpu',
+					**kwargs):
 		"""
 		Initializes the TNBC GCN model and optimizer.
 
 		Args:
-			config (dict): Configuration dictionary containing odel and training parameters.
 			logger (optional, Logger): Logger object for logging training information.
 		"""
-		self.config = config
+		self.gconv = gconv
+		self.nm_epochs = nm_epochs
+		self.batch_size = batch_size
+		self.fnorm = fnorm
 		self.logger = logger
-		self.device = torch.device(config['device'])
-		self.model = GCN(self.config['input_dim'], 
-							self.config['hidden_dim'],
-							nm_class=1).to(self.device)
-		self.optim = torch.optim.Adam(self.model.parameters(), 
-										lr=self.config['lr'])
+
+		self.device = torch.device(device)
+		self.model = GCN_DICT[self.gconv](**kwargs.get(self.gconv, None)).to(self.device)
+		self.optim = torch.optim.Adam(self.model.parameters(), lr=lr)
 		self.criterion = nn.BCELoss()
 
 	def to_pyg(self, data_dict):
@@ -119,19 +128,20 @@ class GraphConvolutionalNetwork:
 			# import pdb
 			# pdb.set_trace()
 			graph_attributes = torch.tensor(data_dict['expressions'][i]).float()
-			if self.config['fnorm'] == 'minmax':
+			if self.fnorm == 'minmax':
+				graph_attributes = torch.log1p(graph_attributes)
 				min_marker, _ = torch.min(graph_attributes, dim=0)
 				max_marker, _ = torch.max(graph_attributes, dim=0)
 				graph_attributes = (graph_attributes - min_marker)/(max_marker - min_marker + 1e-8)
-			elif self.config['fnorm'] == 'log1p':
+			elif self.fnorm == 'log1p':
 				graph_attributes = torch.log1p(graph_attributes)
 				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
-			elif self.config['fnorm'] == 'znorm':
+			elif self.fnorm == 'znorm':
 				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
-			elif self.config['fnorm'] == 'raw':
+			elif self.fnorm == 'raw':
 				pass
 			else:
-				assert 0, f"{self.config['fnorm']} not implemented"
+				assert 0, f"{self.fnorm} not implemented"
 			graph = data_dict['graphs'][i]
 			graph = graph.tocoo()
 			label = torch.tensor(data_dict['labels'][i]).float()
@@ -154,8 +164,8 @@ class GraphConvolutionalNetwork:
 		"""
 		self.model.train()
 		dataset = self.to_pyg(data)
-		loader = DataLoader(dataset, batch_size=self.config['batch_size'], shuffle=True)
-		for epoch in range(self.config['nm_epochs']):
+		loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+		for epoch in range(self.nm_epochs):
 			loss_epoch = 0.
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
@@ -183,7 +193,7 @@ class GraphConvolutionalNetwork:
 		"""
 		self.model.eval()
 		dataset = self.to_pyg(data)
-		loader = DataLoader(dataset, batch_size=self.config['batch_size'], shuffle=False)
+		loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
 		preds = np.array([])
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
@@ -207,7 +217,7 @@ class GraphConvolutionalNetwork:
 		"""
 		self.model.eval()
 		pyg_dataset = self.to_pyg(data)
-		loader = DataLoader(pyg_dataset, batch_size=self.config['batch_size'], shuffle=False)
+		loader = DataLoader(pyg_dataset, batch_size=self.batch_size, shuffle=False)
 		preds = np.array([])
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
@@ -376,3 +386,8 @@ class GraphConvolutionalNetwork:
 		buffer.seek(0)
 		plt.savefig(buffer, format='png')
 		self.logger.log({'Average gradients across ROIs': wandb.Image(Image.open(buffer))})
+
+
+
+
+

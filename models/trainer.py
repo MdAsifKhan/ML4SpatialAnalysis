@@ -2,11 +2,10 @@
 import pickle
 import numpy as np
 from mainutils.utils import compute_scores_train, compute_scores
-from mainutils.utils import graph_feature_vector, coords_to_graph, train_test_split, k_fold_split
+from mainutils.utils import leave_one_out_split, patient_level_scores
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-import xgboost as xgb
-from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
 import wandb
 import pandas as pd
 from torch_geometric.seed import seed_everything
@@ -16,9 +15,12 @@ from PIL import Image
 from models.gcn import GraphConvolutionalNetwork
 from models.abstract import AbstractModel
 
-# MODELS_DICT = {
-	
-# }
+MODELS_DICT = {
+	'logistic' : LogisticRegression,
+	'randomforest' : RandomForestClassifier,
+	'xgboost' : XGBClassifier,
+	'gnn' : GraphConvolutionalNetwork,
+}
 
 class ModelTrainer(AbstractModel):
 	"""
@@ -45,30 +47,19 @@ class ModelTrainer(AbstractModel):
 		"""
 		super().__init__(config, logger)
 		self.seed = seed
+		seed_everything(self.seed)
 		# Choose and initialize classifier based on configuration
-		if self.config['name'] == 'logistic':
-			self.classifier = LogisticRegression(
-											random_state=seed, 
-											penalty=self.config['logisitic']['penalty'],
-											solver=self.config['logisitic']['solver'],
-											l1_ratio=self.config['logisitic']['l1_ratio'],
-											tol=self.config['logisitic']['tol'],
-											max_iter=self.config['logisitic']['max_iter']
-										)
-		elif self.config['name'] == 'randomforest':
-			self.config['randomforest']['random_state'] = seed
-			self.classifier = RandomForestClassifier(**self.config['randomforest'])
-		elif self.config['name'] == 'xgboost':
-			self.classifier = xgb.XGBClassifier(**self.config['xgboost'])
-		elif self.config['name'] == 'gcn':
-			self.config['gcn']['input_dim'] = self.config['feature_dim']
-			self.config['gcn']['hidden_dim'] = 2*self.config['feature_dim']
-			self.config['gcn']['fnorm'] = self.config['fnorm']
-			seed_everything(self.seed)
-			self.classifier = GraphConvolutionalNetwork(self.config['gcn'],
-														logger=self.logger)
-		else:
-			assert 0,f"Classifer {self.config['name']} is not implemented"
+		self.config['logistic']['random_state'] = seed
+		self.config['randomforest']['random_state'] = seed
+
+		if self.config['name'] == 'gnn':
+			self.config['gnn']['fnorm'] = self.config['fnorm']
+			self.config['gnn']['logger'] = self.logger
+			self.config[self.config['name']][self.config[self.config['name']]['gconv']]['input_dim'] = self.config['feature_dim']
+			self.config[self.config['name']][self.config[self.config['name']]['gconv']] ['hidden_dim'] = 2*self.config['feature_dim']
+
+		self.classifier = MODELS_DICT[self.config['name']](**self.config[self.config['name']])
+
 
 	def optimise(self, dataset):
 		"""
@@ -87,12 +78,9 @@ class ModelTrainer(AbstractModel):
 			print(f"Evaluating on Test Set")
 			self.evaluate(dataset['test'], mode='Test')
 
-		elif self.config['eval'] == 'kfold':
-			data = dataset['folds']
-			y_train, y_test, y_pred_train, y_pred_test = np.array([]),np.array([]),np.array([]),np.array([])
-
-			for i, (train_i, test_i) in enumerate(data):
-				self.fit(train_i)
+		elif self.config['eval'] == 'LeaveOneOut':
+			for i, (train_i, test) in enumerate(self.leave_one_out_split(data)):
+				self.fit(train)
 				y_pred_train_i = self.predict(train_i)
 				y_pred_test_i = self.predict(test_i)
 
@@ -101,12 +89,18 @@ class ModelTrainer(AbstractModel):
 				y_pred_train = np.concatenate([y_pred_train, y_pred_train_i])
 				y_pred_test = np.concatenate([y_pred_test, y_pred_test_i])
 
-				self.save_model(fold=f"fold_{i+1}")
+				self.save_model(fold=f"leaveoneout_{i+1}_patient_{test_set['patient'][0]}")
 
 			print(f"Evaluating the {self.config['name']} Model")
 			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
-			self.log_metrics(metrics, mode='kFold')
-			print(metrics)
+			self.log_metrics(metrics, mode='LeaveOneOutROILevel')
+			print('Metrics at ROI Level',metrics)
+			metrics_train = patient_level_scores(y_train, y_pred_train,  data['patient'], mode='Train', pcriterion=self.config['pcriterion'])
+			self.log_metrics(metrics_train, mode='LeaveOneOutPatientLevelTrain')
+			print('Metrics at Patient Level', metrics_train)
+			metrics_test = patient_level_scores(y_test, y_pred_test,  data['patient'], mode='Test', pcriterion=self.config['pcriterion'])
+			self.log_metrics(metrics_test, mode='LeaveOneOutPatientLevelTest')
+			print('Metrics at Patient Level', metrics_test)
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
 
@@ -122,6 +116,9 @@ class ModelTrainer(AbstractModel):
 		y_pred = self.predict(data)
 		metrics = compute_scores(data['labels'], y_pred, mode)
 		self.log_metrics(metrics, mode)
-		print(metrics)
+		print('Metrics at ROI Level', metrics)
+		metrics = patient_level_scores(data['labels'], y_pred, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
+		self.log_metrics(metrics, mode=f"LeaveOneOutPatientLevel{mode}")
+		print('Metrics at Patient Level', metrics)
 		if mode == 'Test':
 			self.attribution(data)

@@ -10,8 +10,7 @@ import networkx as nx
 from scipy.sparse import csr_matrix
 from matplotlib.cm import ScalarMappable
 import matplotlib.patches as patches
-
-
+from collections import Counter
 
 def load_config(filename):
 	"""
@@ -223,8 +222,7 @@ def train_test_split(dataset, test_size=0.2, random_state=None):
 	patient_ids = dataset['patient']
 	unique_patient_ids = np.unique(patient_ids)
 	test_size = int(test_size * len(unique_patient_ids))
-
-	indices = np.random.permutation(unique_patient_ids)
+	unique_patient_ids = np.random.permutation(unique_patient_ids)
 
 	train_patient_ids = unique_patient_ids[test_size:]
 	test_patient_ids = unique_patient_ids[:test_size]
@@ -248,7 +246,6 @@ def train_test_split(dataset, test_size=0.2, random_state=None):
 
 	return train_set, test_set
 
-import numpy as np
 
 def k_fold_split(dataset, k=5, random_state=None):
 	"""
@@ -293,6 +290,103 @@ def k_fold_split(dataset, k=5, random_state=None):
 		fold_sets.append((train_set, test_set))
 	return fold_sets
 
+
+def leave_one_out_split(data):
+	unique_patients = list(set(data['patient']))
+
+	for leave_out_patient in unique_patients:
+		print(f"Leave One Out Validation on a patient {leave_out_patient}")
+		train_patients = [patient for patient in unique_patients if patient != leave_out_patient]
+		train_idx = [idx for idx, patient in enumerate(data['patients']) if patient != leave_out_patient]
+		test_idx = [idx for idx, patient in enumerate(data['patients']) if patient == leave_out_patient]
+
+		train_set, test_set = {}, {}
+		for key, data in data.items():
+			if data is None:
+				train_set[key] = None
+				test_set[key] = None
+			elif key in ['markers', 'celltypes']:
+				train_set[key] = data
+				test_set[key] = data
+			else:
+				train_set[key] = [data[i] for i in train_idx]
+				test_set[key] = [data[i] for i in test_set]
+
+		yield train_set, test_set
+
+
+def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'):
+	unique_patients = list(set(patients))
+	patients_pred = {patient : [] for patient in unique_patients}
+	patients_labels = {patient : [] for patient in unique_patients}
+	true_positives = 0
+	true_negatives = 0
+	false_positives = 0
+	false_negatives = 0
+
+	for patient, label, pred in zip(patients, y, y_pred):
+		patients_pred[patient].append(pred)
+		patients_labels[patient].append(label)
+
+	for patient in unique_patients:
+		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_pred[patient], patients_labels[patient])]
+		if pcriterion == 'majority':
+			# Check if the majority of predictions match the majority of labels
+			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
+		elif pcriterion == 'any':
+			vote_patient = any(pred == 1 for pred in correct_predictions)
+		else:
+			assert 0,f"{pcriterion} Not Implemented"
+
+		# Assign patient as true positive or true negative based on majority correct predictions
+		if vote_patient == 1:
+			if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
+				true_positives += 1
+			else:
+				false_positives += 1
+		if vote_patient == 0:
+			if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
+				true_negatives += 1
+		else:
+			false_negatives += 1
+
+
+	total_patients = len(unique_patients)
+	accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
+	precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
+	recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
+	f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
+	aucroc = roc_auc_score(y, y_pred)
+	
+	metrics = {
+			f"{mode} Accuracy {pcriterion}": accuracy,
+			f"{mode} AUC {pcriterion}": aucroc,
+			f"{mode} F1 Score {pcriterion}": f1_score,
+	}
+	return metrics
+
+
+
+def feature_normalisation(X, fnorm):
+	if fnorm == 'raw':
+		return X
+	if fnorm == 'znorm':
+		return [((expr - np.mean(expr, axis=0, keepdims=True))/(1e-8 + np.std(expr, axis=0, keepdims=True))) for expr in X]
+	if fnorm == 'log1p':
+		X_norm = []
+		for expr in X:
+			expr_s = np.log1p(expr)
+			expr_ns = (expr_s - np.mean(expr_s, axis=0, keepdims=True))/(1e-8 + np.std(expr_s, axis=0, keepdims=True))
+			X_norm.append(expr_ns)
+		return np.asarray(X_norm)
+	if fnorm == 'minmax':
+		X_norm = []
+		for expr in X:
+			expr_s = np.log1p(expr)
+			expr_ns = (expr - expr.min(axis=0))/(expr.max(axis=0) - expr.min(axis=0) + 1e-8)
+			X_norm.append(expr_ns)
+		return X_norm
+		
 
 def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True):
 	"""

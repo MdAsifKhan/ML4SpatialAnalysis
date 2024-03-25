@@ -1,12 +1,13 @@
 import pickle
 import numpy as np
-from mainutils.utils import graph_feature_vector
 import wandb
 import matplotlib.pyplot as plt
 import io
 from PIL import Image
 from abc import ABC
 from sklearn.preprocessing import StandardScaler
+from mainutils.utils import graph_feature_vector, feature_normalisation
+
 
 
 class AbstractModel(ABC):
@@ -21,7 +22,6 @@ class AbstractModel(ABC):
 	def __init__(self, config, logger=None):
 		self.config = config
 		self.logger = logger
-		self.feature_names = None
 		self.scaler = None
 
 	def cellcell_to_featurisation(self, X):
@@ -34,19 +34,8 @@ class AbstractModel(ABC):
 		Returns:
 			np.ndarray: Array containing the extracted features.
 		"""
-		if self.config['fnorm'] == 'raw':
-			data_mat = np.asarray([expr.mean(axis=0) for expr in X])
-		elif self.config['fnorm'] == 'znorm':
-			data_mat = np.asarray([((expr - np.mean(expr, axis=0, keepdims=True))/(1e-8 + np.std(expr, axis=0, keepdims=True))).mean(axis=0) for expr in X])
-		elif self.config['fnorm'] == 'log1p':
-			data_mat = np.asarray([np.log1p(expr).mean(axis=0) for expr in X])
-		elif self.config['fnorm'] == 'minmax':
-			data_mat = np.asarray([((expr - expr.min(axis=0))/(expr.max(axis=0) - expr.min(axis=0) + 1e-8)).mean(axis=0) for expr in X])
-		elif self.config['fnorm'] is None:
-			data_mat = np.array([])
-		else:
-			assert 0, f"{self.config['fnorm']} Expression Features are invalid"
-
+		data_mat = feature_normalisation(X, self.config['fnorm'])
+		data_mat = np.asarray([expr.mean(axis=0) for expr in data_mat])
 		return data_mat
 
 
@@ -75,7 +64,7 @@ class AbstractModel(ABC):
 			y (np.ndarray): Labels.
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
 		"""
-		if self.config['name'] == 'gcn':
+		if self.config['name'] == 'gnn':
 			self.classifier.fit(data)
 			return
 		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
@@ -98,7 +87,7 @@ class AbstractModel(ABC):
 		Returns:
 			np.ndarray: Predicted labels.
 		"""
-		if self.config['name'] == 'gcn':
+		if self.config['name'] == 'gnn':
 			return self.classifier.predict(data)
 		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
 			X = self.cellcell_to_featurisation(data['expressions'])
@@ -117,7 +106,7 @@ class AbstractModel(ABC):
 		Returns:
 			np.ndarray: Predicted class probabilities.
 		"""
-		if self.config['name'] == 'gcn':
+		if self.config['name'] == 'gnn':
 			return self.classifier.predict_proba(data)
 		if self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
 			X = self.cellcell_to_featurisation(data['expressions'])
@@ -134,7 +123,7 @@ class AbstractModel(ABC):
 							expressions is a Feature matrix or a list of node attribute matrix.
 		"""
 
-		if self.config['name'] == 'gcn':
+		if self.config['name'] == 'gnn':
 			self.classifier.pyg_attribution(data)
 			self.classifier.gradient_attribution(data)
 		elif self.config['name'] in ['logistic', 'randomforest', 'xgboost']:

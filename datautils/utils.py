@@ -25,47 +25,6 @@ EXCLUDE_MARKERS = ['Carboplatin', 'Collage-Type_I', 'DNA1', 'DNA2', 'p53', 'VEGF
 
 MARKERS = list(filter(lambda x: x not in EXCLUDE_MARKERS, ALLMARKERS))
 
-def binarise(data, thr):
-	"""
-	Binarise the data to 0/1
-
-	Args:
-		data: Anndata object or 2D NumPy array of data to normalise.
-		thr: threshold to binary the data.
-	Returns:
-		Binarised data as per `thr`
-	"""
-	return data>thr
-
-def normalise(adata, quantile=0.75):
-	"""
-	Normalizes `adata` using quantile normalisation, and ignoring NaNs.
-
-	Args:
-		adata: Anndata object or 2D NumPy array of data to normalise.
-		quantile (float, optional): Quantile used for normalisation (default: 0.75).
-
-	Returns:
-		Normalised Anndata object or NumPy array, depending on the input type.
-
-	Raises:
-		ValueError: If `adata` is not an Anndata object or a 2D NumPy array.
-	"""
-
-	if not isinstance(adata, np.ndarray):
-		raise ValueError("`adata` must be a 2D NumPy array.")
-
-	# Convert to array efficiently and check for scaling
-	if np.all(data >= 0) and np.all(data <= 1):
-		logging.warning("Data seems already normalized, skipping normalisation")
-		return adata
-
-	# Scaling and clipping using robust NaN handling
-	q = np.nanquantile(data, q=quantile, axis=0)  # Use np.nanquantile to ignore NaNs
-	data /= q[None, :]
-	data = np.clip(data, 0, 1)
-	return data
-
 def quality_control(data, low_gene_active=0.2, high_gene_active=0.5, dna_quantile=0.05):
 	"""
 	Performs quality control filtering on intensity data, ensuring efficiency and readability.
@@ -87,10 +46,8 @@ def quality_control(data, low_gene_active=0.2, high_gene_active=0.5, dna_quantil
 	is_marker = data.columns.isin(MARKERS)
 
 	# Perform filtering and quantile calculation efficiently using broadcasting
-	active_genes_few = (binarise(
-					data.loc[:,is_marker], thr=low_gene_active).sum(axis=1)>0)
-	active_genes_many = (binarise(
-					data.loc[:,is_marker], thr=high_gene_active).sum(axis=1)<11)
+	active_genes_few = ((data.loc[:,is_marker]>low_gene_active).sum(axis=1)>0)
+	active_genes_many = ((data.loc[:,is_marker]>high_gene_active).sum(axis=1)<11)
 	dna_thr = np.quantile(data[['DNA1', 'DNA2']].sum(axis=1), dna_quantile)
 	passed_qc = active_genes_few & active_genes_many & (data[['DNA1', 'DNA2']].sum(axis=1) > dna_thr)
 	return passed_qc
@@ -127,7 +84,7 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 	fovs = cell_table.fov.value_counts()[cell_table.fov.value_counts()>=1000].index
 	cell_table = cell_table[cell_table.fov.isin(fovs)]
 	cell_table[MARKERS] = cell_table[MARKERS].fillna(0)
-	return cell_table  
+	return cell_table
 
 
 def filter_data(cell_table, qc_pass=False, use_core=True):
@@ -149,7 +106,7 @@ def filter_data(cell_table, qc_pass=False, use_core=True):
 		cell_table = cell_table[cell_table['qc_pass']]
 	return cell_table
 
-def process_roi(roi, cell_table, min_cells, leap_to_patient, k=6):
+def process_roi(roi, cell_table, min_cells, k=6):
 	roi_cells = cell_table[cell_table.fov == roi]
 	if len(roi_cells) < min_cells:
 		return None
@@ -162,7 +119,7 @@ def process_roi(roi, cell_table, min_cells, leap_to_patient, k=6):
 	if len(label) != 1:
 		assert 0, f"Acquisition {roi} has non-unique labels"
 	label = label.pop()
-	patient = leap_to_patient[roi.split('_')[0]]
+	patient = roi.split('_')[0]
 
 	return expressions, graph, label, patient, cell_labels
 
@@ -182,8 +139,8 @@ def cellcell_to_features(cell_table, min_cells=10, gmethod='knn', k=6, filename=
 		dict: A dictionary containing expressions, graphs, labels, markers and patientid.
 	"""
 	unique_rois = cell_table.fov.unique()
-	unique_leaps = set(roi.split('_')[0] for roi in unique_rois)
-	leap_to_patient = {leap: f"patient_{i+1}" for i, leap in enumerate(unique_leaps)}
+	#unique_leaps = set(roi.split('_')[0] for roi in unique_rois)
+	#leap_to_patient = {leap: f"patient_{i+1}" for i, leap in enumerate(unique_leaps)}
 	celltypes = np.array(cell_table.cell_meta_cluster.unique())
 
 	dataset = {
@@ -197,7 +154,7 @@ def cellcell_to_features(cell_table, min_cells=10, gmethod='knn', k=6, filename=
 		}
 
 	results = Parallel(n_jobs=num_cores)(
-			delayed(process_roi)(roi, cell_table, min_cells, leap_to_patient, k)
+			delayed(process_roi)(roi, cell_table, min_cells, k)
 			for roi in tqdm(unique_rois, desc="Processing ROIs")
 	)
 
@@ -212,5 +169,4 @@ def cellcell_to_features(cell_table, min_cells=10, gmethod='knn', k=6, filename=
 
 	with open(filename, 'wb') as f:
 		pickle.dump(dataset, f)
-
 	return dataset
