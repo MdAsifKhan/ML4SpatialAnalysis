@@ -1,35 +1,45 @@
+seed: 42  # Random seed for reproducibility
 model:
-  name: 'gcn' # Name of the model (choices: gcn, logistic, randomforest, xgboost)
+  name: 'logistic' # Name of the model (choices: gcn, logistic, randomforest, xgboost)
   feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
-  normalise_features: True
+  normalise_features: False
   # Data splitting parameters
-  seed: 42           # Random seed for reproducibility
-  eval: ??? # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
-
+  eval: ??? # Evaluation method ('split' for train/test split, 'LeaveOneOut' for LeaveOneOut evaluation)
+  pcriterion: 'majority'
   LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
 
   # Graph construction parameters
   # Feature selection criteria
-  fcriterion: 'minmaxcellexpression'  # Feature selection criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
-  gtype: ???
+  fnorm: 'minmax'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'znorm' - averages marker intensities in a ROI)
   gcriterion: 'gcn'   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
   gf_dim: 32      # Dimensionality of graph features
 
-  logisitic:
+  logistic:
     penalty: null     # L1 or L2 regularization penalty (None for no regularization)
     l1_ratio: 0.5    # Ratio of L1 to L2 penalty (if penalty is not None)
     solver: 'lbfgs'   # Optimization algorithm for logistic regression
     max_iter: 1000   # Maximum number of iterations
     tol: 0.00001     # Tolerance level for convergence
+    random_state: ???
+
   # GCN hyperparameters
-  gcn:
+  gnn:
+    gconv: 'gcn'
     lr: 0.01       # Learning rate
     nm_epochs: 20    # Number of training epochs
     device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
-    hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
-    input_dim: ???  # Input feature dimensionality (needs to be specified)
+    logger: ???
     batch_size: 128   # Batch size for training
+    fnorm: ???  # Normalisation criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
+    gcn:
+      hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+      input_dim: ???  # Input feature dimensionality (needs to be specified)
+      nm_class: 1
+    ssgcn:
+      hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+      input_dim: ???  # Input feature dimensionality (needs to be specified)
+      nm_class: 1
   randomforest:
     n_estimators: 100          # Number of trees in the forest
     criterion: 'gini'          # Criterion for splitting: 'gini' (Gini impurity) or 'entropy' (information gain)
@@ -69,6 +79,5 @@ dataset:
   k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' method)
   gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' or 'radius')
   datasplit: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
-  seed: ???
   test_ratio: 0.3  # Proportion of data used for testing
   folds: 5           # Number of folds for cross-validation
