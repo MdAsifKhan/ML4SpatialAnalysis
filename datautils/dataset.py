@@ -78,7 +78,7 @@ class SpatialCellToFeatures:
 		Returns:
 			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
-		datafile = f"{self.config['DATA_PATH']}/old_processed_data_{self.config['gtype']}.pkl"
+		datafile = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
 		if os.path.exists(datafile):
 			data = self.load_data(datafile)
 		else:
@@ -110,16 +110,5 @@ class SpatialCellToFeatures:
 				pickle.dump(dataset, f)
 			return dataset
 
-		print('Split Expression Data and save to disk')
-		if self.config['datasplit'] == 'kfold':
-			folds = k_fold_split(data, 
-									test_size=self.config['test_ratio'], 
-									random_state=self.seed)
-
-			dataset = {
-						'folds': folds,
-			}
-			with open(filename, 'wb') as f:
-				pickle.dump(dataset, f)
-			return dataset
-
+		if self.config['datasplit'] == 'leaveOneOut':
+			return data	

@@ -28,6 +28,8 @@ def run(config):
 		config (dict): Configuration dictionary containing training parameters.
 	"""
 
+	if config['model']['name'] == 'gcn':
+		config['model']['gcriterion'] = 'gcn'
 
 	logname = f"_model_{config['model']['name']}"\
 				f"_graphtype_{config['dataset']['gtype']}"\
