@@ -1,0 +1,25 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 58, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 45, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 31, in optimise
+    loss = self.criterion(outputs, labels)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/loss.py", line 725, in forward
+    return F.binary_cross_entropy_with_logits(input, target,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/functional.py", line 3197, in binary_cross_entropy_with_logits
+    raise ValueError(f"Target size ({target.size()}) must be the same as input size ({input.size()})")
+ValueError: Target size (torch.Size([1])) must be the same as input size (torch.Size([]))
+Training Image Classification Model on Patients ['leap088a', 'leap064', 'leap010', 'leap038', 'leap049', 'leap045', 'leap083', 'leap042', 'leap006', 'leap043', 'leap025', 'leap065', 'leap041', 'leap062', 'leap090', 'leap078', 'leap018', 'leap094', 'leap088b', 'leap059', 'leap028', 'leap085', 'leap016', 'leap026', 'leap054', 'leap019', 'leap050', 'leap074', 'leap046', 'leap029', 'leap070', 'leap039', 'leap033', 'leap003', 'leap091', 'leap079', 'leap021', 'leap075', 'leap089', 'leap084', 'leap002', 'leap030', 'leap031', 'leap015', 'leap082', 'leap056', 'leap032', 'leap052', 'leap020', 'leap053', 'leap009', 'leap035', 'leap001', 'leap095', 'leap076', 'leap069', 'leap081', 'leap073', 'leap066', 'leap012', 'leap005', 'leap093', 'leap034']

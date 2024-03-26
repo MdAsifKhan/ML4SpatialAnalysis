@@ -1,0 +1,21 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting logistic with split training
+{'Train Accuracy': 0.6357615894039735, 'Train AUC': 0.6172118226600986, 'Train F1 Score': 0.5189504373177842}
+Evaluating on Test Set
+{'Test Accuracy': 0.5931372549019608, 'Test AUC': 0.45396341463414636, 'Test F1 Score': 0.1782178217821782}
+Saving the logistic Model
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/sklearn/linear_model/_logistic.py:1175: UserWarning: l1_ratio parameter is only used when penalty is 'elasticnet'. Got (penalty=None)
+  warnings.warn(
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 70, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 60, in run
+    model.save_model(logname=logname)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/abstract.py", line 181, in save_model
+    with open(filename, 'wb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs/logistic__model_logistic_graphtype_cellcell_fnorm_znorm_graphfeats_None_eval_split_seed_42.pkl'

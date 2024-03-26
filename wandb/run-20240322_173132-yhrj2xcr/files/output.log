@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 70, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 58, in run
+    model.optimise(dataset.data)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 73, in optimise
+    self.fit(dataset['train'])
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/abstract.py", line 91, in fit
+    X = self.cellcell_to_featurisation(data['expressions'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/abstract.py", line 57, in cellcell_to_featurisation
+    data_mat = feature_normalisation(X, self.config['fnorm'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/abstract.py", line 21, in feature_normalisation
+    expr_ns = (expr_s - np.mean(expr_s, axis=0, keepdims=True))/(1e-8 + np.expr_s(expr, axis=0, keepdims=True))
+                                                                        ^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/numpy/__init__.py", line 311, in __getattr__
+    raise AttributeError("module {!r} has no attribute "
+AttributeError: module 'numpy' has no attribute 'expr_s'
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting randomforest with split training

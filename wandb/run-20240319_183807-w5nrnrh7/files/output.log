@@ -1,0 +1,16 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Training Image Classification Model on Patients ['leap024', 'leap045', 'leap025', 'leap004', 'leap050', 'leap052', 'leap061', 'leap041', 'leap038', 'leap009', 'leap011', 'leap019', 'leap023', 'leap035', 'leap036', 'leap034', 'leap005', 'leap037', 'leap013', 'leap016', 'leap028', 'leap055', 'leap046', 'leap032', 'leap022', 'leap065', 'leap003', 'img', 'leap039', 'leap059', 'leap006', 'leap051', 'leap001', 'leap053', 'leap031', 'leap040', 'leap021', 'leap020', 'leap010', 'leap015', 'leap029', 'leap042', 'leap018', 'leap084a']
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 60, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 47, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 36, in optimise
+    self.evaluate(train_loader, mode='train')
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 45, in evaluate
+    all_predictions, all_labels = np.array([]), np.array([])
+                                  ^^
+NameError: name 'np' is not defined

@@ -1,0 +1,19 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting gcn with split training
+/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/gcn.py:113: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/utils/tensor_new.cpp:278.)
+  edge_index = torch.tensor((row, col)).long()
+{'Train Accuracy': 0.7880794701986755, 'Train AUC': 0.7899408866995073, 'Train F1 Score': 0.7735849056603774}
+Evaluating on Test Set
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 69, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 57, in run
+    model.optimise(dataset.data)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 85, in optimise
+    self.evaluate(dataset['Test'], mode='Test')
+                  ~~~~~~~^^^^^^^^
+KeyError: 'Test'

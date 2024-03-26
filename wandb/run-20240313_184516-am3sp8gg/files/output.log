@@ -1,0 +1,22 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting Model with split training
+Fitting the gcn Model
+/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/factory.py:308: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/work/_temp/anaconda/conda-bld/pytorch_1708933115309/work/torch/csrc/utils/tensor_new.cpp:278.)
+  edge_index = torch.tensor((row, col)).long()
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 65, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 52, in run
+    model.optimise(data)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 87, in optimise
+    self.fit(data_train)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 134, in fit
+    self.classifier.fit(data)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/factory.py", line 90, in fit
+    self.logger.log({'GCN Iteration Loss': loss.item()})
+                                           ^^^^^^^^^^^
+KeyboardInterrupt

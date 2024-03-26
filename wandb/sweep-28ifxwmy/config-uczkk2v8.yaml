@@ -1,0 +1,56 @@
+wandb_version: 1
+
+attribution:
+  value:
+    MODEL_PATH: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels
+    filename: ???
+dataset:
+  value:
+    DATA_PATH: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data
+    cell_filename: cell_table_size_normalized_cell_labels_corrected_labels
+    gmethod: knn
+    gtype: cellcell
+    k: 7
+    response_filename: processed_response
+model:
+  value:
+    MODEL_PATH: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels
+    eval: split
+    fcriterion: avgcelltype
+    feature_dim: ???
+    folds: 4
+    gcn:
+      batch_size: 54
+      device: mps
+      hidden_dim: ???
+      input_dim: ???
+      lr: 0.012350325470921792
+      nm_epochs: 113
+    gcriterion: graphproperties
+    gf_dim: 30
+    gtype: ???
+    logisitic:
+      l1_ratio: 0.37247358181873
+      max_iter: 1746
+      solver: lbfgs
+      tol: 1.2866715342889682e-05
+    name: xgboost
+    normalise_features: 'false'
+    randomforest:
+      bootstrap: 'false'
+      criterion: gini
+      max_features: sqrt
+      min_samples_leaf: 1
+      min_samples_split: 3
+      n_estimators: 186
+      n_jobs: 18
+      oob_score: 'true'
+      random_state: ???
+      warm_start: 'true'
+    seed: 60
+    test_ratio: 0.19735487840152977
+    xgboost:
+      learning_rate: 0.09493473328042826
+      max_depth: 5
+      n_estimators: 71
+      objective: binary:logistic

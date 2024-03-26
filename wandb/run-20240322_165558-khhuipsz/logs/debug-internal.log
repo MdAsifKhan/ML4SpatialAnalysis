@@ -1,0 +1,518 @@
+2024-03-22 16:55:58,881 INFO    StreamThr :11150 [internal.py:wandb_internal():86] W&B internal server running at pid: 11150, started at: 2024-03-22 16:55:58.879189
+2024-03-22 16:55:58,890 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status
+2024-03-22 16:55:58,903 INFO    WriterThread:11150 [datastore.py:open_for_write():87] open: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/run-khhuipsz.wandb
+2024-03-22 16:55:58,903 DEBUG   SenderThread:11150 [sender.py:send():382] send: header
+2024-03-22 16:55:58,950 DEBUG   SenderThread:11150 [sender.py:send():382] send: run
+2024-03-22 16:55:59,272 INFO    SenderThread:11150 [dir_watcher.py:__init__():211] watching files in: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files
+2024-03-22 16:55:59,273 INFO    SenderThread:11150 [sender.py:_start_run_threads():1136] run started: khhuipsz with start time 1711140958.880174
+2024-03-22 16:55:59,290 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: check_version
+2024-03-22 16:55:59,291 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: check_version
+2024-03-22 16:55:59,489 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: run_start
+2024-03-22 16:55:59,507 DEBUG   HandlerThread:11150 [system_info.py:__init__():27] System info init
+2024-03-22 16:55:59,507 DEBUG   HandlerThread:11150 [system_info.py:__init__():42] System info init done
+2024-03-22 16:55:59,507 INFO    HandlerThread:11150 [system_monitor.py:start():194] Starting system monitor
+2024-03-22 16:55:59,508 INFO    SystemMonitor:11150 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-03-22 16:55:59,508 INFO    HandlerThread:11150 [system_monitor.py:probe():214] Collecting system info
+2024-03-22 16:55:59,509 INFO    SystemMonitor:11150 [interfaces.py:start():190] Started cpu monitoring
+2024-03-22 16:55:59,511 DEBUG   HandlerThread:11150 [system_info.py:probe():151] Probing system
+2024-03-22 16:55:59,512 INFO    SystemMonitor:11150 [interfaces.py:start():190] Started disk monitoring
+2024-03-22 16:55:59,512 INFO    SystemMonitor:11150 [interfaces.py:start():190] Started gpuapple monitoring
+2024-03-22 16:55:59,516 INFO    SystemMonitor:11150 [interfaces.py:start():190] Started memory monitoring
+2024-03-22 16:55:59,518 INFO    SystemMonitor:11150 [interfaces.py:start():190] Started network monitoring
+2024-03-22 16:55:59,526 DEBUG   HandlerThread:11150 [system_info.py:_probe_git():136] Probing git
+2024-03-22 16:55:59,564 DEBUG   HandlerThread:11150 [system_info.py:_probe_git():144] Probing git done
+2024-03-22 16:55:59,564 DEBUG   HandlerThread:11150 [system_info.py:probe():199] Probing system done
+2024-03-22 16:55:59,564 DEBUG   HandlerThread:11150 [system_monitor.py:probe():223] {'os': 'macOS-14.3.1-arm64-arm-64bit', 'python': '3.11.7', 'heartbeatAt': '2024-03-22T20:55:59.512089', 'startedAt': '2024-03-22T20:55:58.851774', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py', 'codePathLocal': 'main.py', 'codePath': 'main.py', 'git': {'remote': 'https://github.com/MdAsifKhan/ML4SpatialAnalysis.git', 'commit': '19852622a33d4c26e7b5b78225b1df6c0a8a26ad'}, 'email': 'mak4086@gmail.com', 'root': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis', 'host': 'msb-sand-l21094.harvardsecure.wireless.med.harvard.edu', 'username': 'asifkhan', 'executable': '/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/bin/python', 'cpu_count': 16, 'cpu_count_logical': 16, 'disk': {'/': {'total': 1858.1917190551758, 'used': 301.98131942749023}}, 'gpuapple': {'type': 'arm', 'vendor': 'Apple'}, 'memory': {'total': 128.0}}
+2024-03-22 16:55:59,564 INFO    HandlerThread:11150 [system_monitor.py:probe():224] Finished collecting system info
+2024-03-22 16:55:59,564 INFO    HandlerThread:11150 [system_monitor.py:probe():227] Publishing system info
+2024-03-22 16:55:59,564 DEBUG   HandlerThread:11150 [system_info.py:_save_conda():208] Saving list of conda packages installed into the current environment
+2024-03-22 16:56:00,276 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/conda-environment.yaml
+2024-03-22 16:56:02,484 DEBUG   HandlerThread:11150 [system_info.py:_save_conda():220] Saving conda packages done
+2024-03-22 16:56:02,484 INFO    HandlerThread:11150 [system_monitor.py:probe():229] Finished publishing system info
+2024-03-22 16:56:02,485 DEBUG   SenderThread:11150 [sender.py:send():382] send: files
+2024-03-22 16:56:02,486 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-03-22 16:56:02,488 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: python_packages
+2024-03-22 16:56:02,488 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: python_packages
+2024-03-22 16:56:02,489 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:56:02,489 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:56:02,490 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:56:02,710 DEBUG   SenderThread:11150 [sender.py:send():382] send: telemetry
+2024-03-22 16:56:02,965 INFO    wandb-upload_0:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/7zrthr51-wandb-metadata.json
+2024-03-22 16:56:03,291 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/conda-environment.yaml
+2024-03-22 16:56:03,292 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:03,292 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/wandb-metadata.json
+2024-03-22 16:56:03,292 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/requirements.txt
+2024-03-22 16:56:04,721 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:05,302 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:09,742 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:14,767 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:17,493 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:56:17,493 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:56:17,494 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:56:20,671 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:25,696 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:30,722 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:31,428 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/config.yaml
+2024-03-22 16:56:32,632 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:56:32,633 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:56:32,633 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:56:35,449 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:36,073 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:36,454 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:40,470 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:41,106 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:42,478 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:46,254 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:46,497 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:47,727 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:56:47,727 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:56:47,727 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:56:51,720 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:52,527 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:57,127 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:56:58,559 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:56:59,523 DEBUG   SystemMonitor:11150 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-03-22 16:56:59,524 DEBUG   SenderThread:11150 [sender.py:send():382] send: telemetry
+2024-03-22 16:56:59,524 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:57:02,510 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:02,738 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:57:02,738 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:57:02,738 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:57:03,586 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/config.yaml
+2024-03-22 16:57:04,591 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:07,916 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:08,611 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:13,372 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:14,638 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:17,659 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:57:17,754 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:57:17,754 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:57:20,668 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:20,837 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:22,675 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:24,685 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:26,439 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:29,529 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:57:30,712 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:31,539 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:32,746 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:57:32,827 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:57:32,827 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:57:34,727 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:36,724 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:40,758 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:42,024 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:46,787 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:47,551 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:47,742 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:57:47,829 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:57:47,829 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:57:52,814 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:53,258 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:56,831 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:57:58,968 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:57:59,531 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:58:02,770 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:58:02,848 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:58:02,848 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:58:02,861 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:04,043 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:08,891 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:09,160 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:12,912 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:15,057 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:17,824 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:58:18,016 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:58:18,016 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:58:18,936 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:20,396 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:22,953 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:25,647 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:28,982 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:29,536 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:58:31,546 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:32,827 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:58:32,875 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:58:32,875 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:58:34,003 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:37,091 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:40,031 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:42,326 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:44,052 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:47,627 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:47,827 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:58:47,880 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:58:47,880 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:58:52,085 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:52,724 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:56,101 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:58:58,427 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:58:59,541 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:59:00,115 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:02,906 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:59:02,983 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:59:02,983 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:59:04,227 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:06,142 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:10,135 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:12,172 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:15,666 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:17,900 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:59:17,900 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:59:17,900 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:59:18,195 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:20,998 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:22,210 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:26,395 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:28,232 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:29,547 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:59:31,557 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:32,905 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:59:32,905 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:59:32,905 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:59:34,261 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:37,030 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:40,287 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:42,905 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:46,318 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:48,040 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 16:59:48,040 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 16:59:48,112 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 16:59:48,196 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:50,338 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:53,988 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 16:59:56,369 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 16:59:59,552 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 16:59:59,552 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:00,389 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:03,097 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:00:03,097 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:00:03,098 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:00:05,305 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:06,419 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:10,330 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:12,444 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:15,763 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:16,460 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:18,045 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:00:18,097 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:00:18,097 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:00:21,342 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:22,484 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:26,723 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:28,512 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:29,557 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:00:32,569 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:33,067 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:00:33,142 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:00:33,142 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:00:34,542 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:37,884 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:40,572 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:42,906 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:44,593 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:48,062 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:00:48,142 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:00:48,143 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:00:48,326 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:50,621 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:53,419 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:56,649 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:00:58,434 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:00:59,562 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:01:00,669 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:03,149 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:01:03,219 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:01:03,219 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:01:04,336 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:06,700 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:09,402 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:12,727 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:14,889 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:18,291 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:01:18,306 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:01:18,306 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:01:18,755 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:20,511 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:22,776 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:26,051 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:28,805 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:29,564 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:01:31,574 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:33,160 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:01:33,160 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:01:33,160 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:01:34,832 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:37,351 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:40,859 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:42,664 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:44,879 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:48,165 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:01:48,165 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:01:48,165 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:01:48,254 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:50,902 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:53,639 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:56,928 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:01:59,303 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:01:59,566 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:02:02,955 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:03,190 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:02:03,190 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:02:03,191 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:02:05,274 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:08,986 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:11,204 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:13,006 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:16,782 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:18,187 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:02:18,187 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:02:18,192 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:02:19,034 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:22,429 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:25,063 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:27,922 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:29,571 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:02:31,088 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:33,192 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:02:33,193 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:02:33,196 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:02:33,271 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:35,108 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:38,830 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:41,137 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:44,013 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:47,164 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:48,231 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:02:48,231 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:02:48,482 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:02:49,417 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:53,195 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:54,683 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:02:57,216 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:02:59,576 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:03:00,580 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:03,241 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:03:03,241 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:03:03,241 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:03:03,243 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:06,388 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:09,271 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:11,548 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:15,302 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:16,979 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:18,360 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:03:18,360 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:03:18,419 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:03:21,332 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:22,950 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:25,353 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:27,987 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:29,582 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:03:31,384 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:33,397 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:03:33,398 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:03:33,398 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:33,398 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:03:37,411 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:38,942 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:43,442 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:44,460 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:47,461 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:48,394 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:03:48,394 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:03:48,399 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:03:50,386 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:53,491 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:03:56,344 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:03:59,587 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:04:01,597 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:04:03,375 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: log_artifact
+2024-03-22 17:04:03,375 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: log_artifact
+2024-03-22 17:04:03,399 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-22 17:04:03,404 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:04:03,537 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json
+2024-03-22 17:04:03,537 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media
+2024-03-22 17:04:03,538 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table
+2024-03-22 17:04:03,582 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-22 17:04:03,700 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: log_artifact
+2024-03-22 17:04:03,703 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-22 17:04:03,737 INFO    SenderThread:11150 [sender.py:send_request_log_artifact():1470] logged artifact run-khhuipsz-TrainMetrics - {'id': 'QXJ0aWZhY3Q6NzY3MjE4Njgw', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE1MTU5NTE3Ng==', 'latestArtifact': None}}
+2024-03-22 17:04:03,737 DEBUG   SenderThread:11150 [sender.py:send():382] send: files
+2024-03-22 17:04:03,737 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json with policy now
+2024-03-22 17:04:03,737 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: stop_status
+2024-03-22 17:04:03,827 DEBUG   SenderThread:11150 [sender.py:send():382] send: history
+2024-03-22 17:04:03,832 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: summary_record
+2024-03-22 17:04:03,838 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-22 17:04:03,839 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: log_artifact
+2024-03-22 17:04:03,852 INFO    wandb-upload_0:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/7fsrysrw-media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json
+2024-03-22 17:04:03,939 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-22 17:04:04,138 INFO    SenderThread:11150 [sender.py:send_request_log_artifact():1470] logged artifact run-khhuipsz-TestMetrics - {'id': 'QXJ0aWZhY3Q6NzY3MjE4Njkw', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE1MTU5NTE3OQ==', 'latestArtifact': None}}
+2024-03-22 17:04:04,138 DEBUG   SenderThread:11150 [sender.py:send():382] send: files
+2024-03-22 17:04:04,138 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json with policy now
+2024-03-22 17:04:04,139 DEBUG   SenderThread:11150 [sender.py:send():382] send: history
+2024-03-22 17:04:04,139 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: summary_record
+2024-03-22 17:04:04,139 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-22 17:04:04,139 DEBUG   SenderThread:11150 [sender.py:send():382] send: files
+2024-03-22 17:04:04,139 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png with policy now
+2024-03-22 17:04:04,139 DEBUG   SenderThread:11150 [sender.py:send():382] send: history
+2024-03-22 17:04:04,139 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: summary_record
+2024-03-22 17:04:04,139 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-22 17:04:04,140 DEBUG   SenderThread:11150 [sender.py:send():382] send: telemetry
+2024-03-22 17:04:04,140 DEBUG   SenderThread:11150 [sender.py:send():382] send: exit
+2024-03-22 17:04:04,140 INFO    SenderThread:11150 [sender.py:send_exit():589] handling exit code: 0
+2024-03-22 17:04:04,140 INFO    SenderThread:11150 [sender.py:send_exit():591] handling runtime: 484
+2024-03-22 17:04:04,140 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-22 17:04:04,140 INFO    SenderThread:11150 [sender.py:send_exit():597] send defer
+2024-03-22 17:04:04,140 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,140 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 0
+2024-03-22 17:04:04,141 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,141 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-03-22 17:04:04,141 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 1
+2024-03-22 17:04:04,141 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,141 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 1
+2024-03-22 17:04:04,141 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,141 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-03-22 17:04:04,141 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 2
+2024-03-22 17:04:04,141 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,141 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 2
+2024-03-22 17:04:04,141 INFO    HandlerThread:11150 [system_monitor.py:finish():203] Stopping system monitor
+2024-03-22 17:04:04,142 DEBUG   SystemMonitor:11150 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-03-22 17:04:04,142 DEBUG   SystemMonitor:11150 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [interfaces.py:finish():202] Joined cpu monitor
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [interfaces.py:finish():202] Joined disk monitor
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [interfaces.py:finish():202] Joined gpuapple monitor
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [interfaces.py:finish():202] Joined memory monitor
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [interfaces.py:finish():202] Joined network monitor
+2024-03-22 17:04:04,142 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,142 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-03-22 17:04:04,142 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 3
+2024-03-22 17:04:04,142 DEBUG   SenderThread:11150 [sender.py:send():382] send: stats
+2024-03-22 17:04:04,142 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,142 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 3
+2024-03-22 17:04:04,143 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,143 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-03-22 17:04:04,143 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 4
+2024-03-22 17:04:04,143 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,143 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 4
+2024-03-22 17:04:04,143 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,143 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-03-22 17:04:04,143 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 5
+2024-03-22 17:04:04,143 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,143 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 5
+2024-03-22 17:04:04,143 DEBUG   SenderThread:11150 [sender.py:send():382] send: summary
+2024-03-22 17:04:04,143 INFO    SenderThread:11150 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-22 17:04:04,144 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,144 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-03-22 17:04:04,144 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 6
+2024-03-22 17:04:04,144 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,144 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 6
+2024-03-22 17:04:04,144 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,144 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-03-22 17:04:04,145 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: status_report
+2024-03-22 17:04:04,232 INFO    wandb-upload_1:11150 [upload_job.py:push():89] Uploaded file /Users/asifkhan/Library/Application Support/wandb/artifacts/staging/tmpowalma5v
+2024-03-22 17:04:04,300 INFO    wandb-upload_0:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/crqv7zvl-media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json
+2024-03-22 17:04:04,303 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 7
+2024-03-22 17:04:04,303 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:04,303 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 7
+2024-03-22 17:04:04,303 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:04,303 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-03-22 17:04:04,471 INFO    wandb-upload_3:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/h8t6k84j-media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json
+2024-03-22 17:04:04,537 INFO    wandb-upload_4:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/2gcmxnpf-media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png
+2024-03-22 17:04:04,544 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:04:04,544 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/config.yaml
+2024-03-22 17:04:04,544 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png
+2024-03-22 17:04:04,544 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/wandb-summary.json
+2024-03-22 17:04:04,545 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json
+2024-03-22 17:04:04,545 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table
+2024-03-22 17:04:04,545 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media
+2024-03-22 17:04:04,545 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/images
+2024-03-22 17:04:04,634 INFO    wandb-upload_2:11150 [upload_job.py:push():89] Uploaded file /Users/asifkhan/Library/Application Support/wandb/artifacts/staging/tmp4n35pomk
+2024-03-22 17:04:04,938 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-22 17:04:05,092 INFO    wandb-upload_0:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/lpgqgdpr-media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json
+2024-03-22 17:04:05,198 INFO    wandb-upload_1:11150 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpo_z419piwandb/wxrz68ic-media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png
+2024-03-22 17:04:05,547 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:04:06,549 INFO    Thread-12 :11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:04:06,818 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 8
+2024-03-22 17:04:06,819 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: poll_exit
+2024-03-22 17:04:06,819 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:06,820 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 8
+2024-03-22 17:04:06,820 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:06,820 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-03-22 17:04:06,821 INFO    SenderThread:11150 [job_builder.py:build():296] Attempting to build job artifact
+2024-03-22 17:04:06,822 INFO    SenderThread:11150 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-03-22 17:04:06,823 INFO    SenderThread:11150 [job_builder.py:build():402] adding wandb-job metadata file
+2024-03-22 17:04:06,833 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 9
+2024-03-22 17:04:06,833 DEBUG   SenderThread:11150 [sender.py:send():382] send: artifact
+2024-03-22 17:04:06,834 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:06,836 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 9
+2024-03-22 17:04:06,941 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-22 17:04:07,145 INFO    SenderThread:11150 [sender.py:send_artifact():1494] sent artifact job-https___github.com_MdAsifKhan_ML4SpatialAnalysis.git_main.py - {'id': 'QXJ0aWZhY3Q6NzY3MjA4MTk3', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTgxNjA5Nw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzY3MjA5MjE1', 'versionIndex': 132}}}
+2024-03-22 17:04:07,145 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:07,145 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-03-22 17:04:07,145 INFO    SenderThread:11150 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-03-22 17:04:07,554 INFO    SenderThread:11150 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:04:07,554 INFO    SenderThread:11150 [dir_watcher.py:finish():388] scan: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files
+2024-03-22 17:04:07,555 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/requirements.txt requirements.txt
+2024-03-22 17:04:07,555 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log output.log
+2024-03-22 17:04:07,557 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/config.yaml config.yaml
+2024-03-22 17:04:07,559 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/wandb-summary.json wandb-summary.json
+2024-03-22 17:04:07,561 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/conda-environment.yaml conda-environment.yaml
+2024-03-22 17:04:07,561 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/wandb-metadata.json wandb-metadata.json
+2024-03-22 17:04:07,564 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png media/images/Importance scores logistic classifer_2_85479009379a15c847bf.png
+2024-03-22 17:04:07,565 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json media/table/Train Metrics_0_740a3634b9a8a86abcb1.table.json
+2024-03-22 17:04:07,565 INFO    SenderThread:11150 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json media/table/Test Metrics_1_8fc8a781e12a94295bfe.table.json
+2024-03-22 17:04:07,565 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 10
+2024-03-22 17:04:07,567 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: poll_exit
+2024-03-22 17:04:07,568 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:07,569 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 10
+2024-03-22 17:04:07,571 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:07,571 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-03-22 17:04:07,571 INFO    SenderThread:11150 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-22 17:04:07,787 INFO    wandb-upload_1:11150 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/config.yaml
+2024-03-22 17:04:07,823 INFO    wandb-upload_3:11150 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/output.log
+2024-03-22 17:04:07,823 INFO    wandb-upload_0:11150 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/wandb-summary.json
+2024-03-22 17:04:07,943 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-22 17:04:07,943 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: poll_exit
+2024-03-22 17:04:07,986 INFO    wandb-upload_4:11150 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/requirements.txt
+2024-03-22 17:04:08,044 INFO    wandb-upload_2:11150 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/files/conda-environment.yaml
+2024-03-22 17:04:08,251 INFO    Thread-11 (_thread_body):11150 [sender.py:transition_state():617] send defer: 11
+2024-03-22 17:04:08,252 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:08,252 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 11
+2024-03-22 17:04:08,253 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:08,253 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-03-22 17:04:08,253 INFO    SenderThread:11150 [file_pusher.py:join():178] waiting for file pusher
+2024-03-22 17:04:08,260 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 12
+2024-03-22 17:04:08,261 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:08,261 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 12
+2024-03-22 17:04:08,261 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:08,261 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-03-22 17:04:08,261 INFO    SenderThread:11150 [file_stream.py:finish():595] file stream finish called
+2024-03-22 17:04:08,478 INFO    SenderThread:11150 [file_stream.py:finish():599] file stream finish is done
+2024-03-22 17:04:08,478 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 13
+2024-03-22 17:04:08,478 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:08,479 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 13
+2024-03-22 17:04:08,479 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:08,479 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-03-22 17:04:08,479 INFO    SenderThread:11150 [sender.py:transition_state():617] send defer: 14
+2024-03-22 17:04:08,480 DEBUG   SenderThread:11150 [sender.py:send():382] send: final
+2024-03-22 17:04:08,480 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: defer
+2024-03-22 17:04:08,480 INFO    HandlerThread:11150 [handler.py:handle_request_defer():172] handle defer: 14
+2024-03-22 17:04:08,480 DEBUG   SenderThread:11150 [sender.py:send():382] send: footer
+2024-03-22 17:04:08,481 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: defer
+2024-03-22 17:04:08,481 INFO    SenderThread:11150 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-03-22 17:04:08,483 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-22 17:04:08,483 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: poll_exit
+2024-03-22 17:04:08,484 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-22 17:04:08,485 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: server_info
+2024-03-22 17:04:08,486 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: get_summary
+2024-03-22 17:04:08,486 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: server_info
+2024-03-22 17:04:08,486 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: sampled_history
+2024-03-22 17:04:08,489 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: job_info
+2024-03-22 17:04:08,578 DEBUG   SenderThread:11150 [sender.py:send_request():409] send_request: job_info
+2024-03-22 17:04:08,580 DEBUG   HandlerThread:11150 [handler.py:handle_request():146] handle_request: shutdown
+2024-03-22 17:04:08,580 INFO    HandlerThread:11150 [handler.py:finish():869] shutting down handler
+2024-03-22 17:04:09,494 INFO    WriterThread:11150 [datastore.py:close():296] close: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240322_165558-khhuipsz/run-khhuipsz.wandb
+2024-03-22 17:04:09,579 INFO    SenderThread:11150 [sender.py:finish():1572] shutting down sender
+2024-03-22 17:04:09,579 INFO    SenderThread:11150 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-22 17:04:09,579 INFO    SenderThread:11150 [file_pusher.py:join():178] waiting for file pusher

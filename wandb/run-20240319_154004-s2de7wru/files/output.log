@@ -1,0 +1,25 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Training Image Classification Model on Patients ['leap048', 'leap023', 'leap001', 'leap094', 'leap067', 'leap019', 'leap071', 'leap004', 'leap036', 'leap009', 'leap002', 'leap055', 'leap012', 'leap003', 'leap052', 'leap073', 'leap034', 'leap008', 'leap031', 'leap018', 'leap088a', 'leap084', 'leap030', 'leap038', 'leap011', 'leap090', 'leap070', 'leap066', 'leap046', 'leap061', 'leap086', 'leap077', 'leap024', 'leap035', 'leap089', 'leap057', 'leap005', 'leap051', 'leap025', 'leap033', 'leap021', 'leap016', 'leap079', 'leap039', 'leap080', 'leap013', 'leap015', 'leap049', 'leap056', 'leap029', 'leap040', 'leap078', 'leap010', 'leap017', 'leap026', 'leap085', 'leap006', 'leap042', 'leap064', 'leap032', 'leap062', 'leap069', 'leap028']
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 58, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 45, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 29, in optimise
+    outputs = self.classifier(data).squeeze()
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/models.py", line 22, in forward
+    output = self.fc(features)
+             ^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1688, in __getattr__
+    raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+AttributeError: 'ResNetClassifier' object has no attribute 'fc'

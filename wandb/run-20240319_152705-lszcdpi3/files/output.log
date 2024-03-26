@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 54, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 32, in run
+    train_loader = DataLoader(train_dataset, batch_size=config['dataset']['batch_size'], shuffle=True)
+                   ^^^^^^^^^^
+NameError: name 'DataLoader' is not defined

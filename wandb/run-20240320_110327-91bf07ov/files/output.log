@@ -1,0 +1,12 @@
+
+Preparing Features
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 70, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 41, in run
+    dataset = SpatialCellToFeatures(config['dataset'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 30, in __init__
+    filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
+                  ~~~~~~~~~~~^^^^^^^^^^^^^
+TypeError: 'int' object is not subscriptable

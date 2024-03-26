@@ -1,0 +1,18 @@
+Preparing Features
+Loading Expression Data From File
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 66, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 40, in run
+    dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 36, in __init__
+    self.data = self.prepare_data(filename)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 103, in prepare_data
+    data['labels'] = np.asarray([self.unique_labels[label] for label in data['labels']])
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 103, in <listcomp>
+    data['labels'] = np.asarray([self.unique_labels[label] for label in data['labels']])
+                                 ^^^^^^^^^^^^^^^^^^
+AttributeError: 'SpatialCellToFeatures' object has no attribute 'unique_labels'

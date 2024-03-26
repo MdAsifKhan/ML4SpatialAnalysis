@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 66, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 40, in run
+    dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 37, in __init__
+    self.data = self.prepare_data(filename)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 114, in prepare_data
+    with open(filename, 'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data/cellcell_processed_split.pkl'
+Preparing Features
+Loading Expression Data From File

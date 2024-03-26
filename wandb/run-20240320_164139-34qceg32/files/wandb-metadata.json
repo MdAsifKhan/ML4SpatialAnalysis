@@ -1,0 +1,37 @@
+{
+    "os": "macOS-14.3.1-arm64-arm-64bit",
+    "python": "3.11.7",
+    "heartbeatAt": "2024-03-20T20:41:39.868370",
+    "startedAt": "2024-03-20T20:41:39.491957",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "https://github.com/MdAsifKhan/ML4SpatialAnalysis.git",
+        "commit": "00d83a7ec43147863feef6983998b10c50af7433"
+    },
+    "email": "mak4086@gmail.com",
+    "root": "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis",
+    "host": "msb-sand-l21094.harvardsecure.wireless.med.harvard.edu",
+    "username": "asifkhan",
+    "executable": "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/bin/python",
+    "cpu_count": 16,
+    "cpu_count_logical": 16,
+    "disk": {
+        "/": {
+            "total": 1858.1917190551758,
+            "used": 271.46728897094727
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 128.0
+    }
+}

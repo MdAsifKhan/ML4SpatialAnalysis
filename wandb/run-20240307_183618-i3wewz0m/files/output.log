@@ -1,0 +1,18 @@
+Preparing Features
+Preparing Expression Data From Cell Table
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 65, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 39, in run
+    dataset = SpatialCellToFeatures(config['dataset'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 37, in __init__
+    self.data = self.prepare_data(filename)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 73, in prepare_data
+    data = cellcell_to_features(cell_table,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/utils.py", line 195, in cellcell_to_features
+    dataset['patient'].append(leap_to_patient[acq.split('_')[0]])
+                                              ^^^
+NameError: name 'acq' is not defined

@@ -1,0 +1,54 @@
+Preparing Features
+Loading Cell Table
+Preparing Expression Data From Cell Table
+
+  0%|                                                                             | 0/657 [00:10<?, ?it/s]
+concurrent.futures.process._RemoteTraceback:
+"""
+Traceback (most recent call last):
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/process.py", line 261, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/process.py", line 210, in _process_chunk
+    return [fn(*args) for args in chunk]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/process.py", line 210, in <listcomp>
+    return [fn(*args) for args in chunk]
+            ^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/utils.py", line 160, in process_roi
+    graph = coords_to_graph(coords, gmethod='knn', radius=k)
+                                                          ^
+NameError: name 'k' is not defined
+"""
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 65, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 39, in run
+    dataset = SpatialCellToFeatures(config['dataset'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 37, in __init__
+    self.data = self.prepare_data(filename)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 74, in prepare_data
+    data = cellcell_to_features(cell_table,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/utils.py", line 201, in cellcell_to_features
+    results = list(tqdm(executor.map(partial_process_roi, unique_rois), total=len(unique_rois)))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/tqdm/std.py", line 1182, in __iter__
+    for obj in iterable:
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/process.py", line 620, in _chain_from_iterable_of_lists
+    for element in iterable:
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+NameError: name 'k' is not defined

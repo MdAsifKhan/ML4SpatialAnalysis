@@ -1,0 +1,1 @@
+{"columns": ["Metric", "Value"], "data": [["Train Accuracy", 0.37142857142857144], ["Train AUC", 0.5], ["Train F1 Score", 0.5416666666666666]]}

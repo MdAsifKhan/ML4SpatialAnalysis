@@ -1,0 +1,12 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting Model with split training
+Fitting the gcn Model
+/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/factory.py:306: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/work/_temp/anaconda/conda-bld/pytorch_1708933115309/work/torch/csrc/utils/tensor_new.cpp:278.)
+  edge_index = torch.tensor((row, col)).long()
+Evaluating the gcn Model
+Saving the gcn Model
+{'Accuracy Train': 1.0, 'Accuracy Test': 0.6413043478260869, 'AUC Train': 1.0, 'AUC Test': 0.5499133679861389, 'F1 Score Train': 1.0, 'F1 Score Test': 0.34}

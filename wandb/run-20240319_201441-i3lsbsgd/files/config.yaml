@@ -1,0 +1,62 @@
+wandb_version: 1
+
+seed:
+  desc: null
+  value: 42
+trainer:
+  desc: null
+  value:
+    model_name: ResNetClassifier
+    device: mps
+    nm_epochs: 20
+    test_every: 2
+    LOG_PATH: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs
+    ResNetClassifier:
+      pretrained: false
+      nm_markers: ???
+      num_classes: 1
+    optim:
+      lr: 0.001
+dataset:
+  desc: null
+  value:
+    DATA_PATH: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data
+    test_ratio: 0.3
+    batch_size: 2
+    response_filename: processed_response
+    img_foldername: Img_Denoised
+    nm_markers: 38
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.7
+    cli_version: 0.16.3
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1710893681.213235
+    t:
+      1:
+      - 1
+      - 5
+      - 41
+      - 53
+      - 55
+      - 77
+      2:
+      - 1
+      - 5
+      - 41
+      - 53
+      - 55
+      - 77
+      3:
+      - 13
+      - 16
+      - 23
+      4: 3.11.7
+      5: 0.16.3
+      8:
+      - 4
+      - 5
+      13: darwin-arm64

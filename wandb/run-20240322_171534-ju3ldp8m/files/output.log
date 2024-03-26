@@ -1,0 +1,18 @@
+Preparing Features
+Loading Expression Data From File
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 70, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 42, in run
+    dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 37, in __init__
+    self.data = self.prepare_data(filename)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/datautils/dataset.py", line 100, in prepare_data
+    data_train, data_test = train_test_split(data,
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/mainutils/utils.py", line 228, in train_test_split
+    unique_patient_ids = unique_patient_ids[indices]
+                         ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+IndexError: arrays used as indices must be of integer (or boolean) type

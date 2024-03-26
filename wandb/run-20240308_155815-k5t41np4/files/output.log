@@ -1,0 +1,12 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting Model with split training
+Fitting the logistic Model
+Evaluating the logistic Model
+Saving the logistic Model
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/sklearn/linear_model/_logistic.py:1175: UserWarning: l1_ratio parameter is only used when penalty is 'elasticnet'. Got (penalty=None)
+  warnings.warn(
+{'Accuracy Train': 0.8797327394209354, 'Accuracy Test': 0.6778846153846154, 'AUC Train': 0.8702293202293203, 'AUC Test': 0.6180459770114942, 'F1 Score Train': 0.848314606741573, 'F1 Score Test': 0.45528455284552843}

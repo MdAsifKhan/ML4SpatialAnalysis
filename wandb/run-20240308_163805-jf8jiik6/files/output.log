@@ -1,0 +1,13 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting Model with split training
+Fitting the xgboost Model
+Computing Graph Features criterion graphproperties
+Computing Graph Features criterion graphproperties
+Evaluating the xgboost Model
+Computing Graph Features criterion graphproperties
+Saving the xgboost Model
+{'Accuracy Train': 1.0, 'Accuracy Test': 0.6521739130434783, 'AUC Train': 1.0, 'AUC Test': 0.595228575236572, 'F1 Score Train': 1.0, 'F1 Score Test': 0.4482758620689655}

@@ -1,0 +1,17 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Training Image Classification Model on Patients ['leap046', 'leap016', 'leap023', 'leap010', 'leap004', 'leap014', 'leap084a', 'leap022', 'leap051', 'leap026', 'leap006', 'leap034', 'leap041', 'leap039', 'leap059', 'leap017', 'leap025', 'leap032', 'leap055', 'leap061', 'leap033', 'leap012', 'leap050', 'leap038', 'leap056', 'leap058', 'leap029', 'leap015', 'leap020', 'leap030', 'leap049', 'leap042', 'leap013', 'leap057', 'leap045', 'leap037', 'leap011', 'leap031', 'leap035', 'leap052', 'leap062', 'leap003']
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 62, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 49, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 39, in optimise
+    self.evaluate(train_loader, mode='Train')
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 62, in evaluate
+    all_predictions = np.concatenate([all_predictions, predictions])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<__array_function__ internals>", line 180, in concatenate
+ValueError: all the input arrays must have same number of dimensions, but the array at index 0 has 1 dimension(s) and the array at index 1 has 2 dimension(s)

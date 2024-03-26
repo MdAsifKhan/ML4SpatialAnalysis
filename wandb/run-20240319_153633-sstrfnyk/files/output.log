@@ -1,0 +1,11 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 58, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 45, in run
+    trainer.optimise(train_loader)
+TypeError: ImageTrainer.optimise() missing 1 required positional argument: 'test_loader'
+Training Image Classification Model on Patients ['leap014', 'leap061', 'leap059', 'leap064', 'leap033', 'leap051', 'leap056', 'leap034', 'leap074', 'leap082', 'leap019', 'leap010', 'leap003', 'leap067', 'leap090', 'leap025', 'leap053', 'leap076', 'leap006', 'leap092', 'leap069', 'leap088a', 'leap035', 'leap089', 'leap050', 'leap085', 'leap078', 'leap065', 'leap095', 'leap088b', 'leap017', 'leap084', 'leap028', 'leap039', 'leap018', 'leap045', 'leap084a', 'leap011', 'leap032', 'leap052', 'leap062', 'leap046', 'leap086', 'leap094', 'leap073', 'leap091', 'leap066', 'leap009', 'leap058', 'leap042', 'leap021', 'leap049', 'leap020', 'leap037', 'leap087', 'leap004', 'leap075', 'leap013', 'leap030', 'leap029', 'leap002', 'leap024', 'leap071']

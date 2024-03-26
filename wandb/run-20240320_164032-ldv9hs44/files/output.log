@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 70, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 52, in run
+    model = ModelTrainer(config['model'],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 68, in __init__
+    self.classifier = GraphConvolutionalNetwork(self.config['gcn'],
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/gcn.py", line 66, in __init__
+    self.model = GCN(self.config['input_dim'],
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/gcn.py", line 32, in __init__
+    self.conv1 = CuGraphGATConv(input_dim, hidden_dim)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch_geometric/nn/conv/cugraph/gat_conv.py", line 38, in __init__
+    super().__init__()
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch_geometric/nn/conv/cugraph/base.py", line 41, in __init__
+    raise ModuleNotFoundError(f"'{self.__class__.__name__}' requires "
+ModuleNotFoundError: 'CuGraphGATConv' requires 'pylibcugraphops>=23.02'
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models

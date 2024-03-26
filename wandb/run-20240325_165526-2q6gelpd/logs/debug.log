@@ -1,0 +1,34 @@
+2024-03-25 16:55:26,565 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Current SDK version is 0.16.3
+2024-03-25 16:55:26,565 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Configure stats pid to 56276
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Loading settings from /Users/asifkhan/.config/wandb/settings
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Loading settings from /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/settings
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'main.py', 'program_abspath': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py', 'program': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py'}
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:_log_setup():526] Logging user logs to /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_165526-2q6gelpd/logs/debug.log
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:_log_setup():527] Logging internal logs to /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_165526-2q6gelpd/logs/debug-internal.log
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:init():566] calling init triggers
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:init():573] wandb.init called with sweep_config: {}
+config: {'seed': 42, 'model': {'name': 'logistic', 'feature_dim': '???', 'normalise_features': False, 'eval': '???', 'LOG_PATH': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs', 'fnorm': 'log1p', 'gcriterion': 'gcn', 'gf_dim': 32, 'logistic': {'penalty': None, 'l1_ratio': 0.5, 'solver': 'lbfgs', 'max_iter': 1000, 'tol': 1e-05, 'random_state': '???'}, 'gnn': {'gconv': 'gcn', 'lr': 0.01, 'nm_epochs': 20, 'device': 'mps', 'logger': '???', 'batch_size': 128, 'fnorm': '???', 'gcn': {'hidden_dim': '???', 'input_dim': '???', 'nm_class': 1}, 'ssgcn': {'hidden_dim': '???', 'input_dim': '???', 'nm_class': 1}}, 'randomforest': {'n_estimators': 100, 'criterion': 'gini', 'max_depth': None, 'min_samples_split': 2, 'min_samples_leaf': 1, 'min_weight_fraction_leaf': 0, 'max_features': 'sqrt', 'max_leaf_nodes': None, 'min_impurity_decrease': 0, 'bootstrap': True, 'oob_score': False, 'n_jobs': 12, 'warm_start': False, 'class_weight': None, 'ccp_alpha': 0.0, 'random_state': '???'}, 'xgboost': {'objective': 'binary:logistic', 'max_depth': 3, 'learning_rate': 0.1, 'n_estimators': 100}}, 'attribution': {'top_k': 10, 'filename': '???', 'MODEL_PATH': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'}, 'dataset': {'DATA_PATH': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data', 'cell_filename': 'cell_table_size_normalized_cell_labels_corrected_labels', 'response_filename': 'processed_response', 'gtype': 'cellcell', 'k': 7, 'gmethod': 'knn', 'datasplit': 'split', 'test_ratio': 0.3, 'folds': 5}}
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:init():616] starting backend
+2024-03-25 16:55:26,566 INFO    MainThread:56276 [wandb_init.py:init():620] setting up manager
+2024-03-25 16:55:26,569 INFO    MainThread:56276 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2024-03-25 16:55:26,570 INFO    MainThread:56276 [wandb_init.py:init():628] backend started and connected
+2024-03-25 16:55:26,579 INFO    MainThread:56276 [wandb_init.py:init():720] updated telemetry
+2024-03-25 16:55:26,609 INFO    MainThread:56276 [wandb_init.py:init():753] communicating run to backend with 90.0 second timeout
+2024-03-25 16:55:26,822 INFO    MainThread:56276 [wandb_run.py:_on_init():2262] communicating current version
+2024-03-25 16:55:26,912 INFO    MainThread:56276 [wandb_run.py:_on_init():2271] got version response upgrade_message: "wandb version 0.16.5 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-03-25 16:55:26,912 INFO    MainThread:56276 [wandb_init.py:init():804] starting run threads in backend
+2024-03-25 16:55:29,898 INFO    MainThread:56276 [wandb_run.py:_console_start():2241] atexit reg
+2024-03-25 16:55:29,898 INFO    MainThread:56276 [wandb_run.py:_redirect():2096] redirect: wrap_raw
+2024-03-25 16:55:29,899 INFO    MainThread:56276 [wandb_run.py:_redirect():2161] Wrapping output streams.
+2024-03-25 16:55:29,899 INFO    MainThread:56276 [wandb_run.py:_redirect():2186] Redirects installed.
+2024-03-25 16:55:29,899 INFO    MainThread:56276 [wandb_init.py:init():847] run started, returning control to user process
+2024-03-25 16:55:32,091 INFO    MainThread:56276 [wandb_run.py:_finish():1970] finishing run tnbcspatialcell/ML on TNBC Data/2q6gelpd
+2024-03-25 16:55:32,091 INFO    MainThread:56276 [wandb_run.py:_atexit_cleanup():2210] got exitcode: 0
+2024-03-25 16:55:32,091 INFO    MainThread:56276 [wandb_run.py:_restore():2193] restore
+2024-03-25 16:55:32,091 INFO    MainThread:56276 [wandb_run.py:_restore():2199] restore done
+2024-03-25 16:55:38,496 INFO    MainThread:56276 [wandb_run.py:_footer_history_summary_info():3866] rendering history
+2024-03-25 16:55:38,496 INFO    MainThread:56276 [wandb_run.py:_footer_history_summary_info():3898] rendering summary
+2024-03-25 16:55:38,504 INFO    MainThread:56276 [wandb_run.py:_footer_sync_info():3825] logging synced files

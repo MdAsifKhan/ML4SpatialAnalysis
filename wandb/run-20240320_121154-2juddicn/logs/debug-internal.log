@@ -1,0 +1,827 @@
+2024-03-20 12:11:54,961 INFO    StreamThr :49708 [internal.py:wandb_internal():86] W&B internal server running at pid: 49708, started at: 2024-03-20 12:11:54.960862
+2024-03-20 12:11:54,962 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status
+2024-03-20 12:11:54,970 INFO    WriterThread:49708 [datastore.py:open_for_write():87] open: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/run-2juddicn.wandb
+2024-03-20 12:11:54,970 DEBUG   SenderThread:49708 [sender.py:send():382] send: header
+2024-03-20 12:11:55,004 DEBUG   SenderThread:49708 [sender.py:send():382] send: run
+2024-03-20 12:11:55,202 INFO    SenderThread:49708 [dir_watcher.py:__init__():211] watching files in: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files
+2024-03-20 12:11:55,202 INFO    SenderThread:49708 [sender.py:_start_run_threads():1136] run started: 2juddicn with start time 1710951114.961365
+2024-03-20 12:11:55,211 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: check_version
+2024-03-20 12:11:55,211 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: check_version
+2024-03-20 12:11:55,309 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: run_start
+2024-03-20 12:11:55,319 DEBUG   HandlerThread:49708 [system_info.py:__init__():27] System info init
+2024-03-20 12:11:55,319 DEBUG   HandlerThread:49708 [system_info.py:__init__():42] System info init done
+2024-03-20 12:11:55,320 INFO    HandlerThread:49708 [system_monitor.py:start():194] Starting system monitor
+2024-03-20 12:11:55,320 INFO    SystemMonitor:49708 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-03-20 12:11:55,320 INFO    HandlerThread:49708 [system_monitor.py:probe():214] Collecting system info
+2024-03-20 12:11:55,320 DEBUG   HandlerThread:49708 [system_info.py:probe():151] Probing system
+2024-03-20 12:11:55,320 INFO    SystemMonitor:49708 [interfaces.py:start():190] Started cpu monitoring
+2024-03-20 12:11:55,322 INFO    SystemMonitor:49708 [interfaces.py:start():190] Started disk monitoring
+2024-03-20 12:11:55,324 INFO    SystemMonitor:49708 [interfaces.py:start():190] Started gpuapple monitoring
+2024-03-20 12:11:55,325 INFO    SystemMonitor:49708 [interfaces.py:start():190] Started memory monitoring
+2024-03-20 12:11:55,325 INFO    SystemMonitor:49708 [interfaces.py:start():190] Started network monitoring
+2024-03-20 12:11:55,332 DEBUG   HandlerThread:49708 [system_info.py:_probe_git():136] Probing git
+2024-03-20 12:11:55,369 DEBUG   HandlerThread:49708 [system_info.py:_probe_git():144] Probing git done
+2024-03-20 12:11:55,369 DEBUG   HandlerThread:49708 [system_info.py:probe():199] Probing system done
+2024-03-20 12:11:55,369 DEBUG   HandlerThread:49708 [system_monitor.py:probe():223] {'os': 'macOS-14.3.1-arm64-arm-64bit', 'python': '3.11.7', 'heartbeatAt': '2024-03-20T16:11:55.320841', 'startedAt': '2024-03-20T16:11:54.950130', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py', 'codePathLocal': 'main.py', 'codePath': 'main.py', 'git': {'remote': 'https://github.com/MdAsifKhan/ML4SpatialAnalysis.git', 'commit': '00d83a7ec43147863feef6983998b10c50af7433'}, 'email': 'mak4086@gmail.com', 'root': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis', 'host': 'msb-sand-l21094.harvardsecure.wireless.med.harvard.edu', 'username': 'asifkhan', 'executable': '/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/bin/python', 'cpu_count': 16, 'cpu_count_logical': 16, 'disk': {'/': {'total': 1858.1917190551758, 'used': 270.2781982421875}}, 'gpuapple': {'type': 'arm', 'vendor': 'Apple'}, 'memory': {'total': 128.0}}
+2024-03-20 12:11:55,369 INFO    HandlerThread:49708 [system_monitor.py:probe():224] Finished collecting system info
+2024-03-20 12:11:55,369 INFO    HandlerThread:49708 [system_monitor.py:probe():227] Publishing system info
+2024-03-20 12:11:55,369 DEBUG   HandlerThread:49708 [system_info.py:_save_conda():208] Saving list of conda packages installed into the current environment
+2024-03-20 12:11:56,207 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/conda-environment.yaml
+2024-03-20 12:11:58,313 DEBUG   HandlerThread:49708 [system_info.py:_save_conda():220] Saving conda packages done
+2024-03-20 12:11:58,313 INFO    HandlerThread:49708 [system_monitor.py:probe():229] Finished publishing system info
+2024-03-20 12:11:58,315 DEBUG   SenderThread:49708 [sender.py:send():382] send: files
+2024-03-20 12:11:58,315 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-03-20 12:11:58,318 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: python_packages
+2024-03-20 12:11:58,318 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: python_packages
+2024-03-20 12:11:58,318 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:11:58,318 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:11:58,319 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:11:58,512 DEBUG   SenderThread:49708 [sender.py:send():382] send: telemetry
+2024-03-20 12:11:58,610 INFO    wandb-upload_0:49708 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpy534u8p_wandb/tm59oq6r-wandb-metadata.json
+2024-03-20 12:11:59,220 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/conda-environment.yaml
+2024-03-20 12:11:59,220 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-metadata.json
+2024-03-20 12:11:59,220 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/requirements.txt
+2024-03-20 12:11:59,220 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/output.log
+2024-03-20 12:12:00,557 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:01,230 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/output.log
+2024-03-20 12:12:05,579 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:06,072 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:06,073 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:06,074 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:06,076 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:06,253 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:10,570 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:10,570 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:10,570 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:10,571 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:11,280 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:11,576 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:13,325 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:12:13,326 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:12:13,326 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:12:14,552 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:14,552 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:14,552 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:14,553 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:15,301 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:17,053 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:17,053 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:17,053 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:17,054 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:17,054 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:17,054 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:17,054 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:17,054 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:17,054 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:17,309 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:21,351 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:21,352 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:21,352 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:21,352 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:22,336 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:22,358 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:25,704 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:25,705 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:25,705 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:25,705 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:26,351 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:27,718 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:28,323 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:12:28,328 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:12:29,203 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:12:29,364 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/config.yaml
+2024-03-20 12:12:30,723 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:30,724 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:30,724 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:30,726 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:31,370 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:32,840 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:32,840 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:32,840 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:32,840 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:32,841 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:32,841 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:32,841 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:32,841 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:33,381 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:34,851 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:37,216 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:37,217 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:37,218 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:37,220 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:37,401 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:40,234 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:42,029 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:42,030 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:42,030 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:42,031 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:42,425 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:43,328 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:12:43,329 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:12:43,329 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:12:45,474 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:46,496 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:46,496 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:46,496 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:46,497 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:47,448 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:48,600 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:48,600 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:48,600 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:48,601 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:48,601 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:48,601 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:48,601 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:48,601 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:49,457 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:50,611 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:52,857 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:52,858 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:52,858 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:52,858 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:53,475 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:12:55,330 DEBUG   SystemMonitor:49708 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-03-20 12:12:55,331 DEBUG   SenderThread:49708 [sender.py:send():382] send: telemetry
+2024-03-20 12:12:55,332 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:12:56,336 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:12:57,885 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:12:57,886 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:12:57,886 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:12:57,887 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:12:58,334 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:12:58,334 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:12:58,334 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:12:58,492 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:01,463 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:02,046 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:02,046 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:02,046 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:02,047 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:02,512 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:02,513 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/config.yaml
+2024-03-20 12:13:04,142 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:04,142 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:04,142 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:04,143 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:04,143 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:04,143 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:04,143 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:04,143 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:04,523 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:07,156 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:08,410 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:08,411 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:08,412 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:08,412 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:08,541 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:12,425 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:12,594 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:12,594 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:12,594 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:12,595 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:13,338 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:13:13,339 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:13:13,339 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:13:13,566 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:17,487 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:17,535 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:17,535 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:17,535 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:17,536 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:17,587 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:20,277 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:20,278 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:20,278 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:20,278 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:20,278 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:20,279 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:20,279 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:20,279 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:20,600 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:23,291 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:24,526 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:24,526 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:24,526 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:24,526 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:24,608 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:25,337 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:13:28,341 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:13:28,342 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:13:28,343 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:13:28,425 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:29,847 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:29,848 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:29,848 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:29,848 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:30,631 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:33,865 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:33,965 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:33,966 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:33,966 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:33,966 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:34,649 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:36,517 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:36,518 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:36,518 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:36,518 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:36,521 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:36,521 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:36,521 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:36,521 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:36,660 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:39,538 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:40,880 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:40,880 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:40,880 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:40,881 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:41,679 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:43,345 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:13:43,346 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:13:43,347 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:13:45,437 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:45,652 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:45,652 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:45,652 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:45,652 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:45,699 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:49,964 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:49,965 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:49,966 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:49,967 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:50,723 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:50,968 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:52,691 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:52,691 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:52,691 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:52,692 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:52,692 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:52,692 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:52,692 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:52,693 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:52,733 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:55,342 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:13:56,348 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:13:57,497 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:13:57,498 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:13:57,498 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:13:57,498 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:13:57,760 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:13:58,345 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:13:58,345 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:13:58,351 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:14:01,414 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:01,610 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:01,610 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:01,611 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:01,611 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:01,776 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:06,293 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:06,293 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:06,294 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:06,294 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:06,802 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:07,299 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:09,024 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:09,024 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:09,024 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:09,024 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:09,024 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:09,025 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:09,025 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:09,025 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:09,818 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:13,045 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:13,050 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:13,050 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:13,050 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:13,050 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:13,350 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:14:13,350 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:14:13,356 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:14:13,838 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:17,924 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:17,925 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:17,925 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:17,927 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:18,863 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:18,931 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:22,150 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:22,150 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:22,150 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:22,151 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:22,882 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:24,161 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:24,789 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:24,790 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:24,791 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:24,791 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:24,793 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:24,794 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:24,794 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:24,795 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:24,893 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:25,348 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:14:28,356 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:14:28,357 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:14:28,362 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:14:29,512 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:29,626 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:29,626 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:29,626 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:29,627 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:29,915 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:34,282 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:34,282 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:34,282 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:34,283 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:34,941 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:35,288 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:38,600 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:38,601 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:38,602 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:38,602 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:38,960 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:40,613 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:40,898 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:40,898 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:40,898 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:40,898 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:40,899 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:40,899 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:40,899 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:40,899 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:40,970 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:43,356 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:14:43,357 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:14:43,366 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:14:45,729 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:45,731 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:45,731 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:45,732 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:45,732 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:45,993 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:50,727 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:50,727 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:50,727 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:50,728 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:51,020 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:51,732 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:54,744 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:54,744 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:54,744 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:54,745 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:55,038 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:55,353 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:14:57,064 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:57,065 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:14:57,065 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:57,065 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:57,065 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:14:57,066 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:57,066 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:14:57,066 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:14:57,066 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:14:58,052 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:14:58,361 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:14:58,361 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:14:58,371 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:15:01,420 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:01,554 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:01,554 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:01,554 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:02,070 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:02,560 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:05,703 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:05,703 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:05,703 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:05,704 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:06,089 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:07,713 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:10,880 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:10,881 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:10,881 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:10,881 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:11,113 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:12,892 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:13,367 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:15:13,368 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:15:13,377 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:15:13,710 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:13,710 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:13,711 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:13,711 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:13,711 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:13,712 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:13,712 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:13,712 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:14,129 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:18,097 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:18,098 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:18,098 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:18,099 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:18,099 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:18,145 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:22,551 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:22,551 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:22,551 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:22,551 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:23,171 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:23,556 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:25,358 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:15:27,073 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:27,075 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:27,075 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:27,076 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:27,191 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:28,368 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:15:28,368 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:15:28,381 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:15:28,563 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:30,367 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:30,368 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:30,369 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:30,370 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:30,373 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:30,374 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:30,374 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:30,375 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:31,212 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:34,391 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:34,872 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:34,873 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:34,873 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:34,874 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:35,234 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:39,900 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:40,552 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:40,552 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:40,552 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:40,553 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:41,263 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:43,373 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:15:43,373 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:15:43,386 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:15:44,408 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:44,410 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:44,410 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:44,411 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:45,284 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:45,417 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:46,962 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:46,962 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:46,962 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:46,963 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:46,963 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:46,963 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:46,963 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:46,963 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:47,294 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:50,984 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:51,422 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:51,423 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:51,424 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:51,425 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:52,319 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:55,367 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:15:55,439 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:15:55,440 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:15:55,440 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:15:55,441 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:15:56,340 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:15:56,447 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:15:58,379 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:15:58,380 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:15:58,392 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:16:00,577 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:00,578 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:00,578 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:00,578 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:01,363 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:01,583 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:03,368 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:03,368 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:03,368 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:03,369 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:03,369 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:03,369 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:03,369 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:03,370 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:03,372 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:07,386 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:08,183 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:08,183 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:08,183 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:08,184 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:08,392 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:13,188 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:13,190 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:13,190 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:13,190 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:13,191 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:13,383 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:16:13,383 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:16:13,392 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:16:13,419 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:17,381 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:17,381 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:17,381 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:17,382 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:17,438 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:18,387 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:20,125 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:20,127 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:20,127 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:20,127 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:20,128 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:20,129 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:20,129 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:20,129 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:20,450 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:24,145 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:24,185 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:24,186 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:24,186 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:24,187 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:24,469 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:25,367 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:16:28,388 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:16:28,388 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:16:28,397 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:16:28,802 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:28,802 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:28,802 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:28,802 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:29,493 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:29,807 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:33,963 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:33,965 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:33,966 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:33,967 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:34,515 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:34,971 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:36,497 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:36,497 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:36,497 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:36,497 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:36,497 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:36,498 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:36,498 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:36,498 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:36,526 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:40,518 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:40,724 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:40,724 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:40,724 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:40,725 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:41,550 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:43,393 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:16:43,393 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:16:43,402 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:16:45,540 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:46,354 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:46,354 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:46,354 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:46,354 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:46,567 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:50,668 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:50,669 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:50,669 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:50,669 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:50,670 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:51,588 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:53,176 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:53,177 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:53,177 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:53,177 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:53,178 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:53,178 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:53,178 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:53,178 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:53,599 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:55,373 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:16:56,378 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:16:57,396 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:16:57,397 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:16:57,398 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:16:57,399 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:16:57,619 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:16:58,395 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:16:58,395 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:16:58,407 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:17:01,450 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:01,451 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:01,451 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:01,451 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:01,452 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:01,640 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:06,359 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:06,360 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:06,360 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:06,360 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:06,663 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:07,365 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:09,744 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:09,744 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:09,744 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:09,745 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:09,746 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:09,746 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:09,746 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:09,746 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:10,682 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:12,756 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:13,400 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:17:13,400 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:17:13,412 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:17:14,758 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:14,759 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:14,759 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:14,760 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:15,708 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:17,773 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:19,072 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:19,073 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:19,073 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:19,074 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:19,725 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:23,086 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:23,608 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:23,608 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:23,608 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:23,609 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:23,746 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:25,379 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:17:26,513 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:26,514 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:26,514 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:26,514 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:26,515 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:26,515 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:26,515 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:26,516 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:26,755 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:28,408 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:17:28,408 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:17:28,419 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:17:28,682 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:33,702 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:38,727 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:43,414 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-20 12:17:43,415 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: stop_status
+2024-03-20 12:17:43,424 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:17:44,507 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: log_artifact
+2024-03-20 12:17:44,507 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: log_artifact
+2024-03-20 12:17:44,651 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-20 12:17:44,791 INFO    SenderThread:49708 [sender.py:send_request_log_artifact():1470] logged artifact run-2juddicn-Metrics - {'id': 'QXJ0aWZhY3Q6NzY0MjY1OTcy', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE1MDgwOTMwOA==', 'latestArtifact': None}}
+2024-03-20 12:17:44,791 DEBUG   SenderThread:49708 [sender.py:send():382] send: files
+2024-03-20 12:17:44,791 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:44,791 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file media/table/Metrics_100_1bbffe52aae771557505.table.json with policy now
+2024-03-20 12:17:44,791 DEBUG   SenderThread:49708 [sender.py:send():382] send: history
+2024-03-20 12:17:44,791 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: summary_record
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:44,792 DEBUG   SenderThread:49708 [sender.py:send():382] send: exit
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:send_exit():589] handling exit code: 1
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:send_exit():591] handling runtime: 349
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:send_exit():597] send defer
+2024-03-20 12:17:44,792 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,792 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 0
+2024-03-20 12:17:44,792 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 1
+2024-03-20 12:17:44,792 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,792 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 1
+2024-03-20 12:17:44,792 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-03-20 12:17:44,792 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 2
+2024-03-20 12:17:44,792 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,792 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 2
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [system_monitor.py:finish():203] Stopping system monitor
+2024-03-20 12:17:44,793 DEBUG   SystemMonitor:49708 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-03-20 12:17:44,793 DEBUG   SystemMonitor:49708 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [interfaces.py:finish():202] Joined cpu monitor
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [interfaces.py:finish():202] Joined disk monitor
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [interfaces.py:finish():202] Joined gpuapple monitor
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [interfaces.py:finish():202] Joined memory monitor
+2024-03-20 12:17:44,793 INFO    HandlerThread:49708 [interfaces.py:finish():202] Joined network monitor
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 3
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send():382] send: stats
+2024-03-20 12:17:44,794 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,794 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 3
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 4
+2024-03-20 12:17:44,794 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,794 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 4
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 5
+2024-03-20 12:17:44,794 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,794 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 5
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send():382] send: summary
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-20 12:17:44,794 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-03-20 12:17:44,794 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 6
+2024-03-20 12:17:44,794 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,794 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 6
+2024-03-20 12:17:44,795 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,795 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-03-20 12:17:44,795 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 7
+2024-03-20 12:17:44,795 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: status_report
+2024-03-20 12:17:44,795 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:44,795 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 7
+2024-03-20 12:17:44,795 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:44,795 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-03-20 12:17:44,842 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:44,842 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/media/table/Metrics_100_1bbffe52aae771557505.table.json
+2024-03-20 12:17:44,842 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/media
+2024-03-20 12:17:44,843 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/media/table
+2024-03-20 12:17:45,144 INFO    wandb-upload_0:49708 [upload_job.py:push():89] Uploaded file /Users/asifkhan/Library/Application Support/wandb/artifacts/staging/tmpnkzpgs1b
+2024-03-20 12:17:45,163 INFO    wandb-upload_1:49708 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpy534u8p_wandb/7hvct1uq-media/table/Metrics_100_1bbffe52aae771557505.table.json
+2024-03-20 12:17:45,611 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 8
+2024-03-20 12:17:45,611 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:45,611 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 8
+2024-03-20 12:17:45,612 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:45,612 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-03-20 12:17:45,612 INFO    SenderThread:49708 [job_builder.py:build():296] Attempting to build job artifact
+2024-03-20 12:17:45,613 INFO    SenderThread:49708 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-03-20 12:17:45,614 INFO    SenderThread:49708 [job_builder.py:build():402] adding wandb-job metadata file
+2024-03-20 12:17:45,618 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 9
+2024-03-20 12:17:45,618 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:45,618 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 9
+2024-03-20 12:17:45,619 DEBUG   SenderThread:49708 [sender.py:send():382] send: artifact
+2024-03-20 12:17:45,658 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-20 12:17:45,822 INFO    wandb-upload_0:49708 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpy534u8p_wandb/4wbvxl4x-media/table/Metrics_100_1bbffe52aae771557505.table.json
+2024-03-20 12:17:45,842 INFO    Thread-12 :49708 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/output.log
+2024-03-20 12:17:45,911 INFO    SenderThread:49708 [sender.py:send_artifact():1494] sent artifact job-https___github.com_MdAsifKhan_ML4SpatialAnalysis.git_main.py - {'id': 'QXJ0aWZhY3Q6NzY0MjUxMTg5', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTgxNjA5Nw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzY0MjUxMTg5', 'versionIndex': 115}}}
+2024-03-20 12:17:45,911 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:45,911 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-03-20 12:17:45,912 INFO    SenderThread:49708 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-03-20 12:17:46,844 INFO    SenderThread:49708 [dir_watcher.py:finish():388] scan: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files
+2024-03-20 12:17:46,845 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/requirements.txt requirements.txt
+2024-03-20 12:17:46,845 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/output.log output.log
+2024-03-20 12:17:46,848 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/config.yaml config.yaml
+2024-03-20 12:17:46,850 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json wandb-summary.json
+2024-03-20 12:17:46,850 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/conda-environment.yaml conda-environment.yaml
+2024-03-20 12:17:46,856 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-metadata.json wandb-metadata.json
+2024-03-20 12:17:46,861 INFO    SenderThread:49708 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/media/table/Metrics_100_1bbffe52aae771557505.table.json media/table/Metrics_100_1bbffe52aae771557505.table.json
+2024-03-20 12:17:46,861 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 10
+2024-03-20 12:17:46,861 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: poll_exit
+2024-03-20 12:17:46,861 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:46,862 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 10
+2024-03-20 12:17:46,863 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:46,863 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-03-20 12:17:46,863 INFO    SenderThread:49708 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-20 12:17:47,064 INFO    wandb-upload_1:49708 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/requirements.txt
+2024-03-20 12:17:47,125 INFO    wandb-upload_2:49708 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/config.yaml
+2024-03-20 12:17:47,192 INFO    wandb-upload_3:49708 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/wandb-summary.json
+2024-03-20 12:17:47,229 INFO    wandb-upload_0:49708 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/output.log
+2024-03-20 12:17:47,232 INFO    wandb-upload_4:49708 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/files/conda-environment.yaml
+2024-03-20 12:17:47,437 INFO    Thread-11 (_thread_body):49708 [sender.py:transition_state():617] send defer: 11
+2024-03-20 12:17:47,438 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:47,438 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 11
+2024-03-20 12:17:47,438 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:47,438 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-03-20 12:17:47,439 INFO    SenderThread:49708 [file_pusher.py:join():178] waiting for file pusher
+2024-03-20 12:17:47,443 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 12
+2024-03-20 12:17:47,443 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:47,444 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 12
+2024-03-20 12:17:47,444 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:47,444 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-03-20 12:17:47,444 INFO    SenderThread:49708 [file_stream.py:finish():595] file stream finish called
+2024-03-20 12:17:47,648 INFO    SenderThread:49708 [file_stream.py:finish():599] file stream finish is done
+2024-03-20 12:17:47,649 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 13
+2024-03-20 12:17:47,649 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:47,649 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 13
+2024-03-20 12:17:47,649 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:47,649 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-03-20 12:17:47,650 INFO    SenderThread:49708 [sender.py:transition_state():617] send defer: 14
+2024-03-20 12:17:47,650 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: defer
+2024-03-20 12:17:47,650 DEBUG   SenderThread:49708 [sender.py:send():382] send: final
+2024-03-20 12:17:47,650 INFO    HandlerThread:49708 [handler.py:handle_request_defer():172] handle defer: 14
+2024-03-20 12:17:47,650 DEBUG   SenderThread:49708 [sender.py:send():382] send: footer
+2024-03-20 12:17:47,651 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: defer
+2024-03-20 12:17:47,651 INFO    SenderThread:49708 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-03-20 12:17:47,652 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-20 12:17:47,652 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: poll_exit
+2024-03-20 12:17:47,653 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-20 12:17:47,653 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: server_info
+2024-03-20 12:17:47,654 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: poll_exit
+2024-03-20 12:17:47,654 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: server_info
+2024-03-20 12:17:47,656 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: get_summary
+2024-03-20 12:17:47,656 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: sampled_history
+2024-03-20 12:17:47,657 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-20 12:17:47,658 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: job_info
+2024-03-20 12:17:47,715 DEBUG   SenderThread:49708 [sender.py:send_request():409] send_request: job_info
+2024-03-20 12:17:47,716 INFO    MainThread:49708 [wandb_run.py:_footer_history_summary_info():3866] rendering history
+2024-03-20 12:17:47,716 INFO    MainThread:49708 [wandb_run.py:_footer_history_summary_info():3898] rendering summary
+2024-03-20 12:17:47,717 INFO    MainThread:49708 [wandb_run.py:_footer_sync_info():3825] logging synced files
+2024-03-20 12:17:47,717 DEBUG   HandlerThread:49708 [handler.py:handle_request():146] handle_request: shutdown
+2024-03-20 12:17:47,717 INFO    HandlerThread:49708 [handler.py:finish():869] shutting down handler
+2024-03-20 12:17:48,664 INFO    WriterThread:49708 [datastore.py:close():296] close: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240320_121154-2juddicn/run-2juddicn.wandb
+2024-03-20 12:17:48,718 INFO    SenderThread:49708 [sender.py:finish():1572] shutting down sender
+2024-03-20 12:17:48,719 INFO    SenderThread:49708 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-20 12:17:48,719 INFO    SenderThread:49708 [file_pusher.py:join():178] waiting for file pusher

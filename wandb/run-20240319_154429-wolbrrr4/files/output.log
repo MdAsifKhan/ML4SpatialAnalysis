@@ -1,0 +1,28 @@
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 58, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 45, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 27, in optimise
+    for batch_idx, (data, labels) in enumerate(train_loader):
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/dataset.py", line 54, in __getitem__
+    images = torch.stack(images)
+             ^^^^^^^^^^^^^^^^^^^
+RuntimeError: stack expects a non-empty TensorList
+Training Image Classification Model on Patients ['leap074', 'leap053', 'leap089', 'leap094', 'leap084a', 'leap011', 'leap045', 'leap029', 'leap071', 'leap021', 'leap083', 'leap049', 'leap042', 'leap005', 'leap041', 'leap020', 'leap076', 'leap054', 'leap033', 'leap024', 'leap035', 'leap084', 'leap039', 'leap064', 'leap066', 'leap040', 'leap052', 'leap057', 'leap056', 'leap038', 'leap058', 'leap004', 'leap081', 'leap051', 'leap070', 'leap015', 'leap069', 'leap088b', 'leap092', 'leap028', 'leap009', 'leap034', 'leap093', 'leap088a', 'leap017', 'leap036', 'leap001', 'leap062', 'leap043', 'leap075', 'leap008', 'leap086', 'leap065', 'leap012', 'leap087', 'leap073', 'leap061', 'leap006', 'leap019', 'leap002', 'leap003', 'leap032', 'leap055']

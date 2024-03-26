@@ -1,0 +1,200 @@
+2024-03-25 16:46:30,512 INFO    StreamThr :55954 [internal.py:wandb_internal():86] W&B internal server running at pid: 55954, started at: 2024-03-25 16:46:30.511181
+2024-03-25 16:46:30,513 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: status
+2024-03-25 16:46:30,521 INFO    WriterThread:55954 [datastore.py:open_for_write():87] open: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/run-siojjvlh.wandb
+2024-03-25 16:46:30,521 DEBUG   SenderThread:55954 [sender.py:send():382] send: header
+2024-03-25 16:46:30,553 DEBUG   SenderThread:55954 [sender.py:send():382] send: run
+2024-03-25 16:46:30,801 INFO    SenderThread:55954 [dir_watcher.py:__init__():211] watching files in: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files
+2024-03-25 16:46:30,801 INFO    SenderThread:55954 [sender.py:_start_run_threads():1136] run started: siojjvlh with start time 1711399590.51168
+2024-03-25 16:46:30,810 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: check_version
+2024-03-25 16:46:30,810 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: check_version
+2024-03-25 16:46:30,881 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: run_start
+2024-03-25 16:46:30,892 DEBUG   HandlerThread:55954 [system_info.py:__init__():27] System info init
+2024-03-25 16:46:30,892 DEBUG   HandlerThread:55954 [system_info.py:__init__():42] System info init done
+2024-03-25 16:46:30,892 INFO    HandlerThread:55954 [system_monitor.py:start():194] Starting system monitor
+2024-03-25 16:46:30,892 INFO    SystemMonitor:55954 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-03-25 16:46:30,892 INFO    HandlerThread:55954 [system_monitor.py:probe():214] Collecting system info
+2024-03-25 16:46:30,892 DEBUG   HandlerThread:55954 [system_info.py:probe():151] Probing system
+2024-03-25 16:46:30,893 INFO    SystemMonitor:55954 [interfaces.py:start():190] Started cpu monitoring
+2024-03-25 16:46:30,895 INFO    SystemMonitor:55954 [interfaces.py:start():190] Started disk monitoring
+2024-03-25 16:46:30,895 INFO    SystemMonitor:55954 [interfaces.py:start():190] Started gpuapple monitoring
+2024-03-25 16:46:30,897 INFO    SystemMonitor:55954 [interfaces.py:start():190] Started memory monitoring
+2024-03-25 16:46:30,899 INFO    SystemMonitor:55954 [interfaces.py:start():190] Started network monitoring
+2024-03-25 16:46:30,906 DEBUG   HandlerThread:55954 [system_info.py:_probe_git():136] Probing git
+2024-03-25 16:46:30,945 DEBUG   HandlerThread:55954 [system_info.py:_probe_git():144] Probing git done
+2024-03-25 16:46:30,945 DEBUG   HandlerThread:55954 [system_info.py:probe():199] Probing system done
+2024-03-25 16:46:30,945 DEBUG   HandlerThread:55954 [system_monitor.py:probe():223] {'os': 'macOS-14.3.1-arm64-arm-64bit', 'python': '3.11.7', 'heartbeatAt': '2024-03-25T20:46:30.892787', 'startedAt': '2024-03-25T20:46:30.501336', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py', 'codePathLocal': 'main.py', 'codePath': 'main.py', 'git': {'remote': 'https://github.com/MdAsifKhan/ML4SpatialAnalysis.git', 'commit': '19852622a33d4c26e7b5b78225b1df6c0a8a26ad'}, 'email': 'mak4086@gmail.com', 'root': '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis', 'host': 'msb-sand-l21094.harvardsecure.wireless.med.harvard.edu', 'username': 'asifkhan', 'executable': '/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/bin/python', 'cpu_count': 16, 'cpu_count_logical': 16, 'disk': {'/': {'total': 1858.1917190551758, 'used': 303.8918228149414}}, 'gpuapple': {'type': 'arm', 'vendor': 'Apple'}, 'memory': {'total': 128.0}}
+2024-03-25 16:46:30,945 INFO    HandlerThread:55954 [system_monitor.py:probe():224] Finished collecting system info
+2024-03-25 16:46:30,945 INFO    HandlerThread:55954 [system_monitor.py:probe():227] Publishing system info
+2024-03-25 16:46:30,945 DEBUG   HandlerThread:55954 [system_info.py:_save_conda():208] Saving list of conda packages installed into the current environment
+2024-03-25 16:46:31,807 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/conda-environment.yaml
+2024-03-25 16:46:33,817 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/conda-environment.yaml
+2024-03-25 16:46:33,866 DEBUG   HandlerThread:55954 [system_info.py:_save_conda():220] Saving conda packages done
+2024-03-25 16:46:33,866 INFO    HandlerThread:55954 [system_monitor.py:probe():229] Finished publishing system info
+2024-03-25 16:46:33,867 DEBUG   SenderThread:55954 [sender.py:send():382] send: files
+2024-03-25 16:46:33,867 INFO    SenderThread:55954 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-03-25 16:46:33,869 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: python_packages
+2024-03-25 16:46:33,870 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: python_packages
+2024-03-25 16:46:33,870 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: stop_status
+2024-03-25 16:46:33,870 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: stop_status
+2024-03-25 16:46:33,871 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-25 16:46:34,077 DEBUG   SenderThread:55954 [sender.py:send():382] send: telemetry
+2024-03-25 16:46:34,158 INFO    wandb-upload_0:55954 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpyzk0h3vtwandb/60phtffu-wandb-metadata.json
+2024-03-25 16:46:34,822 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/wandb-metadata.json
+2024-03-25 16:46:34,822 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/output.log
+2024-03-25 16:46:34,822 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/requirements.txt
+2024-03-25 16:46:35,186 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: log_artifact
+2024-03-25 16:46:35,186 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: log_artifact
+2024-03-25 16:46:35,356 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: partial_history
+2024-03-25 16:46:35,449 INFO    SenderThread:55954 [sender.py:send_request_log_artifact():1470] logged artifact run-siojjvlh-TrainMetrics - {'id': 'QXJ0aWZhY3Q6NzcwNDMyMzYx', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjE1MjQ0ODk3OA==', 'latestArtifact': None}}
+2024-03-25 16:46:35,449 DEBUG   SenderThread:55954 [sender.py:send():382] send: files
+2024-03-25 16:46:35,449 INFO    SenderThread:55954 [sender.py:_save_file():1403] saving file media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json with policy now
+2024-03-25 16:46:35,450 DEBUG   SenderThread:55954 [sender.py:send():382] send: history
+2024-03-25 16:46:35,450 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: summary_record
+2024-03-25 16:46:35,450 INFO    SenderThread:55954 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-25 16:46:35,450 DEBUG   SenderThread:55954 [sender.py:send():382] send: telemetry
+2024-03-25 16:46:35,450 DEBUG   SenderThread:55954 [sender.py:send():382] send: exit
+2024-03-25 16:46:35,450 INFO    SenderThread:55954 [sender.py:send_exit():589] handling exit code: 0
+2024-03-25 16:46:35,450 INFO    SenderThread:55954 [sender.py:send_exit():591] handling runtime: 4
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:send_exit():597] send defer
+2024-03-25 16:46:35,451 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,451 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 0
+2024-03-25 16:46:35,451 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 1
+2024-03-25 16:46:35,451 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,451 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 1
+2024-03-25 16:46:35,451 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-03-25 16:46:35,451 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 2
+2024-03-25 16:46:35,451 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,451 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 2
+2024-03-25 16:46:35,451 INFO    HandlerThread:55954 [system_monitor.py:finish():203] Stopping system monitor
+2024-03-25 16:46:35,451 DEBUG   SystemMonitor:55954 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-03-25 16:46:35,451 DEBUG   SystemMonitor:55954 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-03-25 16:46:35,451 DEBUG   SystemMonitor:55954 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-03-25 16:46:35,452 INFO    HandlerThread:55954 [interfaces.py:finish():202] Joined cpu monitor
+2024-03-25 16:46:35,452 INFO    HandlerThread:55954 [interfaces.py:finish():202] Joined disk monitor
+2024-03-25 16:46:35,452 INFO    HandlerThread:55954 [interfaces.py:finish():202] Joined gpuapple monitor
+2024-03-25 16:46:35,453 INFO    HandlerThread:55954 [interfaces.py:finish():202] Joined memory monitor
+2024-03-25 16:46:35,453 INFO    HandlerThread:55954 [interfaces.py:finish():202] Joined network monitor
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 3
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send():382] send: telemetry
+2024-03-25 16:46:35,453 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send():382] send: stats
+2024-03-25 16:46:35,453 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 3
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 4
+2024-03-25 16:46:35,453 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,453 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 4
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 5
+2024-03-25 16:46:35,453 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,453 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 5
+2024-03-25 16:46:35,453 DEBUG   SenderThread:55954 [sender.py:send():382] send: summary
+2024-03-25 16:46:35,453 INFO    SenderThread:55954 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-03-25 16:46:35,454 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,454 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-03-25 16:46:35,454 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 6
+2024-03-25 16:46:35,454 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,454 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 6
+2024-03-25 16:46:35,454 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,454 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-03-25 16:46:35,454 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: status_report
+2024-03-25 16:46:35,517 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 7
+2024-03-25 16:46:35,517 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:35,517 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 7
+2024-03-25 16:46:35,517 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:35,517 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-03-25 16:46:35,654 INFO    wandb-upload_1:55954 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpyzk0h3vtwandb/y80lh70w-media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json
+2024-03-25 16:46:35,828 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/config.yaml
+2024-03-25 16:46:35,828 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json
+2024-03-25 16:46:35,829 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/wandb-summary.json
+2024-03-25 16:46:35,829 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/media
+2024-03-25 16:46:35,830 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/media/table
+2024-03-25 16:46:35,830 INFO    wandb-upload_0:55954 [upload_job.py:push():89] Uploaded file /Users/asifkhan/Library/Application Support/wandb/artifacts/staging/tmpwvpksuca
+2024-03-25 16:46:36,363 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-25 16:46:36,491 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 8
+2024-03-25 16:46:36,491 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: poll_exit
+2024-03-25 16:46:36,491 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:36,492 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 8
+2024-03-25 16:46:36,492 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:36,492 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-03-25 16:46:36,492 INFO    SenderThread:55954 [job_builder.py:build():296] Attempting to build job artifact
+2024-03-25 16:46:36,493 INFO    SenderThread:55954 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-03-25 16:46:36,494 INFO    SenderThread:55954 [job_builder.py:build():402] adding wandb-job metadata file
+2024-03-25 16:46:36,498 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 9
+2024-03-25 16:46:36,499 DEBUG   SenderThread:55954 [sender.py:send():382] send: artifact
+2024-03-25 16:46:36,499 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:36,501 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 9
+2024-03-25 16:46:36,622 INFO    wandb-upload_1:55954 [upload_job.py:push():131] Uploaded file /var/folders/j2/98xl7w2d1dsgb7hdcht9dncm0000gr/T/tmpyzk0h3vtwandb/753u9g4v-media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json
+2024-03-25 16:46:36,739 INFO    SenderThread:55954 [sender.py:send_artifact():1494] sent artifact job-https___github.com_MdAsifKhan_ML4SpatialAnalysis.git_main.py - {'id': 'QXJ0aWZhY3Q6NzcwNDI5MjA1', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTgxNjA5Nw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzcwNDI5MjA1', 'versionIndex': 144}}}
+2024-03-25 16:46:36,739 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:36,739 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-03-25 16:46:36,739 INFO    SenderThread:55954 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-03-25 16:46:36,833 INFO    Thread-12 :55954 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/output.log
+2024-03-25 16:46:36,834 INFO    SenderThread:55954 [dir_watcher.py:finish():388] scan: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files
+2024-03-25 16:46:36,834 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/requirements.txt requirements.txt
+2024-03-25 16:46:36,835 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/output.log output.log
+2024-03-25 16:46:36,837 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/config.yaml config.yaml
+2024-03-25 16:46:36,839 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/wandb-summary.json wandb-summary.json
+2024-03-25 16:46:36,841 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/conda-environment.yaml conda-environment.yaml
+2024-03-25 16:46:36,843 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/wandb-metadata.json wandb-metadata.json
+2024-03-25 16:46:36,845 INFO    SenderThread:55954 [dir_watcher.py:finish():402] scan save: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json media/table/Train Metrics_0_e0332de254e9128cf3d9.table.json
+2024-03-25 16:46:36,845 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 10
+2024-03-25 16:46:36,846 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:36,846 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 10
+2024-03-25 16:46:36,846 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:36,846 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-03-25 16:46:36,846 INFO    SenderThread:55954 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-25 16:46:37,038 INFO    wandb-upload_1:55954 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/output.log
+2024-03-25 16:46:37,097 INFO    wandb-upload_2:55954 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/config.yaml
+2024-03-25 16:46:37,123 INFO    wandb-upload_0:55954 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/requirements.txt
+2024-03-25 16:46:37,152 INFO    wandb-upload_3:55954 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/wandb-summary.json
+2024-03-25 16:46:37,184 INFO    wandb-upload_4:55954 [upload_job.py:push():131] Uploaded file /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/files/conda-environment.yaml
+2024-03-25 16:46:37,369 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-25 16:46:37,369 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: poll_exit
+2024-03-25 16:46:37,386 INFO    Thread-11 (_thread_body):55954 [sender.py:transition_state():617] send defer: 11
+2024-03-25 16:46:37,386 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:37,386 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 11
+2024-03-25 16:46:37,386 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:37,387 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-03-25 16:46:37,387 INFO    SenderThread:55954 [file_pusher.py:join():178] waiting for file pusher
+2024-03-25 16:46:37,390 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 12
+2024-03-25 16:46:37,390 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:37,390 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 12
+2024-03-25 16:46:37,390 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:37,391 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-03-25 16:46:37,391 INFO    SenderThread:55954 [file_stream.py:finish():595] file stream finish called
+2024-03-25 16:46:37,578 INFO    SenderThread:55954 [file_stream.py:finish():599] file stream finish is done
+2024-03-25 16:46:37,578 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 13
+2024-03-25 16:46:37,578 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:37,578 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 13
+2024-03-25 16:46:37,579 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:37,579 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-03-25 16:46:37,579 INFO    SenderThread:55954 [sender.py:transition_state():617] send defer: 14
+2024-03-25 16:46:37,579 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: defer
+2024-03-25 16:46:37,579 INFO    HandlerThread:55954 [handler.py:handle_request_defer():172] handle defer: 14
+2024-03-25 16:46:37,579 DEBUG   SenderThread:55954 [sender.py:send():382] send: final
+2024-03-25 16:46:37,580 DEBUG   SenderThread:55954 [sender.py:send():382] send: footer
+2024-03-25 16:46:37,580 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: defer
+2024-03-25 16:46:37,580 INFO    SenderThread:55954 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-03-25 16:46:37,581 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: poll_exit
+2024-03-25 16:46:37,581 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: poll_exit
+2024-03-25 16:46:37,582 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: internal_messages
+2024-03-25 16:46:37,583 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: server_info
+2024-03-25 16:46:37,583 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: get_summary
+2024-03-25 16:46:37,583 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: sampled_history
+2024-03-25 16:46:37,583 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: server_info
+2024-03-25 16:46:37,583 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: job_info
+2024-03-25 16:46:37,649 DEBUG   SenderThread:55954 [sender.py:send_request():409] send_request: job_info
+2024-03-25 16:46:37,650 DEBUG   HandlerThread:55954 [handler.py:handle_request():146] handle_request: shutdown
+2024-03-25 16:46:37,650 INFO    HandlerThread:55954 [handler.py:finish():869] shutting down handler
+2024-03-25 16:46:38,589 INFO    WriterThread:55954 [datastore.py:close():296] close: /Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/wandb/run-20240325_164630-siojjvlh/run-siojjvlh.wandb
+2024-03-25 16:46:38,651 INFO    SenderThread:55954 [sender.py:finish():1572] shutting down sender
+2024-03-25 16:46:38,651 INFO    SenderThread:55954 [file_pusher.py:finish():172] shutting down file pusher
+2024-03-25 16:46:38,651 INFO    SenderThread:55954 [file_pusher.py:join():178] waiting for file pusher

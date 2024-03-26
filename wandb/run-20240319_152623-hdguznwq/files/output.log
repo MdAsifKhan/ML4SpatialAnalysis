@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 54, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 31, in run
+    train_dataset = IMCDataset(config['dataset'], train_patients, transform=transform, mode='train')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/dataset.py", line 30, in __init__
+    meta_data = pd.read_csv(f"{self.config['DATA_PATH']}/{response_filename}.csv", sep=',')
+                ^^
+NameError: name 'pd' is not defined

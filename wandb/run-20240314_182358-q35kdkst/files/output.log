@@ -1,0 +1,27 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting Model with split training
+Fitting the logistic Model
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 65, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 52, in run
+    model.optimise(data)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 89, in optimise
+    self.fit(data_train)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 139, in fit
+    X = self.featurisation(data)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 215, in featurisation
+    X = self.cellcell_to_featurisation(data['expressions'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 253, in cellcell_to_featurisation
+    data_mat = np.asarray([((expr - expr.mean(axis=0, keepdim=True)/(1e-8 + expr.std(axis=0, keepdim=True)))).mean(axis=0) for expr in X])
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/trainer.py", line 253, in <listcomp>
+    data_mat = np.asarray([((expr - expr.mean(axis=0, keepdim=True)/(1e-8 + expr.std(axis=0, keepdim=True)))).mean(axis=0) for expr in X])
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: _mean() got an unexpected keyword argument 'keepdim'

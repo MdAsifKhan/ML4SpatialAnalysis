@@ -1,0 +1,15 @@
+
+Training Image Classification Model on Patients ['leap014', 'leap064', 'leap032', 'leap045', 'leap030', 'leap024', 'leap048', 'leap036', 'leap016', 'leap059', 'leap043', 'leap051', 'leap050', 'leap017', 'leap011', 'leap037', 'leap042', 'leap038', 'leap023', 'leap035', 'leap057', 'leap009', 'leap065', 'leap056', 'leap015', 'leap028', 'leap046', 'leap084a', 'leap002', 'leap010', 'leap031', 'leap006', 'leap021', 'leap040', 'leap001', 'leap054', 'leap055', 'leap022', 'leap061', 'leap033', 'leap034', 'leap049']
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Traceback (most recent call last):
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 62, in <module>
+    run(config_file)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/run_image.py", line 49, in run
+    trainer.optimise(train_loader, test_loader)
+  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/imagemodels/trainer.py", line 45, in optimise
+    self.attribution(data_loader)
+                     ^^^^^^^^^^^
+NameError: name 'data_loader' is not defined
