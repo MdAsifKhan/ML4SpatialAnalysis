@@ -1,22 +1,29 @@
 seed: 42
+resume: False
+resume_epoch: 5
 trainer:
   model_name: 'ResNetClassifier'
   device: 'mps'
-  nm_epochs: 20
-  test_every: 2
+  nm_epochs: 100
+  test_every: 5
+  save_every: 5
   LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
   ResNetClassifier:
-    pretrained: False
+    pretrained: True
+    nm_markers: ???
+    num_classes: 1
+  VisionTransformer:
+    pretrained: True
     nm_markers: ???
     num_classes: 1
   optim:
-    lr: 0.001
+    lr: 0.0001
 
 # Dataset parameters
 dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
   test_ratio: 0.3
-  batch_size: 2
+  batch_size: 64
   response_filename: 'processed_response'  # Filename containing response labels
   img_foldername: 'Img_Denoised'
   nm_markers: 38
