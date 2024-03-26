@@ -1,9 +1,0 @@
-Preparing Features
-Loading Expression Data From File
-Feature Class Labels
-{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
-Configuring models
-Fitting gcn with split training
-/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/models/gcn.py:112: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/utils/tensor_new.cpp:278.)
-  edge_index = torch.tensor((row, col)).long()
-/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torch_geometric/utils/_scatter.py:100: UserWarning: The operator 'aten::scatter_reduce.two_out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:13.)

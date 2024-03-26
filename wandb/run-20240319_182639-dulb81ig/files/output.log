@@ -1,5 +1,0 @@
-/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
-  warnings.warn(
-/Users/asifkhan/miniconda3/envs/SpatialCellTNBC/lib/python3.11/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
-  warnings.warn(msg)
-Training Image Classification Model on Patients ['leap030', 'leap006', 'out.txt', 'leap001', 'leap013', 'leap045', 'leap019', 'leap039', 'leap022', 'leap062', 'leap029', 'leap051', 'leap010', 'leap061', 'leap012', 'leap054', 'leap009', 'leap038', 'leap057', 'leap028', 'leap052', 'img', 'leap064', 'leap015', 'leap041', 'leap043', 'leap033', 'leap003', 'leap049', 'leap017', 'leap056', 'leap084a', 'leap024', 'leap005', 'leap034', 'leap032', 'leap004', 'leap023', 'leap046', 'leap026', 'leap018', 'leap002', 'leap058', 'leap053']

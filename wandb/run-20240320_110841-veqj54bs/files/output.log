@@ -1,9 +1,0 @@
-
-Preparing Features
-Traceback (most recent call last):
-  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 69, in <module>
-    run(config_file)
-  File "/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/main.py", line 40, in run
-    dataset = SpatialCellToFeatures(config['dataset'], random_state=self.config['seed'])
-                                                                    ^^^^
-NameError: name 'self' is not defined
