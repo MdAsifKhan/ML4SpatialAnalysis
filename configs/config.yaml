@@ -1,13 +1,13 @@
 seed: 42  # Random seed for reproducibility
 model:
-  name: 'logistic' # Name of the model (choices: gcn, logistic, randomforest, xgboost)
+  name: 'xgboost' # Name of the model (choices: gcn, logistic, randomforest, xgboost)
   feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
   normalise_features: False
   # Data splitting parameters
   eval: ??? # Evaluation method ('split' for train/test split, 'LeaveOneOut' for LeaveOneOut evaluation)
   pcriterion: 'majority'
-  LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
+  LOG_PATH: 'logs'  # Path to save model logs
 
   # Graph construction parameters
   # Feature selection criteria
@@ -28,7 +28,7 @@ model:
     gconv: 'gcn'
     lr: 0.01       # Learning rate
     nm_epochs: 20    # Number of training epochs
-    device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
+    device: 'gpu'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
     logger: ???
     batch_size: 128   # Batch size for training
     fnorm: ???  # Normalisation criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
@@ -67,14 +67,14 @@ model:
 attribution:
   top_k: 10
   filename: ???  # Filename to save attribution scores (needs to be specified)
-  MODEL_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logmodels'  # Path to load the model for attribution
+  MODEL_PATH: '/logmodels'  # Path to load the model for attribution
 
 
 # Dataset parameters
 dataset:
-  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
+  DATA_PATH: 'data'  # Path to the data directory
   cell_filename: 'cell_table_size_normalized_cell_labels_corrected_labels'  # Filename containing cell table data
-  response_filename: 'processed_response'  # Filename containing response labels
+  response_filename: 'processed_response_enR'  # Filename containing response labels
   gtype: 'cellcell'  # Type of graph to construct ('cellcell' or 'celltype')
   k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' method)
   gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' or 'radius')

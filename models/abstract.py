@@ -7,7 +7,7 @@ from PIL import Image
 from abc import ABC
 from sklearn.preprocessing import StandardScaler
 from mainutils.utils import graph_feature_vector, feature_normalisation
-
+import os
 
 
 class AbstractModel(ABC):
@@ -163,6 +163,9 @@ class AbstractModel(ABC):
 		else:
 			name = self.config['name']
 		filename = f"{self.config['LOG_PATH']}/{name}_{logname}.pkl"
+		path = f"{self.config['LOG_PATH']}"
+		if not os.path.exists(path):
+			os.makedirs(path)
 		out = {
 				'model': self.classifier,
 				'scaler': self.scaler
