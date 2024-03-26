@@ -1,0 +1,112 @@
+Preparing Features
+Loading Cell Table
+Preparing Expression Data From Cell Table and saving to disk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Processing ROIs: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 657/657 [09:39<00:00,  1.13it/s]
+Split Expression Data and save to disk
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting xgboost with split training
+Metrics at ROI Level {'Train Accuracy': 0.9935344827586207, 'Train AUC': 0.9922980512654644, 'Train F1 Score': 0.9909365558912386}
+Metrics at Patient Level {'Train Accuracy majority': 1.0, 'Train AUC majority': 0.9922980512654644, 'Train F1 Score majority': 0.6666666666666666}
+Evaluating on Test Set
+Metrics at ROI Level {'Test Accuracy': 0.6217616580310881, 'Test AUC': 0.5674540976265114, 'Test F1 Score': 0.3865546218487395}
+Metrics at Patient Level {'Test Accuracy majority': 0.6785714285714286, 'Test AUC majority': 0.5674540976265114, 'Test F1 Score majority': 0.6666666666666666}
+Saving the xgboost Model
+Traceback (most recent call last):
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/main.py", line 72, in <module>
+    run(config_file)
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/main.py", line 62, in run
+    model.save_model(logname=logname)
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/models/abstract.py", line 170, in save_model
+    with open(filename, 'wb') as f:
+FileNotFoundError: [Errno 2] No such file or directory: '../logs/xgboost__model_xgboost_graphtype_cellcell_fnorm_minmax_graphfeats_gcn_eval_split_seed_42.pkl'
+Traceback (most recent call last):
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/main.py", line 72, in <module>
+    run(config_file)
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/main.py", line 62, in run
+    model.save_model(logname=logname)
+  File "/home/giuseppe/devices/Delta_Tissue/IMC/ML4SpatialAnalysis/models/abstract.py", line 170, in save_model
+    with open(filename, 'wb') as f:
+FileNotFoundError: [Errno 2] No such file or directory: '../logs/xgboost__model_xgboost_graphtype_cellcell_fnorm_minmax_graphfeats_gcn_eval_split_seed_42.pkl'

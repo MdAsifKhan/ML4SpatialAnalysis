@@ -1,0 +1,96 @@
+Preparing Features
+Loading Cell Table
+Preparing Expression Data From Cell Table and saving to disk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Processing ROIs: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 657/657 [10:32<00:00,  1.04it/s]
+Split Expression Data and save to disk
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting xgboost with split training
+Metrics at ROI Level {'Train Accuracy': 0.9910313901345291, 'Train AUC': 0.9892728674203495, 'Train F1 Score': 0.9880239520958084}
+Metrics at Patient Level {'Train Accuracy majority': 1.0, 'Train AUC majority': 0.9892728674203495, 'Train F1 Score majority': 0.6666666666666666}
+Evaluating on Test Set
+Metrics at ROI Level {'Test Accuracy': 0.6445497630331753, 'Test AUC': 0.6196078431372547, 'Test F1 Score': 0.5161290322580645}
+Metrics at Patient Level {'Test Accuracy majority': 0.8, 'Test AUC majority': 0.6196078431372547, 'Test F1 Score majority': 0.6666666666666666}
+Saving the xgboost Model

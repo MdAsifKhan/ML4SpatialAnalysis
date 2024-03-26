@@ -119,7 +119,7 @@ def process_roi(roi, cell_table, min_cells, k=6):
 	if len(label) != 1:
 		assert 0, f"Acquisition {roi} has non-unique labels"
 	label = label.pop()
-	patient = roi.split('_')[0]
+	patient = roi_cells.Patient.iloc[0]
 
 	return expressions, graph, label, patient, cell_labels
 

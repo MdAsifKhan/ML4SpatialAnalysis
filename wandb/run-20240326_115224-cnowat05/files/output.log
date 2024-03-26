@@ -1,0 +1,12 @@
+Preparing Features
+Loading Expression Data From File
+Feature Class Labels
+{'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
+Configuring models
+Fitting xgboost with split training
+Metrics at ROI Level {'Train Accuracy': 0.9935344827586207, 'Train AUC': 0.9922980512654644, 'Train F1 Score': 0.9909365558912386}
+Metrics at Patient Level {'Train Accuracy majority': 1.0, 'Train AUC majority': 0.9922980512654644, 'Train F1 Score majority': 0.6666666666666666}
+Evaluating on Test Set
+Metrics at ROI Level {'Test Accuracy': 0.6217616580310881, 'Test AUC': 0.5674540976265114, 'Test F1 Score': 0.3865546218487395}
+Metrics at Patient Level {'Test Accuracy majority': 0.6785714285714286, 'Test AUC majority': 0.5674540976265114, 'Test F1 Score majority': 0.6666666666666666}
+Saving the xgboost Model
