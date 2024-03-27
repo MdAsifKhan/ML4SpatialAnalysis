@@ -53,11 +53,13 @@ class SSGCN(nn.Module):
 	"""
 	def __init__(self, 
 					input_dim, 
-					hidden_dim, 
+					hidden_dim,
+					K,
+					alpha, 
 					nm_class=1):
 		super(SSGCN, self).__init__()
-		self.conv1 = SSGConv(input_dim, hidden_dim, K=1, alpha=0.4)
-		self.conv2 = SSGConv(hidden_dim, hidden_dim, K=1, alpha=0.4)
+		self.conv1 = SSGConv(input_dim, hidden_dim, K, alpha)
+		self.conv2 = SSGConv(hidden_dim, hidden_dim, K, alpha)
 		self.clf = nn.Linear(hidden_dim, nm_class)
 
 	def forward(self, x, edge_index, edge_weight, batch):
