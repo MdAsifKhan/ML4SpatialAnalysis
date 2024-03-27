@@ -45,5 +45,8 @@ python run_attribution.py configs/config.yaml
     - `utils.py`
 
 6. **main.py**: Used for dispatching experiments.
+
+    ./response_prediction.sh config/config.yaml model.name=xgboost model.fnorm=log1p
+
 7. **run_attribution.py**: Dispatches attribution methods.
 ```
