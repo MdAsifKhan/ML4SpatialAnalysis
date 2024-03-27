@@ -103,22 +103,3 @@ class ModelTrainer(AbstractModel):
 			print('Metrics at Patient Level', metrics_test)
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
-
-	def evaluate(self, data, mode='Test'):
-		"""
-		Tests the model on new data and returns evaluation metrics.
-
-		Args:
-			data (dict): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
-							expressions is a Feature matrix or a list of node attribute matrix.
-			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
-		"""
-		y_pred = self.predict(data)
-		metrics = compute_scores(data['labels'], y_pred, mode)
-		self.log_metrics(metrics, mode)
-		print('Metrics at ROI Level', metrics)
-		metrics = patient_level_scores(data['labels'], y_pred, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
-		self.log_metrics(metrics, mode=f"LeaveOneOutPatientLevel{mode}")
-		print('Metrics at Patient Level', metrics)
-		if mode == 'Test':
-			self.attribution(data)
