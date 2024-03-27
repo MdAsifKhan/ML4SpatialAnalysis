@@ -114,6 +114,27 @@ class AbstractModel(ABC):
 				X = self.scaler.transform(X)
 			return self.classifier.predict_proba(X)
 
+
+	def evaluate(self, data, mode='Test'):
+		"""
+		Tests the model on new data and returns evaluation metrics.
+
+		Args:
+			data (dict): A dictionary containing: expressions, enrichments (None for cell-cell case), graphs, labels, and feature names.
+							expressions is a Feature matrix or a list of node attribute matrix.
+			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
+		"""
+		y_pred = self.predict(data)
+		metrics = compute_scores(data['labels'], y_pred, mode)
+		self.log_metrics(metrics,  mode=f"ROILevel{mode}")
+		print('Metrics at ROI Level', metrics)
+		metrics = patient_level_scores(data['labels'], y_pred, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
+		self.log_metrics(metrics, mode=f"PatientLevel{mode}")
+		print('Metrics at Patient Level', metrics)
+		if mode == 'Test':
+			self.attribution(data)
+
+
 	def attribution(self, data):
 		"""
 		Computes attribution scores for a given data set.
@@ -162,14 +183,18 @@ class AbstractModel(ABC):
 			name = f"{self.config['name']}_{fold}"
 		else:
 			name = self.config['name']
+		
 		filename = f"{self.config['LOG_PATH']}/{name}_{logname}.pkl"
 		path = f"{self.config['LOG_PATH']}"
+
 		if not os.path.exists(path):
 			os.makedirs(path)
+		
 		out = {
 				'model': self.classifier,
 				'scaler': self.scaler
 				}
+		
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
 
