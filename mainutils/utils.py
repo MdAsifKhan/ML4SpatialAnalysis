@@ -461,6 +461,13 @@ def feature_normalisation(X, fnorm):
 			expr_ns = (expr - expr.min(axis=0))/(expr.max(axis=0) - expr.min(axis=0) + 1e-8)
 			X_norm.append(expr_ns)
 		return X_norm
+	if fnorm == 'arctan':
+		X_norm = []
+		for expr in X:
+			expr_s = np.arctan(expr)
+			expr_ns = (expr_s - np.mean(expr_s, axis=0, keepdims=True))/(1e-8 + np.std(expr_s, axis=0, keepdims=True))
+			X_norm.append(expr_ns)
+		return np.asarray(X_norm)
 		
 
 def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True):
