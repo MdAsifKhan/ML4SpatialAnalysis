@@ -30,7 +30,7 @@ class SpatialCellToFeatures:
 		self.seed = random_state
 		self.unique_labels = {'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
 		#filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
-		filename = f"{self.config['DATA_PATH']}/{self.config['gtype']}_processed_{self.config['datasplit']}.pkl"
+		filename = f"{self.config['DATA_PATH']}/cellcell_processed_{self.config['datasplit']}.pkl"
 		if os.path.exists(f"{filename}"):		
 			self.data = self.load_split_data(filename)
 		else:
@@ -78,7 +78,7 @@ class SpatialCellToFeatures:
 		Returns:
 			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
-		datafile = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
+		datafile = f"{self.config['DATA_PATH']}/processed_data_cellcell.pkl"
 		if os.path.exists(datafile):
 			data = self.load_data(datafile)
 		else:
