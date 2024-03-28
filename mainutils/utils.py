@@ -3,7 +3,7 @@ import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import eigs
 from scipy.sparse import csr_matrix
-from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph
+from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph, NearestNeighbors
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -12,6 +12,8 @@ from matplotlib.cm import ScalarMappable
 import matplotlib.patches as patches
 from collections import Counter
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
+from scipy.spatial.distance import pdist, cdist
+from scipy.spatial import Delaunay
 
 def load_config(filename):
 	"""
@@ -33,6 +35,7 @@ def edge_index_to_adj(edge_index, num_nodes):
 	data = np.ones_like(row)
 	adj = csr_matrix((data, (row, col)), shape=(num_nodes, num_nodes))
 	return adj
+
 
 def adjacency_to_laplacian(A, normalised=True):
 	"""
@@ -56,9 +59,67 @@ def adjacency_to_laplacian(A, normalised=True):
 	Lnorm = Dsqrt.dot(L).dot(Dsqrt)
 	return Lnorm
 
+
+def delaunay_graph(coords, mode='connectivity'):
+	"""
+		Constructs a Delaunay graph based on given coordinates.
+
+	Args:
+		coords: A NumPy array of shape (n_points, n_dims) containing coordinates.
+		mode: Either 'connectivity' (for adjacency matrix) or 'distance' (for distance matrix).
+				Defaults to 'connectivity'.
+
+	Returns:
+		A scipy.sparse.csr_matrix (connectivity mode) or a NumPy array (distance mode)
+		representing the Delaunay graph.
+	"""
+	nm_nodes = len(coords)
+	triangluation = Delaunay(coords)
+	indptr, indices = tri.vertex_neighbor_vertices
+	if mode=='connectivity':
+		return csr_matrix((np.ones_like(indices, dtype=np.float64), indices, indptr), shape=(nm_nodes, nm_nodes))
+	if mode=='distance':
+		distances = cdist(coords, coords)
+		A = distances[indptr[:-1], indices].reshape(nm_nodes, -1)
+		return csr_matrix(A)
+
+def atmostk_neighbors_graph(coords, k, mode='connectivity', include_self=False):
+	"""
+		Constructs an "at-most-k" nearest neighbor graph based on Euclidean distances.
+
+	Args:
+		coords: A NumPy array of shape (n_samples, 2) representing data points.
+		k: The maximum number of neighbors allowed for each vertex (at most k).
+
+	Returns:
+		A networkx.Graph object representing the "at-most-k" nearest neighbor graph.
+	"""
+	distance_matrix = pdist(coords)
+	threshold = np.percentile(distance_matrix, 100 * (1 - k / len(coords)), interpolation='higher')
+	#threshold = np.sum(distance_matrix) / (len(coords) * (len(coords) - 1))
+	G = nx.Graph()
+	for i in range(len(coords)):
+		# Add self-loop if specified
+		if include_self:
+			G.add_edge(i, i, weight=1)	
+		neighbors = [(j, distance_matrix[i, j]) for j in range(len(coords)) if i != j and distance_matrix[i, j] <= threshold]
+		neighbors.sort(key=lambda x: x[1])
+
+		for j, dist in range(neighbors):
+			if G.degree(j) >= k:
+				break
+			else:
+				if mode == 'distance':
+					G.add_edge(i, j, weight=1.0/(dist + 1e-6))
+				else:
+					G.add_edge(i, j)
+
+	return nx.adjacency_matrix(G).to_csr()
+
+
 def coords_to_graph(coords, gmethod='knn', radius=7):
 	"""
-	Constructs a graph from coordinates using specified method (k-nearest neighbors or radius-based).
+	Constructs a graph from coordinates using specified method (k-nearest neighbors, k-atmost neighbors or radius-based).
 
 	Args:
 		coords (numpy.ndarray): Array of coordinates representing nodes.
@@ -74,6 +135,10 @@ def coords_to_graph(coords, gmethod='knn', radius=7):
 									include_self=True)
 	elif gmethod == 'knn':
 		G = kneighbors_graph(coords, radius, mode='connectivity', include_self=True)
+	elif gmethod == 'atmostk':
+		G = atmostk_neighbors_graph(coords, radius, mode='connectivity', include_self=True)
+	elif gmethod == 'delaunay':
+		G = delaunay_graph(coords, mode='connectivity')
 	else:
 		assert 0, f"{gmethod} Not Implemented"
 	return G
@@ -191,11 +256,74 @@ def compute_scores(y, y_pred, mode='Train'):
 	accuracy_ = accuracy_score(y, y_pred)
 	auc_ = roc_auc_score(y, y_pred)
 	f1_ = f1_score(y, y_pred)
-
+	bal_acc_ = balanced_accuracy_score(y, y_pred)
 	metrics = {
 			f"{mode} Accuracy": accuracy_,
 			f"{mode} AUC": auc_,
 			f"{mode} F1 Score": f1_,
+			f"{mode} Balanced Accuracy": bal_acc_,
+
+	}
+	return metrics
+
+
+
+def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'):
+	unique_patients = list(set(patients))
+	patients_preds = {patient : [] for patient in unique_patients}
+	patients_labels = {patient : [] for patient in unique_patients}
+	true_positives = 0
+	true_negatives = 0
+	false_positives = 0
+	false_negatives = 0
+
+	for patient, label, pred in zip(patients, y, y_pred):
+		patients_preds[patient].append(pred)
+		patients_labels[patient].append(label)
+
+	unique_pred_patients_label, unique_patients_label = [], []
+	for patient in unique_patients:
+		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_preds[patient], patients_labels[patient])]
+		if pcriterion == 'majority':
+			# Check if the majority of predictions match the majority of labels
+			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
+		elif pcriterion == 'any':
+			vote_patient = any(pred == 1 for pred in correct_predictions)
+		else:
+			assert 0,f"{pcriterion} Not Implemented"
+
+		# Assign patient as true positive or true negative based on majority correct predictions
+		if vote_patient == 1:
+			unique_pred_patients_label.append(1)
+		else:
+			unique_pred_patients_label.append(0)
+		unique_patients_label.append(patients_labels[patient][0])
+		# 	if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
+		# 		true_positives += 1
+		# 	else:
+		# 		false_positives += 1
+		# if vote_patient == 0:
+		# 	if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
+		# 		true_negatives += 1
+		# else:
+		# 	false_negatives += 1
+
+
+	# total_patients = len(unique_patients)
+	# accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
+	# precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
+	# recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
+	# f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
+	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_label)
+	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
+	f1_ = f1_score(unique_patients_label, unique_pred_patients_label)
+	bal_acc_ = balanced_accuracy_score(y, y_pred)
+
+	metrics = {
+			f"{mode} Accuracy {pcriterion}": accuracy,
+			f"{mode} AUC {pcriterion}": aucroc,
+			f"{mode} F1 Score {pcriterion}": f1_,
+			f"{mode} Balanced Accuracy": bal_acc_,
 	}
 	return metrics
 
@@ -312,65 +440,6 @@ def leave_one_out_split(data):
 				test_set[key] = [data[i] for i in test_set]
 
 		yield train_set, test_set
-
-
-def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'):
-	unique_patients = list(set(patients))
-	patients_preds = {patient : [] for patient in unique_patients}
-	patients_labels = {patient : [] for patient in unique_patients}
-	true_positives = 0
-	true_negatives = 0
-	false_positives = 0
-	false_negatives = 0
-
-	for patient, label, pred in zip(patients, y, y_pred):
-		patients_preds[patient].append(pred)
-		patients_labels[patient].append(label)
-
-	unique_pred_patients_label, unique_patients_label = [], []
-	for patient in unique_patients:
-		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_preds[patient], patients_labels[patient])]
-		if pcriterion == 'majority':
-			# Check if the majority of predictions match the majority of labels
-			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
-		elif pcriterion == 'any':
-			vote_patient = any(pred == 1 for pred in correct_predictions)
-		else:
-			assert 0,f"{pcriterion} Not Implemented"
-
-		# Assign patient as true positive or true negative based on majority correct predictions
-		if vote_patient == 1:
-			unique_pred_patients_label.append(1)
-		else:
-			unique_pred_patients_label.append(0)
-		unique_patients_label.append(patients_labels[patient][0])
-		# 	if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
-		# 		true_positives += 1
-		# 	else:
-		# 		false_positives += 1
-		# if vote_patient == 0:
-		# 	if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
-		# 		true_negatives += 1
-		# else:
-		# 	false_negatives += 1
-
-
-	# total_patients = len(unique_patients)
-	# accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
-	# precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
-	# recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
-	# f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
-	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_label)
-	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
-	f1_ = f1_score(unique_patients_label, unique_pred_patients_label)
-	
-	metrics = {
-			f"{mode} Accuracy {pcriterion}": accuracy,
-			f"{mode} AUC {pcriterion}": aucroc,
-			f"{mode} F1 Score {pcriterion}": f1_,
-	}
-	return metrics
-
 
 
 def feature_normalisation(X, fnorm):
