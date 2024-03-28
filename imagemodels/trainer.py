@@ -7,6 +7,7 @@ from imagemodels.models import ResNetClassifier, VisionTransformer
 from mainutils.utils import compute_scores
 import numpy as np
 import wandb
+import torch.nn.functional as F
 
 MODELS = {
 	"ResNetClassifier": ResNetClassifier,
@@ -23,12 +24,12 @@ class ImageTrainer:
 		self.classifier = MODELS[self.config['model_name']](self.config[self.config['model_name']]).to(self.config['device'])
 		
 		self.optimizer = optim.Adam(self.classifier.parameters(), lr=self.config['optim']['lr'])
-		self.criterion = nn.BCEWithLogitsLoss()
+		self.criterion = nn.CrossEntropyLoss()
 
 	def optimise(self, train_loader, test_loader):
 		for epoch in range(self.config['nm_epochs']):
 			batch_loss = 0
-			for batch_idx, (data, labels) in enumerate(train_loader):
+			for batch_idx, (data, labels, _) in enumerate(train_loader):
 				data, labels = data.to(self.config['device']), labels.to(self.config['device'])
 				self.optimizer.zero_grad()
 				outputs = self.classifier(data)
@@ -50,21 +51,18 @@ class ImageTrainer:
 	def evaluate(self, data_loader, mode='train'):
 		self.classifier.eval()
 		with torch.no_grad():
-			all_predictions, all_labels = np.array([]), np.array([])
+			all_pred_labels, all_labels = np.array([]), np.array([])
 			i = 0
-			for images, labels in data_loader:
+			for images, labels, _ in data_loader:
 				i += 1
 				images = images.to(self.config['device'])
 				labels = labels.to(self.config['device'])
 
-				outputs = self.classifier(images)
-				
-				if len(outputs)>1:
-					outputs = outputs.squeeze()
-					labels = labels.squeeze()
+				logits = self.classifier(images)
+				probs = F.softmax(logits, dim=1)
+				pred_labels = probs.argmax(dim=1)
 
-				predictions = torch.round(torch.sigmoid(outputs)).cpu().numpy()
-				all_predictions = np.concatenate([all_predictions.reshape(-1), predictions.reshape(-1)])
+				all_pred_labels = np.concatenate([all_pred_labels, pred_labels.cpu().numpy()])
 				all_labels = np.concatenate([all_labels, labels.cpu().numpy()])
 
 		metrics = compute_scores(all_labels, all_predictions, mode)
@@ -86,7 +84,6 @@ class ImageTrainer:
 				labels = labels.to(self.config['device'])
 				outputs = self.classifier(data)
 				loss = self.criterion(outputs.squeeze(), labels.squeeze())
-				self.logger.log({'Test Iteration Loss': loss.item()})
 				batch_loss += loss.item() 
 			self.logger.log({'Test Epoch Loss': batch_loss/len(data_loader)})
 
@@ -121,25 +118,29 @@ class ImageTrainer:
 
 
 	def attribution(self, test_loader):
-		sample_image, sample_label = next(iter(test_loader))
+		sample_image, sample_label, channel_names = next(iter(test_loader))
 		sample_image = sample_image.to(self.config['device'])
 		sample_label = sample_label.to(self.config['device'])
+
+		indices_label_1 = torch.nonzero(sample_label == 1).squeeze(1)
+		
+		random_index = random.choice(indices_label_1)
+		sample_image, sample_label = sample_image[random_index], sample_label[random_index]
+
 		unique_labels = {1: 'Responder', 0: 'Non-Responder'}
 		# Compute saliency map
 		saliency_map = IntegratedGradients(self.classifier)
-		attributions = saliency_map.attribute(sample_image, target=sample_label)
-		import wandb
-		wandb.finish()
-		import pdb
-		pdb.set_trace()
-		# Log saliency map to WandB
-		wandb.log({f"Saliency Map {sample_label}": [wandb.Image(saliency_map.cpu().detach().numpy())]})
+		attributions = saliency_map.attribute(sample_image.unsqueeze(0), target=sample_label)
+		for marker_image, saliency, marker_name in zip(sample_image.squeeze(), attributions.squeeze(), channel_names):
+			# Log saliency map to WandB
+			concat_image = torch.cat((marker_image, saliency), dim=1)
+			wandb.log({f"Saliency Map For Patient {unique_labels[sample_label]} marker {marker_name}": [wandb.Image(concat_image.cpu().detach().numpy())]})
 
 		# Compute integrated gradients
 		integrated_gradients = IntegratedGradients(self.classifier)
 		attributions_ig, delta = integrated_gradients.attribute(sample_image, target=sample_label, return_convergence_delta=True)
 		# Log integrated gradients to WandB
-		wandb.log({"Integrated Gradients": [wandb.Image(integrated_gradients.cpu().detach().numpy())]})
+		wandb.log({f"Integrated Gradients {sample_label}": [wandb.Image(integrated_gradients.cpu().detach().numpy())]})
 
 
 
