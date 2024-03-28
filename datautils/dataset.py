@@ -84,8 +84,8 @@ class SpatialCellToFeatures:
 		else:
 			print('Loading Cell Table')
 			cell_table = load_cell_data(self.config['DATA_PATH'],
-													self.config['cell_filename'], 
-													self.config['response_filename'])
+											self.config['cell_filename'], 
+											self.config['response_filename'])
 
 			print('Preparing Expression Data From Cell Table and saving to disk')
 			data = cellcell_to_features(cell_table, 
