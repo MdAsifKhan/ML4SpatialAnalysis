@@ -67,7 +67,7 @@ model:
 attribution:
   top_k: 10
   filename: ???  # Filename to save attribution scores (needs to be specified)
-  MODEL_PATH: '/logmodels'  # Path to load the model for attribution
+  MODEL_PATH: 'logmodels'  # Path to load the model for attribution
 
 
 # Dataset parameters

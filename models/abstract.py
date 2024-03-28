@@ -6,7 +6,7 @@ import io
 from PIL import Image
 from abc import ABC
 from sklearn.preprocessing import StandardScaler
-from mainutils.utils import graph_feature_vector, feature_normalisation
+from mainutils.utils import graph_feature_vector, feature_normalisation, compute_scores, leave_one_out_split, patient_level_scores
 import os
 
 
