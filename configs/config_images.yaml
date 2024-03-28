@@ -11,11 +11,11 @@ trainer:
   ResNetClassifier:
     pretrained: True
     nm_markers: ???
-    num_classes: 1
+    nm_classes: 2
   VisionTransformer:
     pretrained: True
     nm_markers: ???
-    num_classes: 1
+    nm_classes: 2
   optim:
     lr: 0.0001
 
@@ -26,4 +26,3 @@ dataset:
   batch_size: 64
   response_filename: 'processed_response'  # Filename containing response labels
   img_foldername: 'Img_Denoised'
-  nm_markers: 38
