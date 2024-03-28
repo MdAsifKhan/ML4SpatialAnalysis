@@ -67,7 +67,7 @@ class SSGCN(nn.Module):
 		x = F.relu(x)
 		x = self.conv2(x, edge_index, edge_weight)
 		x = global_mean_pool(x, batch)
-		return F.sigmoid(self.clf(x))
+		return self.clf(x)
 
 GCN_DICT = {
 			'gcn': GCN,
@@ -90,6 +90,7 @@ class GraphConvolutionalNetwork:
 					fnorm,
 					logger=None,
 					device='cpu',
+					class_weight=None,
 					**kwargs):
 		"""
 		Initializes the TNBC GCN model and optimizer.
@@ -102,11 +103,12 @@ class GraphConvolutionalNetwork:
 		self.batch_size = batch_size
 		self.fnorm = fnorm
 		self.logger = logger
+		self.class_weight = class_weight
 
 		self.device = torch.device(device)
 		self.model = GCN_DICT[self.gconv](**kwargs.get(self.gconv, None)).to(self.device)
 		self.optim = torch.optim.Adam(self.model.parameters(), lr=lr)
-		self.criterion = nn.BCELoss()
+		self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(class_weight[1], dtype=torch.float32))
 
 	def to_pyg(self, data_dict):
 		"""
@@ -137,6 +139,9 @@ class GraphConvolutionalNetwork:
 				graph_attributes = (graph_attributes - min_marker)/(max_marker - min_marker + 1e-8)
 			elif self.fnorm == 'log1p':
 				graph_attributes = torch.log1p(graph_attributes)
+				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
+			elif self.fnorm == 'arctan':
+				graph_attributes = torch.arctan(graph_attributes)
 				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
 			elif self.fnorm == 'znorm':
 				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
@@ -200,6 +205,7 @@ class GraphConvolutionalNetwork:
 		for x_batch in loader:
 			x_batch = x_batch.to(self.device)
 			preds_i = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
+			preds_i = F.sigmoid(preds_i)
 			preds_i = (preds_i.squeeze().detach().cpu().numpy()>0.5).astype(float)
 			preds = np.concatenate([preds, preds_i])
 		return preds
@@ -225,11 +231,12 @@ class GraphConvolutionalNetwork:
 			x_batch = x_batch.to(self.device)
 			# x_batch
 			score = self.model(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
+			score = F.sigmoid(score)
 			preds_i = score.squeeze().detach().cpu().numpy()
 			preds = np.concatenate([preds, preds_i])
 		return preds
 
-	def pyg_attribution(self, data):
+	def pyg_attribution(self, data, topk=10):
 		from torch_geometric.explain import Explainer, GNNExplainer
 		self.model.eval()
 		explainer = Explainer(
@@ -256,7 +263,7 @@ class GraphConvolutionalNetwork:
 			scores, labels = explanation.visualize_feature_importance()
 			scores = scores.cpu().numpy()
 			sorted_indices = scores.argsort()[::-1]
-			sorted_indices = sorted_indices[:10]
+			sorted_indices = sorted_indices[:topk]
 			sorted_scores = scores[sorted_indices]
 			sorted_feature_names = feature_names[sorted_indices]
 			sub_graph = explanation.get_explanation_subgraph()
@@ -321,7 +328,7 @@ class GraphConvolutionalNetwork:
 		plt.savefig(buffer, format='png')
 		self.logger.log({'Average GNNExplainer across ROIs': wandb.Image(Image.open(buffer))})
 
-	def gradient_attribution(self, data):
+	def gradient_attribution(self, data, topk=10):
 		feature_names = data['markers']
 		import matplotlib.pyplot as plt
 		self.model.eval()
@@ -342,7 +349,7 @@ class GraphConvolutionalNetwork:
 			std_node_gradients.append(node_gradients.abs().std(0))
 
 			node_gradients = node_gradients.T.abs().cpu().numpy() 
-			top_k_idx = node_gradients.argsort(1)[:,-100:]
+			top_k_idx = node_gradients.argsort(1)[:,-topk:]
 			top_k_value = node_gradients[np.arange(node_gradients.shape[0])[:, None], top_k_idx]
 			plt.imshow(top_k_value, cmap='hot', aspect='auto')
 			plt.xlabel('Node Index')
@@ -388,8 +395,4 @@ class GraphConvolutionalNetwork:
 		buffer.seek(0)
 		plt.savefig(buffer, format='png')
 		self.logger.log({'Average gradients across ROIs': wandb.Image(Image.open(buffer))})
-
-
-
-
 

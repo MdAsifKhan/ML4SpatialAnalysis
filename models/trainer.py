@@ -35,7 +35,8 @@ class ModelTrainer(AbstractModel):
 	def __init__(self, config, 
 						logger,
 						logfile=None,
-						seed=42):
+						seed=42,
+						class_weight=None):
 		"""
 		Initializes the ModelTrainer object.
 
@@ -49,8 +50,12 @@ class ModelTrainer(AbstractModel):
 		self.seed = seed
 		seed_everything(self.seed)
 		# Choose and initialize classifier based on configuration
-		self.config['logistic']['random_state'] = seed
-		self.config['randomforest']['random_state'] = seed
+		self.config[self.config['name']]['random_state'] = seed
+		if (class_weight is not None) and (self.config['name'] in ['logistic', 'randomforest', 'gnn']):
+			self.config[self.config['name']]['class_weight'] = class_weight
+
+		if self.config['name'] == 'xgboost':
+			self.config[self.config['name']]['scale_pos_weight'] = class_weight[1]
 
 		if self.config['name'] == 'gnn':
 			self.config['gnn']['fnorm'] = self.config['fnorm']

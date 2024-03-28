@@ -5,6 +5,7 @@ import wandb
 from mainutils.utils import load_config
 from models.trainer import ModelTrainer
 from datautils.dataset import SpatialCellToFeatures
+from sklearn.utils.class_weight import compute_class_weight
 
 def log_features(features, labels, logger):
 	"""
@@ -28,15 +29,15 @@ def run(config):
 		config (dict): Configuration dictionary containing training parameters.
 	"""
 
-	if config['model']['name'] == 'gcn':
+	if config['model']['name'] == 'gnn':
 		config['model']['gcriterion'] = 'gcn'
 
 	logname = f"_model_{config['model']['name']}"\
-				f"_graphtype_{config['dataset']['gtype']}"\
+				f"_graphtype_{config['dataset']['gmethod']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
-				f"_seed_{config['seed']}"
+				f"_seed_{config['seed']}_balanced_train_{config['balanced_train']}"
 
 	# Initialize W&B logger with project name, entity, configuration, and log name
 	logger = wandb.init(entity="tnbcspatialcell", project="ML on TNBC Data", config=config, name=logname)
@@ -48,9 +49,13 @@ def run(config):
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
 
+	if config['balanced_train']:
+		class_weight = compute_class_weight('balanced', classes=np.unique(dataset.data['train']['labels']), y=dataset.data['train']['labels'])
+		class_weight = dict(zip(np.unique(dataset.data['train']['labels']), class_weight))
 	print('Configuring models')
 	# Configure the model trainer
-	model = ModelTrainer(config['model'], 
+	model = ModelTrainer(config['model'],
+							class_weight=class_weight, 
 							logger=logger,
 							logfile=logname,
 							seed=config['seed'])

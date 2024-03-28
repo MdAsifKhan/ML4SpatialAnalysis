@@ -18,11 +18,11 @@ def run(config):
 		config['model']['gcriterion'] = 'gcn'
 
 	logname = f"_model_{config['model']['name']}"\
-				f"_graphtype_{config['dataset']['gtype']}"\
+				f"_graphtype_{config['dataset']['gmethod']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
-				f"_seed_{config['seed']}"
+				f"_seed_{config['seed']}_balanced_train_{config['balanced_train']}"
 
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname, resume=True)
 	print('Preparing Features')
