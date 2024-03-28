@@ -145,8 +145,8 @@ class AbstractModel(ABC):
 		"""
 
 		if self.config['name'] == 'gnn':
-			self.classifier.pyg_attribution(data)
-			self.classifier.gradient_attribution(data)
+			self.classifier.pyg_attribution(data, self.config['tok_k_attr'])
+			self.classifier.gradient_attribution(data, self.config['tok_k_attr'])
 		elif self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
 			if self.config['name'] == 'logistic':
 				feature_importances = self.classifier.coef_.flatten()
