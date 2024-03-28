@@ -43,7 +43,6 @@ def run(config):
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
 	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
-	config['model']['gtype'] = config['dataset']['gtype']
 	config['model']['eval'] = config['dataset']['datasplit']
 
 	print('Feature Class Labels')

@@ -6,9 +6,9 @@ import io
 from PIL import Image
 from abc import ABC
 from sklearn.preprocessing import StandardScaler
-from mainutils.utils import graph_feature_vector, feature_normalisation
 import os
-
+from mainutils.utils import compute_scores, patient_level_scores
+from mainutils.utils import graph_feature_vector, feature_normalisation
 
 class AbstractModel(ABC):
 	"""
@@ -153,7 +153,7 @@ class AbstractModel(ABC):
 			else:
 				feature_importances = self.classifier.feature_importances_
 			feature_names = data['markers']
-			sorted_indices = feature_importances.argsort()[::-1][:10]
+			sorted_indices = feature_importances.argsort()[::-1][:self.config['tok_k_attr']]
 			sorted_feature_importances = feature_importances[sorted_indices]
 			sorted_feature_names = np.array(feature_names)[sorted_indices]
 			plt.figure(figsize=(16, 10))
@@ -185,9 +185,8 @@ class AbstractModel(ABC):
 			name = self.config['name']
 		
 		filename = f"{self.config['LOG_PATH']}/{name}_{logname}.pkl"
-		path = f"{self.config['LOG_PATH']}"
 
-		if not os.path.exists(path):
+		if not os.path.exists(self.config['LOG_PATH']):
 			os.makedirs(path)
 		
 		out = {

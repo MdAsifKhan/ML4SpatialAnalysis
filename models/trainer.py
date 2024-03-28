@@ -103,3 +103,5 @@ class ModelTrainer(AbstractModel):
 			print('Metrics at Patient Level', metrics_test)
 		else:
 			assert 0, f"{self.config['eval']} Evaluation not implemented"
+
+

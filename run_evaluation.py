@@ -27,11 +27,15 @@ def run(config):
 	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname, resume=True)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
+	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
+	config['model']['gtype'] = config['dataset']['gtype']
+	config['model']['eval'] = config['dataset']['datasplit']
+
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
 	print('Configuring models')
-	explainer = ModelEvaluation(config, logname, logger)
-	explainer.run(dataset.data_test)
+	explainer = ModelEvaluation(config['model'], logname, logger)
+	explainer.run(dataset.data['test'], logname)
 	wandb.finish()
 
 if __name__ == '__main__':

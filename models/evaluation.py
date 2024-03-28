@@ -22,20 +22,30 @@ class ModelEvaluation(AbstractModel):
 			config (dict): Configuration dictionary containing attribution parameters.
 		"""
 		super().__init__(config, logger)
+		self.classifier = None
+		self.scaler = None
 
-	def load_model(self, filename, fold):
-		with open(filename, 'wb') as f:
+	def load_model(self, filename, fold=None):
+		if fold:
+			name = f"{self.config['name']}_{fold}"
+		else:
+			name = self.config['name']
+
+		filename = f"{self.config['LOG_PATH']}/{name}_{filename}.pkl"
+
+		with open(filename, 'rb') as f:
 			load = pickle.load(f)
-			self.classifier = load['model']
-			self.scaler = load['scaler']
+		self.classifier = load['model']
+		self.scaler = load['scaler']
 
-	def run(self, data):
+	def run(self, data, logname):
 		"""
 		Logs the coefficients of the logistic regression model to W&B.
 
 		Args:
 			logger (wandb.Logger): W&B logger object.
 		"""
+		self.load_model(logname)
 		if self.config['eval'] == 'split':
 			filename = f"{self.config['LOG_PATH']}/{logname}.pkl"
 			self.evaluate(data, mode='Test')

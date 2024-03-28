@@ -11,6 +11,7 @@ from scipy.sparse import csr_matrix
 from matplotlib.cm import ScalarMappable
 import matplotlib.patches as patches
 from collections import Counter
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
 
 def load_config(filename):
 	"""
@@ -140,7 +141,6 @@ def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
 	return feature_vector, feature_names
 
 
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
 def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 	"""
 	Computes various evaluation scores for both training and test sets.
@@ -189,7 +189,6 @@ def compute_scores(y, y_pred, mode='Train'):
 		metrics (dict): Dictionary containing evaluation metrics.
 	"""
 	accuracy_ = accuracy_score(y, y_pred)
-	balanced_accuracy_ = balanced_accuracy_score(y, y_pred)
 	auc_ = roc_auc_score(y, y_pred)
 	f1_ = f1_score(y, y_pred)
 
@@ -317,7 +316,7 @@ def leave_one_out_split(data):
 
 def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'):
 	unique_patients = list(set(patients))
-	patients_pred = {patient : [] for patient in unique_patients}
+	patients_preds = {patient : [] for patient in unique_patients}
 	patients_labels = {patient : [] for patient in unique_patients}
 	true_positives = 0
 	true_negatives = 0
@@ -325,11 +324,12 @@ def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'
 	false_negatives = 0
 
 	for patient, label, pred in zip(patients, y, y_pred):
-		patients_pred[patient].append(pred)
+		patients_preds[patient].append(pred)
 		patients_labels[patient].append(label)
 
+	unique_pred_patients_label, unique_patients_label = [], []
 	for patient in unique_patients:
-		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_pred[patient], patients_labels[patient])]
+		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_preds[patient], patients_labels[patient])]
 		if pcriterion == 'majority':
 			# Check if the majority of predictions match the majority of labels
 			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
@@ -340,28 +340,34 @@ def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'
 
 		# Assign patient as true positive or true negative based on majority correct predictions
 		if vote_patient == 1:
-			if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
-				true_positives += 1
-			else:
-				false_positives += 1
-		if vote_patient == 0:
-			if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
-				true_negatives += 1
+			unique_pred_patients_label.append(1)
 		else:
-			false_negatives += 1
+			unique_pred_patients_label.append(0)
+		unique_patients_label.append(patients_labels[patient][0])
+		# 	if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
+		# 		true_positives += 1
+		# 	else:
+		# 		false_positives += 1
+		# if vote_patient == 0:
+		# 	if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
+		# 		true_negatives += 1
+		# else:
+		# 	false_negatives += 1
 
 
-	total_patients = len(unique_patients)
-	accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
-	precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
-	recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
-	f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
-	aucroc = roc_auc_score(y, y_pred)
+	# total_patients = len(unique_patients)
+	# accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
+	# precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
+	# recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
+	# f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
+	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_label)
+	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
+	f1_ = f1_score(unique_patients_label, unique_pred_patients_label)
 	
 	metrics = {
 			f"{mode} Accuracy {pcriterion}": accuracy,
 			f"{mode} AUC {pcriterion}": aucroc,
-			f"{mode} F1 Score {pcriterion}": f1_score,
+			f"{mode} F1 Score {pcriterion}": f1_,
 	}
 	return metrics
 
