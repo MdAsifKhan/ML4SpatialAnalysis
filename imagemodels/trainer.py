@@ -65,7 +65,7 @@ class ImageTrainer:
 				all_pred_labels = np.concatenate([all_pred_labels, pred_labels.cpu().numpy()])
 				all_labels = np.concatenate([all_labels, labels.cpu().numpy()])
 
-		metrics = compute_scores(all_labels, all_predictions, mode)
+		metrics = compute_scores(all_labels, all_pred_labels, mode)
 		metrics_table=[[key, value] for key, value in metrics.items()]
 		self.logger.log({
 					f"{mode} Metrics": 
