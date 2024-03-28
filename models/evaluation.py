@@ -37,7 +37,7 @@ class ModelEvaluation(AbstractModel):
 			logger (wandb.Logger): W&B logger object.
 		"""
 		if self.config['eval'] == 'split':
-			filename = f"{self.config['LOG_PATH']}/{logname}.pkl"
+			#filename = f"{self.config['LOG_PATH']}/{logname}.pkl"
 			self.evaluate(data, mode='Test')
 
 		elif self.config['eval'] == 'LeaveOneOut':

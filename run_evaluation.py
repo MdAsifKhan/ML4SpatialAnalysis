@@ -16,7 +16,7 @@ def run(config):
 
 	if config['model']['name'] == 'gcn':
 		config['model']['gcriterion'] = 'gcn'
-
+	config['model']['eval'] = config['dataset']['datasplit']
 	logname = f"_model_{config['model']['name']}"\
 				f"_graphtype_{config['dataset']['gtype']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
@@ -30,8 +30,8 @@ def run(config):
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
 	print('Configuring models')
-	explainer = ModelEvaluation(config, logname, logger)
-	explainer.run(dataset.data_test)
+	explainer = ModelEvaluation(config['model'], logname, logger)
+	explainer.run(dataset.data['test'])
 	wandb.finish()
 
 if __name__ == '__main__':
