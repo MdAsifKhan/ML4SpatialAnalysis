@@ -17,7 +17,7 @@ def run(config):
 	logger = wandb.init(entity="tnbcspatialcell", project="ML on Image Data", config=config, name=logname)
 
 	train_patients, test_patients = create_patient_split(config['dataset']['DATA_PATH'], 
-														config['dataset']['img_foldername'],
+														config['dataset']['response_filename'],
 														config['dataset']['test_ratio'], 
 														config['seed'])
 
