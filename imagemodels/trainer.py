@@ -4,7 +4,7 @@ import torch.nn as nn
 from captum.attr import IntegratedGradients
 
 from imagemodels.models import ResNetClassifier, VisionTransformer
-from mainutils.utils import compute_scores
+from mainutils.utils import compute_scores, patient_level_scores
 import numpy as np
 import wandb
 import torch.nn.functional as F
@@ -25,12 +25,13 @@ class ImageTrainer:
 		
 		self.optimizer = optim.Adam(self.classifier.parameters(), lr=self.config['optim']['lr'])
 		self.criterion = nn.CrossEntropyLoss()
+		self.auc_best = 0
 
 	def optimise(self, train_loader, test_loader):
 		for epoch in range(self.config['nm_epochs']):
 			batch_loss = 0
-			for batch_idx, (data, labels, _) in enumerate(train_loader):
-				data, labels = data.to(self.config['device']), labels.to(self.config['device'])
+			for batch_idx, batch_data in enumerate(train_loader):
+				data, labels = batch_data['images'].to(self.config['device']), batch_data['labels'].to(self.config['device'])
 				self.optimizer.zero_grad()
 				outputs = self.classifier(data)
 				loss = self.criterion(outputs.squeeze(), labels.squeeze())
@@ -38,25 +39,49 @@ class ImageTrainer:
 				self.optimizer.step()
 				self.logger.log({'Train Iteration Loss': loss.item()})
 				batch_loss += loss.item()
-			self.evaluate(train_loader, mode='Train')
+
+			metrics = self.evaluate(train_loader, mode='Train')
+			print(f"Metrics on Train Set {metrics}")
+
 			self.logger.log({'Train Epoch Loss': batch_loss/len(train_loader)})
 
 			if (epoch + 1) % self.config['test_every'] == 0:
 				self.log_test_loss(test_loader)
-				self.evaluate(test_loader, mode='Test')
+				metrics = self.evaluate(test_loader, mode='Test')
+				print(f"Metrics on Test Set {metrics}")
+
+				self.save_best_model(metrics, epoch+1)
 				#self.attribution(data_loader)
 			if (epoch + 1) % self.config['save_every'] == 0:
 				self.save_model(epoch+1)
 
+	def save_best_model(self, metrics, epoch):
+		if self.auc_best > metrics['Test AUC majority']:
+			filepath = f"{self.config['LOG_PATH']}/{self.config['model_name']}_best.pth"
+			ckpt = {
+					'model': self.classifier.state_dict(),
+					'optimizer': self.optim.state_dict(),
+					'epoch': epoch
+			}
+			filepath = f"{self.config['LOG_PATH']}/{self.config['model_name']}_{epoch}.pth"
+			torch.save(ckpt, filepath)
+			self.auc_best = metrics['Test AUC majority']
+			self.logger.log({
+						"Best Metrics Patient Level Test": 
+								wandb.Table(
+										data=metrics, 
+									columns=['Metric', 'Value'])
+						})
+
 	def evaluate(self, data_loader, mode='train'):
 		self.classifier.eval()
 		with torch.no_grad():
-			all_pred_labels, all_labels = np.array([]), np.array([])
+			all_pred_labels, all_labels, all_patients = np.array([]), np.array([]), []
 			i = 0
-			for images, labels, _ in data_loader:
+			for batch_data in data_loader:
 				i += 1
-				images = images.to(self.config['device'])
-				labels = labels.to(self.config['device'])
+				images = batch_data['images'].to(self.config['device'])
+				labels = batch_data['labels'].to(self.config['device'])
 
 				logits = self.classifier(images)
 				probs = F.softmax(logits, dim=1)
@@ -64,24 +89,35 @@ class ImageTrainer:
 
 				all_pred_labels = np.concatenate([all_pred_labels, pred_labels.cpu().numpy()])
 				all_labels = np.concatenate([all_labels, labels.cpu().numpy()])
+				all_patients += batch_data['patients']
 
 		metrics = compute_scores(all_labels, all_pred_labels, mode)
-		metrics_table=[[key, value] for key, value in metrics.items()]
+		metrics_table = [[key, value] for key, value in metrics.items()]
+
 		self.logger.log({
-					f"{mode} Metrics": 
+					f"{mode} Metrics ROI Level": 
 							wandb.Table(
 									data=metrics_table, 
 								columns=['Metric', 'Value'])
 					})
 		
+		metrics_patient = patient_level_scores(all_labels, all_pred_labels, all_patients, mode)
+		metrics_patient_table = [[key, value] for key, value in metrics_patient.items()]
+		self.logger.log({
+					f"{mode} Metrics Patient Level": 
+							wandb.Table(
+									data=metrics_patient_table, 
+								columns=['Metric', 'Value'])
+					})
+		return metrics_patient
 
 	def log_test_loss(self, data_loader):
 		with torch.no_grad():
 			batch_loss = 0
-			for batch_idx, (data, labels) in enumerate(data_loader):
+			for batch_idx, batch_data in enumerate(data_loader):
 				# Your training code here
-				data = data.to(self.config['device'])
-				labels = labels.to(self.config['device'])
+				data = batch_data['images'].to(self.config['device'])
+				labels = batch_data['labels'].to(self.config['device'])
 				outputs = self.classifier(data)
 				loss = self.criterion(outputs.squeeze(), labels.squeeze())
 				batch_loss += loss.item() 
@@ -97,7 +133,7 @@ class ImageTrainer:
 		"""
 		ckpt = {
 				'model': self.classifier.state_dict(),
-				'optimizer': self.optim.state_dict()
+				'optimizer': self.optimizer.state_dict()
 		}
 		filepath = f"{self.config['LOG_PATH']}/{self.config['model_name']}_{name}.pth"
 		torch.save(ckpt, filepath)
@@ -114,7 +150,7 @@ class ImageTrainer:
 		ckpt = torch.load(filepath, map_location=self.config['device'])
 		
 		self.classifier.load_state_dict(ckpt['model'])
-		self.optimizer.load_state_dict(ckpt['optim'])
+		self.optimizer.load_state_dict(ckpt['optimizer'])
 
 
 	def attribution(self, test_loader):

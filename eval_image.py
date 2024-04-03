@@ -19,10 +19,7 @@ def run(config):
 		patient_split = pickle.load(f)
 
 	transform_test = transforms.Compose([
-				transforms.Resize((224, 224)),  # Resize to a fixed size
-				transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),  # Color jitter
-				transforms.ToTensor(),  # Convert to tensor
-				transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize
+				transforms.Resize((512, 512)),  # Resize to a fixed size
 	])
 
 
@@ -33,11 +30,8 @@ def run(config):
 
 	trainer = ImageTrainer(config['trainer'], train_patients, test_patients, logger)
 
-	if config['resume']:
-		trainer.load_model(resume_epoch)
-
 	print(f"Testing Image Classification Model on Patients {test_patients}")
-	trainer.evaluate(test_loader, mode='test')
+	trainer.evaluate(test_loader, mode='Test')
 
 	wandb.finish()
 

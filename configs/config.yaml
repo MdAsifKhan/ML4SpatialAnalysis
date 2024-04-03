@@ -1,7 +1,7 @@
 seed: 42  # Random seed for reproducibility
 balanced_train: True
 model:
-  name: 'logistic' # Name of the model (choices: gnn, logistic, randomforest, xgboost)
+  name: 'xgboost' # Name of the model (choices: gnn, logistic, randomforest, xgboost)
   feature_dim: ??? # Dimensionality of Features
   # Logistic regression hyperparameters 
   normalise_features: False

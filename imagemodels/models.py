@@ -76,8 +76,8 @@ class VisionTransformer(nn.Module):
         super(VisionTransformer, self).__init__()
         self.config = config
         self.vit = vit_b_16(self.config['pretrained'])
-        in_features = self.vit.head.in_features
-        self.vit.head = nn.Identity()
+        in_features = self.vit.heads.head.in_features
+        self.vit.heads = nn.Identity()
         self.final_layer = nn.Sequential(
                             nn.Linear(self.config['nm_markers']*in_features, self.config['nm_markers']),
                             nn.LeakyReLU(0.2),
@@ -85,10 +85,8 @@ class VisionTransformer(nn.Module):
                     )
 
     def forward(self, x):
-        batch_size, marker_images, C, W, H = x.size()
+        batch_size, marker_images, W, H = x.size()
         # Reshape the input to (batch_size * marker_images, C, W, H)
-        x = x.view(-1, C, W, H)
         features = self.vit(x)
-        features = features.view(batch_size, -1)
         output = self.final_layer(features)
         return output
