@@ -78,7 +78,7 @@ model:
 # Dataset parameters
 dataset:
   DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
-  cell_filename: 'cell_table_size_normalized_cell_labels'  # Filename containing cell table data
+  cell_filename: 'cell_table_size_normalized_cell_labels_new'  # Filename containing cell table data
   response_filename: 'processed_response_new'  # Filename containing response labels
   datasplit: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
   test_ratio: 0.3  # Proportion of data used for testing
