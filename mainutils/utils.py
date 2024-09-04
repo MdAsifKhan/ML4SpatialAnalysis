@@ -14,6 +14,7 @@ from collections import Counter
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
 from scipy.spatial.distance import pdist, cdist
 from scipy.spatial import Delaunay
+from scipy.spatial import KDTree
 
 def load_config(filename):
 	"""
@@ -75,13 +76,14 @@ def delaunay_graph(coords, mode='connectivity'):
 	"""
 	nm_nodes = len(coords)
 	triangluation = Delaunay(coords)
-	indptr, indices = tri.vertex_neighbor_vertices
+	indptr, indices = triangluation.vertex_neighbor_vertices
 	if mode=='connectivity':
 		return csr_matrix((np.ones_like(indices, dtype=np.float64), indices, indptr), shape=(nm_nodes, nm_nodes))
 	if mode=='distance':
 		distances = cdist(coords, coords)
 		A = distances[indptr[:-1], indices].reshape(nm_nodes, -1)
 		return csr_matrix(A)
+
 
 def atmostk_neighbors_graph(coords, k, mode='connectivity', include_self=False):
 	"""
@@ -92,29 +94,40 @@ def atmostk_neighbors_graph(coords, k, mode='connectivity', include_self=False):
 		k: The maximum number of neighbors allowed for each vertex (at most k).
 
 	Returns:
-		A networkx.Graph object representing the "at-most-k" nearest neighbor graph.
+		A scipy.sparse.csr_matrix representing the adjacency matrix of the "at-most-k" nearest neighbor graph.
 	"""
-	distance_matrix = pdist(coords)
-	threshold = np.percentile(distance_matrix, 100 * (1 - k / len(coords)), interpolation='higher')
-	#threshold = np.sum(distance_matrix) / (len(coords) * (len(coords) - 1))
+	# Construct a k-nearest neighbor graph
+	tree = KDTree(coords)
+	indices = tree.query(coords, k + 1)[1][:, 1:]  # Exclude the first nearest neighbor (itself)
+
 	G = nx.Graph()
-	for i in range(len(coords)):
+	for i, neighbors in enumerate(indices):
 		# Add self-loop if specified
 		if include_self:
-			G.add_edge(i, i, weight=1)	
-		neighbors = [(j, distance_matrix[i, j]) for j in range(len(coords)) if i != j and distance_matrix[i, j] <= threshold]
-		neighbors.sort(key=lambda x: x[1])
+			G.add_edge(i, i, weight=1)
 
-		for j, dist in range(neighbors):
-			if G.degree(j) >= k:
-				break
+		for j in neighbors:
+			dist = np.linalg.norm(coords[i] - coords[j])
+			if mode == 'distance':
+				G.add_edge(i, j, weight=1.0/(dist + 1e-6))
 			else:
-				if mode == 'distance':
-					G.add_edge(i, j, weight=1.0/(dist + 1e-6))
-				else:
-					G.add_edge(i, j)
+				G.add_edge(i, j, weight=1)
 
-	return nx.adjacency_matrix(G).to_csr()
+	# Sparsify based on threshold
+	threshold = np.percentile([G[i][j]['weight'] for i, j in G.edges()], 100 * (1 - k / len(coords)), interpolation='higher')
+	edges_to_remove = [(i, j) for i, j in G.edges() if G[i][j]['weight'] > threshold]
+	G.remove_edges_from(edges_to_remove)
+
+	# Ensure each node is connected to at least one neighbor
+	for i in range(len(coords)):
+		if len(list(G.neighbors(i))) == 0:
+			j = indices[i][0]  # Connect to the nearest neighbor
+			dist = np.linalg.norm(coords[i] - coords[j])
+			if mode == 'distance':
+				G.add_edge(i, j, weight=1.0/(dist + 1e-6))
+			else:
+				G.add_edge(i, j, weight=1)
+	return nx.adjacency_matrix(G)
 
 
 def coords_to_graph(coords, gmethod='knn', radius=7):
@@ -242,7 +255,7 @@ def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 
 
 
-def compute_scores(y, y_pred, mode='Train'):
+def compute_scores(y, y_pred, y_proba, mode='Train', multi_class='raise'):
 	"""
 	Computes evaluation scores for a single test set.
 
@@ -254,8 +267,8 @@ def compute_scores(y, y_pred, mode='Train'):
 		metrics (dict): Dictionary containing evaluation metrics.
 	"""
 	accuracy_ = accuracy_score(y, y_pred)
-	auc_ = roc_auc_score(y, y_pred)
-	f1_ = f1_score(y, y_pred)
+	auc_ = roc_auc_score(y, y_proba, multi_class=multi_class)
+	f1_ = f1_score(y, y_pred, average='weighted')
 	bal_acc_ = balanced_accuracy_score(y, y_pred)
 	metrics = {
 			f"{mode} Accuracy": accuracy_,
@@ -268,27 +281,28 @@ def compute_scores(y, y_pred, mode='Train'):
 
 
 
-def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'):
+def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='majority'):
 	unique_patients = list(set(patients))
 	patients_preds = {patient : [] for patient in unique_patients}
 	patients_labels = {patient : [] for patient in unique_patients}
+	patients_probs = {patient : [] for patient in unique_patients}
 	true_positives = 0
 	true_negatives = 0
 	false_positives = 0
 	false_negatives = 0
 
-	for patient, label, pred in zip(patients, y, y_pred):
+	for patient, label, pred, prob in zip(patients, y, y_pred, y_proba):
 		patients_preds[patient].append(pred)
+		patients_probs[patient].append(prob)
 		patients_labels[patient].append(label)
 
-	unique_pred_patients_label, unique_patients_label = [], []
+	unique_pred_patients_prob, unique_pred_patients_label, unique_patients_label = [], [], []
 	for patient in unique_patients:
 		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_preds[patient], patients_labels[patient])]
 		if pcriterion == 'majority':
 			# Check if the majority of predictions match the majority of labels
 			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
-		elif pcriterion == 'any':
-			vote_patient = any(pred == 1 for pred in correct_predictions)
+			prob_patient = np.mean(patients_probs[patient])
 		else:
 			assert 0,f"{pcriterion} Not Implemented"
 
@@ -298,32 +312,18 @@ def patient_level_scores(y, y_pred, patients, mode='Test', pcriterion='majority'
 		else:
 			unique_pred_patients_label.append(0)
 		unique_patients_label.append(patients_labels[patient][0])
-		# 	if patients_labels[patient][0] == 1:  # Assuming labels are consistent for the patient
-		# 		true_positives += 1
-		# 	else:
-		# 		false_positives += 1
-		# if vote_patient == 0:
-		# 	if patients_labels[patient][0] == 0:  # Assuming labels are consistent for the patient				
-		# 		true_negatives += 1
-		# else:
-		# 	false_negatives += 1
+		unique_pred_patients_prob.append(prob_patient)
 
-
-	# total_patients = len(unique_patients)
-	# accuracy = (true_positives + true_negatives) / total_patients if total_patients != 0 else 0
-	# precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) != 0 else 0
-	# recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) != 0 else 0
-	# f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
-	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_label)
+	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_prob)
 	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
 	f1_ = f1_score(unique_patients_label, unique_pred_patients_label)
-	bal_acc_ = balanced_accuracy_score(y, y_pred)
+	bal_acc_ = balanced_accuracy_score(unique_patients_label, unique_pred_patients_label)
 
 	metrics = {
 			f"{mode} Accuracy {pcriterion}": accuracy,
 			f"{mode} AUC {pcriterion}": aucroc,
 			f"{mode} F1 Score {pcriterion}": f1_,
-			f"{mode} Balanced Accuracy": bal_acc_,
+			f"{mode} Balanced Accuracy {pcriterion}": bal_acc_,
 	}
 	return metrics
 
@@ -453,7 +453,7 @@ def feature_normalisation(X, fnorm):
 			expr_s = np.log1p(expr)
 			expr_ns = (expr_s - np.mean(expr_s, axis=0, keepdims=True))/(1e-8 + np.std(expr_s, axis=0, keepdims=True))
 			X_norm.append(expr_ns)
-		return np.asarray(X_norm)
+		return X_norm
 	if fnorm == 'minmax':
 		X_norm = []
 		for expr in X:
@@ -467,10 +467,10 @@ def feature_normalisation(X, fnorm):
 			expr_s = np.arctan(expr)
 			expr_ns = (expr_s - np.mean(expr_s, axis=0, keepdims=True))/(1e-8 + np.std(expr_s, axis=0, keepdims=True))
 			X_norm.append(expr_ns)
-		return np.asarray(X_norm)
+		return X_norm
 		
 
-def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True):
+def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True, spatial_coords=None, ax=None, pos=None, add_legend=False, label_to_color=None, largest_comp=None):
 	"""
 	Visualizes a cell graph using NetworkX and Matplotlib.
 
@@ -485,41 +485,52 @@ def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True):
 	for i in range(graph.shape[0]):
 		for j in graph.indices[graph.indptr[i]:graph.indptr[i+1]]:
 			edges.append((i, j))
-
 	# Create a NetworkX graph and add edges
 	G = nx.Graph()
 	G.add_edges_from(edges)
 	G.remove_edges_from(nx.selfloop_edges(G))
 
-	# Set appropriate figure size for large graphs
-	fig, ax = plt.subplots(figsize=(10, 6))
-	# Use a layout that handles large graphs relatively well
-	pos = nx.spring_layout(G, k=0.15, iterations=200)
-	# Create a color mapper for normalization
+	if largest_comp is not None:
+		# Identify the largest connected component
+		largest_cc = max(nx.connected_components(G), key=len)
+		G = G.subgraph(largest_cc).copy()
 	if node_labels is not None:
-		# Choose a colormap (modify as needed)
-		cmap = plt.cm.tab10  # Select a colormap from matplotlib.cm
-		unique_labels = set(node_labels)
-		norm = plt.Normalize(vmin=0, vmax=len(set(node_labels)) - 1) 
-		sm = ScalarMappable(cmap=cmap, norm=norm)
+		node_labels = np.array(node_labels)
+		node_labels = [node_labels[i] for i in G.nodes]
 
-		# Draw nodes with colors based on labels and colormap
-		node_colors = [sm.to_rgba(i) for i in range(len(node_labels))]
-		nx.draw_networkx_nodes(G, pos, node_size=5, node_color=node_colors)
+	if ax is None:
+		# Set appropriate figure size for large graphs
+		fig, ax = plt.subplots(figsize=(10, 6))
 	else:
-		nx.draw_networkx_nodes(G, pos, node_size=5)
+		fig = ax.get_figure()
+	# Use a layout that handles large graphs relatively well
+	if pos is None:
+		if spatial_coords is None:
+			pos = nx.spring_layout(G, seed=random_state, k=0.15, iterations=200)
+		else:
+			pos = {i: (spatial_coords[i][0], spatial_coords[i][1]) for i in range(graph.shape[0])}
+	# Create a color mapper for normalization
+	unique_labels = list(set(node_labels))
+	if node_labels is not None and label_to_color is None:
+		# Choose a colormap (modify as needed)
+		cmap = plt.cm.tab20  # Select a colormap from matplotlib.cm
+		norm = plt.Normalize(vmin=0, vmax=len(unique_labels) - 1) 
+		sm = ScalarMappable(cmap=cmap, norm=norm)
+		label_to_color = {label: sm.to_rgba(i) for i, label in enumerate(unique_labels)}
 
-	nx.draw_networkx_edges(G, pos, width=0.2, alpha=0.5, edge_color='gray')
 	if node_labels is not None:
-		legend_handles = []
-		for i, label in enumerate(unique_labels):
-			legend_handles.append(patches.Patch(color=sm.to_rgba(i), label=label))
+		# Draw nodes with colors based on labels and colormap
+		node_colors = [label_to_color[label] for label in node_labels]
+		nx.draw_networkx_nodes(G, pos, node_size=5, node_color=node_colors, ax=ax)
+	else:
+		nx.draw_networkx_nodes(G, pos, node_size=5, ax=ax)
 
-		legend_ax = fig.add_axes([0.1, 0.05, 0.8, 0.1])
-		# Add legend (adjust location as needed)
-		legend_ax.legend(handles=legend_handles, ncol=5, loc='upper center')
-		legend_ax.axis('off')
+	nx.draw_networkx_edges(G, pos, width=0.2, alpha=0.5, edge_color='gray', ax=ax)
+	
+	if node_labels is not None and add_legend:
+		legend_handles = [patches.Patch(color=sm.to_rgba(i), label=label) for i, label in enumerate(unique_labels)]
+		ax.legend(handles=legend_handles, ncol=5, loc='upper center', bbox_to_anchor=(1.1, 1), borderaxespad=0.)
 	ax.axis('off')
 	if show:
 		plt.show()
-	return plt
+	return fig, ax, pos, label_to_color
