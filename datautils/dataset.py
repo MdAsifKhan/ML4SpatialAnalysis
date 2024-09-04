@@ -29,8 +29,8 @@ class SpatialCellToFeatures:
 		self.config = config
 		self.seed = random_state
 		self.unique_labels = {'pCR': 1, 'Responder': 1, 'Non-Responder': 0}
-		#filename = f"{self.config['DATA_PATH']}/processed_data_{self.config['gtype']}.pkl"
-		filename = f"{self.config['DATA_PATH']}/cellcell_processed_{self.config['datasplit']}.pkl"
+		#filename = f"{self.config['DATA_PATH']}/cellcell_processed_split.pkl"
+		filename = f"{self.config['DATA_PATH']}/RCB_cellcell_processed_{self.config['datasplit']}_{self.seed}.pkl"
 		if os.path.exists(f"{filename}"):		
 			self.data = self.load_split_data(filename)
 		else:
@@ -78,23 +78,26 @@ class SpatialCellToFeatures:
 		Returns:
 			dict: A dictionary containing: expressions, enrichments (default None), graphs (default None), labels, and feature names.
 		"""
-		datafile = f"{self.config['DATA_PATH']}/processed_data_cellcell.pkl"
+		
+		# Old Data
+		datafile = f"{self.config['DATA_PATH']}/RCB_processed_data_cellcell.pkl"
+		# New Data
+		#datafile = f"{self.config['DATA_PATH']}/RCB_processed_data_cellcell_new.pkl"
+
 		if os.path.exists(datafile):
 			data = self.load_data(datafile)
 		else:
 			print('Loading Cell Table')
 			cell_table = load_cell_data(self.config['DATA_PATH'],
 											self.config['cell_filename'], 
-											self.config['response_filename'])
+											self.config['response_filename']
+											)
 
 			print('Preparing Expression Data From Cell Table and saving to disk')
 			data = cellcell_to_features(cell_table, 
-											gmethod=self.config['gmethod'], 
-											k=self.config['k'],
 											filename=datafile)
 
-			print('Split Expression Data and save to disk')
-
+		print('Split Expression Data and save to disk')
 		data['labels'] = np.asarray([self.unique_labels[label] for label in data['labels']])
 		if self.config['datasplit'] == 'split':
 			data_train, data_test = train_test_split(data, 

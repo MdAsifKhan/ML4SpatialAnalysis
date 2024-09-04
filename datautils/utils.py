@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import os
 import pickle
-from mainutils.utils import coords_to_graph
 from scipy.sparse import csr_matrix
 import squidpy as sq
 from collections import OrderedDict
@@ -10,6 +9,8 @@ from collections import OrderedDict
 from functools import partial
 from tqdm import tqdm
 from joblib import Parallel, delayed
+import threading
+
 ##
 # Based On Giuseppe's Code
 
@@ -84,12 +85,13 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 	fovs = cell_table.fov.value_counts()[cell_table.fov.value_counts()>=1000].index
 	cell_table = cell_table[cell_table.fov.isin(fovs)]
 	cell_table[MARKERS] = cell_table[MARKERS].fillna(0)
+	cell_table = cell_table.dropna(subset=['Stain'])
 	return cell_table
 
 
 def filter_data(cell_table, qc_pass=False, use_core=True):
 	"""
-	Filters the AnnData object based on user-defined criteria.
+	Filters the pandas based on user-defined criteria.
 
 	Args:
 		cell_table (pd.DataFrame): The pandas object containing the data.
@@ -106,7 +108,10 @@ def filter_data(cell_table, qc_pass=False, use_core=True):
 		cell_table = cell_table[cell_table['qc_pass']]
 	return cell_table
 
-def process_roi(roi, cell_table, min_cells, k=6):
+# from memory_profiler import profile
+
+# @profile
+def process_roi(roi, cell_table, min_cells):
 	roi_cells = cell_table[cell_table.fov == roi]
 	if len(roi_cells) < min_cells:
 		return None
@@ -114,17 +119,16 @@ def process_roi(roi, cell_table, min_cells, k=6):
 	coords = roi_cells[['centroid-0', 'centroid-1']].values
 	expressions = roi_cells[MARKERS].values
 	cell_labels = roi_cells.cell_meta_cluster.values
-	graph = coords_to_graph(coords, gmethod='knn', radius=k)
 	label = set(roi_cells.Response.values)
 	if len(label) != 1:
 		assert 0, f"Acquisition {roi} has non-unique labels"
 	label = label.pop()
 	patient = roi_cells.Patient.iloc[0]
+	stain = int(roi_cells.Stain.iloc[0]) - 1 #Offset by 1 for labels
+	return expressions, coords, label, patient, cell_labels, stain
 
-	return expressions, graph, label, patient, cell_labels
 
-
-def cellcell_to_features(cell_table, min_cells=10, gmethod='knn', k=6, filename='./data.pkl', num_cores=8):
+def cellcell_to_features(cell_table, min_cells=10, filename='./data.pkl', num_cores=4):
 	"""
 	Extracts features based on interactions between individual cells within each acquisition.
 
@@ -145,27 +149,30 @@ def cellcell_to_features(cell_table, min_cells=10, gmethod='knn', k=6, filename=
 
 	dataset = {
 		'expressions': [],
-		'graphs': [],
+		'coords': [],
 		'labels': [],
 		'patient': [],
 		'cell_labels': [],
+		'stain': [],
 		'markers': MARKERS,
 		'celltypes': celltypes
 		}
-
-	results = Parallel(n_jobs=num_cores)(
-			delayed(process_roi)(roi, cell_table, min_cells, k)
-			for roi in tqdm(unique_rois, desc="Processing ROIs")
-	)
+	semaphore = threading.Semaphore()
+	with semaphore:
+		results = Parallel(n_jobs=num_cores, timeout=120)(
+				delayed(process_roi)(roi, cell_table, min_cells)
+				for roi in tqdm(unique_rois, desc="Processing ROIs")
+		)
 
 	for result in results:
 		if result is not None:
-			expressions, graph, label, patient, cell_labels = result
+			expressions, coords, label, patient, cell_labels, stain = result
 			dataset['expressions'].append(expressions)
-			dataset['graphs'].append(graph)
+			dataset['coords'].append(coords)
 			dataset['labels'].append(label)
 			dataset['patient'].append(patient)
 			dataset['cell_labels'].append(cell_labels)
+			dataset['stain'].append(stain)
 
 	with open(filename, 'wb') as f:
 		pickle.dump(dataset, f)
