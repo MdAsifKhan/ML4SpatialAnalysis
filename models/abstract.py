@@ -124,14 +124,26 @@ class AbstractModel(ABC):
 							expressions is a Feature matrix or a list of node attribute matrix.
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
 		"""
-		y_pred = self.predict(data)
-		metrics = compute_scores(data['labels'], y_pred, mode)
+		if self.config['name'] == 'gnn':
+			y_pred, yb_pred = self.predict(data)
+			y_proba, yb_proba = self.predict_proba(data)
+			if self.config['gnn']['batch_correct']:
+				metrics = compute_scores(data['stain'], yb_pred, yb_proba, mode, multi_class='ovr')
+				self.log_metrics(metrics,  mode=f"Batch Classifier {mode}")
+				print('Metrics Batch Predictor', metrics)
+		else:
+			y_pred = self.predict(data)
+			y_proba = self.predict_proba(data)
+		y_proba = y_proba[:, 1]
+		metrics = compute_scores(data['labels'], y_pred, y_proba, mode)
 		self.log_metrics(metrics,  mode=f"ROILevel{mode}")
 		print('Metrics at ROI Level', metrics)
-		metrics = patient_level_scores(data['labels'], y_pred, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
-		self.log_metrics(metrics, mode=f"PatientLevel{mode}")
+		metrics = patient_level_scores(data['labels'], y_pred, y_proba, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
+		self.log_metrics(metrics, mode=f"Patient Level {mode}")
 		print('Metrics at Patient Level', metrics)
 		if mode == 'Test':
+			if self.config['gnn']['batch_correct']:
+				self.classifier.visualize_latent_space(data)
 			self.attribution(data)
 
 
@@ -146,7 +158,7 @@ class AbstractModel(ABC):
 
 		if self.config['name'] == 'gnn':
 			self.classifier.pyg_attribution(data, self.config['tok_k_attr'])
-			self.classifier.gradient_attribution(data, self.config['tok_k_attr'])
+			#self.classifier.gradient_attribution(data, self.config['tok_k_attr'])
 		elif self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
 			if self.config['name'] == 'logistic':
 				feature_importances = self.classifier.coef_.flatten()
@@ -172,19 +184,14 @@ class AbstractModel(ABC):
 			assert 0,f"Attribution not implemented for {self.config['name']}"
 
 
-	def save_model(self, logname, fold=None):
+	def save_model(self, logname):
 		"""
 		Saves the trained model and feature names to a file.
 
 		Args:
 			fold (str, optional): Fold number for cross-validation (optional). Defaults to None.
 		"""
-		if fold:
-			name = f"{self.config['name']}_{fold}"
-		else:
-			name = self.config['name']
-		
-		filename = f"{self.config['LOG_PATH']}/{name}_{logname}.pkl"
+		filename = f"{self.config['LOG_PATH']}/{self.config['name']}_{logname}.pkl"
 
 		if not os.path.exists(self.config['LOG_PATH']):
 			os.makedirs(path)
@@ -197,6 +204,27 @@ class AbstractModel(ABC):
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
 
+
+	def save_leaveOO(self, test, logname=None):
+		"""
+		Saves the trained model and feature names to a file.
+
+		Args:
+			fold (str, optional): Fold number for cross-validation (optional). Defaults to None.
+		"""
+		filename = f"{self.config['LOG_PATH']}/{self.config['name']}_{logname}.pkl"
+
+		if not os.path.exists(self.config['LOG_PATH']):
+			os.makedirs(path)
+		
+		out = {
+				'model': self.classifier,
+				'scaler': self.scaler,
+				'data': test
+				}
+		
+		with open(filename, 'wb') as f:
+			pickle.dump(out, f)
 
 	def log_metrics(self, metrics, mode='Train'):
 		"""
