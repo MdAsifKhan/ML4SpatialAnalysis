@@ -54,7 +54,7 @@ class ModelTrainer(AbstractModel):
 		if (class_weight is not None) and (self.config['name'] in ['logistic', 'randomforest', 'gnn']):
 			self.config[self.config['name']]['class_weight'] = class_weight
 
-		if self.config['name'] == 'xgboost':
+		if (class_weight is not None) and self.config['name'] == 'xgboost':
 			self.config[self.config['name']]['scale_pos_weight'] = class_weight[1]
 
 		if self.config['name'] == 'gnn':
@@ -94,7 +94,7 @@ class ModelTrainer(AbstractModel):
 				y_pred_train = np.concatenate([y_pred_train, y_pred_train_i])
 				y_pred_test = np.concatenate([y_pred_test, y_pred_test_i])
 
-				self.save_model(fold=f"leaveoneout_{i+1}_patient_{test_set['patient'][0]}")
+				self.save_leaveOO(test_i, logname=f"leaveoneout_{i+1}_patient_{test_i['patient'][0]}")
 
 			print(f"Evaluating the {self.config['name']} Model")
 			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
