@@ -33,14 +33,14 @@ def run(config):
 		config['model']['gcriterion'] = 'gcn'
 
 	logname = f"_model_{config['model']['name']}"\
-				f"_graphtype_{config['dataset']['gmethod']}"\
+				f"_graphtype_{config['model']['gnn']['gmethod']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
 				f"_seed_{config['seed']}_balanced_train_{config['balanced_train']}"
 
 	# Initialize W&B logger with project name, entity, configuration, and log name
-	logger = wandb.init(entity="tnbcspatialcell", project="ML on TNBC Data", config=config, name=logname)
+	logger = wandb.init(entity="maximentropy", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
 	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
@@ -52,6 +52,8 @@ def run(config):
 	if config['balanced_train']:
 		class_weight = compute_class_weight('balanced', classes=np.unique(dataset.data['train']['labels']), y=dataset.data['train']['labels'])
 		class_weight = dict(zip(np.unique(dataset.data['train']['labels']), class_weight))
+	else:
+		class_weight = None
 	print('Configuring models')
 	# Configure the model trainer
 	model = ModelTrainer(config['model'],

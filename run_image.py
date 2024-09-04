@@ -7,6 +7,7 @@ from imagemodels.trainer import ImageTrainer
 from mainutils.utils import load_config
 from torch_geometric.seed import seed_everything
 import pickle
+import os
 
 def run(config):
 	seed_everything(config['seed'])
@@ -22,6 +23,9 @@ def run(config):
 														config['seed'])
 
 	patient_split = {'train': train_patients, 'test': test_patients}
+
+	if not os.path.exists(f"{config['trainer']['LOG_PATH']}/"):
+		os.makedirs(f"{config['trainer']['LOG_PATH']}/")
 	with open(f"{config['trainer']['LOG_PATH']}/patient_splits.pkl", 'wb') as f:
 		pickle.dump(patient_split, f)
 
