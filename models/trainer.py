@@ -61,12 +61,12 @@ class ModelTrainer(AbstractModel):
 			self.config['gnn']['fnorm'] = self.config['fnorm']
 			self.config['gnn']['logger'] = self.logger
 			self.config[self.config['name']][self.config[self.config['name']]['gconv']]['input_dim'] = self.config['feature_dim']
-			self.config[self.config['name']][self.config[self.config['name']]['gconv']] ['hidden_dim'] = 2*self.config['feature_dim']
+			self.config[self.config['name']][self.config[self.config['name']]['gconv']] ['hidden_dim'] = self.config['feature_dim']
 
 		self.classifier = MODELS_DICT[self.config['name']](**self.config[self.config['name']])
 
 
-	def optimise(self, dataset):
+	def optimise(self, dataset, logname):
 		"""
 		Optimizes the model by fitting, evaluating, and potentially saving it.
 
@@ -82,28 +82,58 @@ class ModelTrainer(AbstractModel):
 			self.evaluate(dataset['train'], mode='Train')
 			print(f"Evaluating on Test Set")
 			self.evaluate(dataset['test'], mode='Test')
+			
+			print(f"Saving the {config['model']['name']} Model")
+			self.save_model(logname=logname)
 
-		elif self.config['eval'] == 'LeaveOneOut':
-			for i, (train_i, test) in enumerate(self.leave_one_out_split(data)):
-				self.fit(train)
+		elif self.config['eval'] == 'leaveOneOut':
+			y_test = np.array([])
+			y_pred_test = np.array([])
+			y_pred_test_prob = np.array([])
+			patient_label = np.array([])
+			for i, (train_i, test_i) in enumerate(leave_one_out_split(dataset)):
+				self.fit(train_i)
+
 				y_pred_train_i = self.predict(train_i)
+				y_pred_train_prob_i = self.predict_proba(train_i)[:, 1]
+
+				print(f"Evaluating the {self.config['name']} Model on Training Set")
+				print(f"[Fold {i+1}] Evaluating {self.config['name']} Model on TRAIN set")
+				train_metrics = compute_scores(
+								train_i['labels'],          # ground truth
+								y_pred_train_i,             # predicted labels
+								y_pred_train_prob_i,        # predicted probabilities
+								mode='Train'
+				)
+				self.log_metrics(train_metrics, mode=f"LOO_ROI_Train_Fold{i+1}")
+
+				metrics_train = patient_level_scores(
+								train_i['labels'], 
+								y_pred_train_i, 
+								y_pred_train_prob_i, 
+								train_i['patient'], 
+								mode='Train', 
+								pcriterion=self.config['pcriterion'])
+				print('Metrics at Patient Level', metrics_train)
+				self.log_metrics(metrics_train, mode=f"LeaveOneOutPatientLevelTrain {i+1}")
+
 				y_pred_test_i = self.predict(test_i)
+				y_pred_test_prob_i = self.predict_proba(test_i)[:, 1] 
 
-				y_train = np.concatenate([y_train, train_i['labels']])
 				y_test = np.concatenate([y_test, test_i['labels']])
-				y_pred_train = np.concatenate([y_pred_train, y_pred_train_i])
 				y_pred_test = np.concatenate([y_pred_test, y_pred_test_i])
+				y_pred_test_prob = np.concatenate([y_pred_test_prob, y_pred_test_prob_i])
+				patient_label = np.concatenate([patient_label, test_i['patient']])
 
-				self.save_leaveOO(test_i, logname=f"leaveoneout_{i+1}_patient_{test_i['patient'][0]}")
+				self.save_leaveOO(test_i, logname=f"{logname}_leaveoneout_{i+1}_patient_{test_i['patient'][0]}")
+				self.classifier = MODELS_DICT[self.config['name']](**self.config[self.config['name']])
 
-			print(f"Evaluating the {self.config['name']} Model")
-			metrics = compute_scores_train(y_train, y_pred_train, y_test, y_pred_test)
-			self.log_metrics(metrics, mode='LeaveOneOutROILevel')
-			print('Metrics at ROI Level',metrics)
-			metrics_train = patient_level_scores(y_train, y_pred_train,  data['patient'], mode='Train', pcriterion=self.config['pcriterion'])
-			self.log_metrics(metrics_train, mode='LeaveOneOutPatientLevelTrain')
-			print('Metrics at Patient Level', metrics_train)
-			metrics_test = patient_level_scores(y_test, y_pred_test,  data['patient'], mode='Test', pcriterion=self.config['pcriterion'])
+			print(f"[All Folds] Evaluating {self.config['name']} Model on the concatenated TEST folds")
+
+			metrics = compute_scores(y_test, y_pred_test, y_pred_test_prob, mode='Test')
+			self.log_metrics(metrics, mode=f"LeaveOneOutROILevel {i+1}")
+
+			metrics_test = patient_level_scores(y_test, y_pred_test, y_pred_test_prob, patient_label, mode='Test', pcriterion=self.config['pcriterion'])
 			self.log_metrics(metrics_test, mode='LeaveOneOutPatientLevelTest')
 			print('Metrics at Patient Level', metrics_test)
 		else:

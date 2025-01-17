@@ -124,27 +124,19 @@ class AbstractModel(ABC):
 							expressions is a Feature matrix or a list of node attribute matrix.
 			graphs (list, optional): List of graphs (for GCN models). Defaults to None.
 		"""
-		if self.config['name'] == 'gnn':
-			y_pred, yb_pred = self.predict(data)
-			y_proba, yb_proba = self.predict_proba(data)
-			if self.config['gnn']['batch_correct']:
-				metrics = compute_scores(data['stain'], yb_pred, yb_proba, mode, multi_class='ovr')
-				self.log_metrics(metrics,  mode=f"Batch Classifier {mode}")
-				print('Metrics Batch Predictor', metrics)
-		else:
-			y_pred = self.predict(data)
-			y_proba = self.predict_proba(data)
+		y_pred = self.predict(data)
+		y_proba = self.predict_proba(data)
 		y_proba = y_proba[:, 1]
-		metrics = compute_scores(data['labels'], y_pred, y_proba, mode)
-		self.log_metrics(metrics,  mode=f"ROILevel{mode}")
-		print('Metrics at ROI Level', metrics)
-		metrics = patient_level_scores(data['labels'], y_pred, y_proba, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
-		self.log_metrics(metrics, mode=f"Patient Level {mode}")
-		print('Metrics at Patient Level', metrics)
-		if mode == 'Test':
-			if self.config['gnn']['batch_correct']:
-				self.classifier.visualize_latent_space(data)
-			self.attribution(data)
+		metrics_roi = compute_scores(data['labels'], y_pred, y_proba, mode)
+		self.log_metrics(metrics_roi,  mode=f"ROILevel{mode}")
+		print('Metrics at ROI Level', metrics_roi)
+
+		metrics_patient = patient_level_scores(data['labels'], y_pred, y_proba, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
+		self.log_metrics(metrics_patient, mode=f"Patient Level {mode}")
+		print('Metrics at Patient Level', metrics_patient)
+
+		# if mode == 'Test':
+		# 	self.attribution(data)
 
 
 	def attribution(self, data):
@@ -157,6 +149,7 @@ class AbstractModel(ABC):
 		"""
 
 		if self.config['name'] == 'gnn':
+			#self.classifier.latent_attribution(data)
 			self.classifier.pyg_attribution(data, self.config['tok_k_attr'])
 			#self.classifier.gradient_attribution(data, self.config['tok_k_attr'])
 		elif self.config['name'] in ['logistic', 'randomforest', 'xgboost']:
@@ -212,7 +205,7 @@ class AbstractModel(ABC):
 		Args:
 			fold (str, optional): Fold number for cross-validation (optional). Defaults to None.
 		"""
-		filename = f"{self.config['LOG_PATH']}/{self.config['name']}_{logname}.pkl"
+		filename = f"{self.config['LOG_PATH']}/{logname}.pkl"
 
 		if not os.path.exists(self.config['LOG_PATH']):
 			os.makedirs(path)
@@ -225,6 +218,12 @@ class AbstractModel(ABC):
 		
 		with open(filename, 'wb') as f:
 			pickle.dump(out, f)
+
+	def load_model(self, filename):
+		with open(filename, 'rb') as f:
+			load = pickle.load(f)
+		self.classifier = load['model']
+		self.scaler = load['scaler']
 
 	def log_metrics(self, metrics, mode='Train'):
 		"""
