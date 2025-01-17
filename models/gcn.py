@@ -1,7 +1,8 @@
 from sklearn.linear_model import LogisticRegression
 import torch.nn as nn
 import torch
-from torch_geometric.nn import GCNConv, global_mean_pool, SSGConv
+from torch_geometric.nn import GCNConv, SSGConv, global_sort_pool, TopKPooling, global_mean_pool, GATConv
+
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
@@ -16,6 +17,43 @@ import io
 from PIL import Image
 from mainutils.utils import coords_to_graph
 from models.adversarial_batch import AdversarialClassifier
+
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GATConv, global_mean_pool, GlobalAttention
+
+
+# class GCN(nn.Module):
+#     def __init__(self, input_dim, hidden_dim, nm_class):
+#         super(GCN, self).__init__()
+#         self.input_dim = input_dim
+#         self.hidden_dim = hidden_dim
+#         self.nm_class = nm_class
+#         self.mlp_protein = nn.Sequential(
+#             nn.Linear(input_dim, hidden_dim),
+#             nn.ReLU(),
+#             nn.Linear(hidden_dim, hidden_dim)
+#         )
+#         self.gat1 = GCNConv(hidden_dim, 4*hidden_dim)
+#         self.gat2 = GCNConv(4 * hidden_dim, 4*hidden_dim)
+#         self.global_pool = global_mean_pool
+#         self.mlp_classifier = nn.Sequential(
+#             nn.Linear(4*hidden_dim, 2*hidden_dim),
+#             nn.ReLU(),
+#             nn.Dropout(0.3),
+#             nn.Linear(hidden_dim*2, nm_class)
+#         )
+        
+#     def hidden_representation(self, x, edge_index, edge_attr, batch):
+#         x = self.mlp_protein(x)
+#         x = F.relu(self.gat1(x, edge_index, edge_attr))
+#         x = F.relu(self.gat2(x, edge_index, edge_attr))
+#         z = self.global_pool(x, batch)
+#         x = self.mlp_classifier(z)
+#         return x, z
+
 
 class GCN(nn.Module):
 	"""
@@ -34,23 +72,50 @@ class GCN(nn.Module):
 		self.input_dim = input_dim
 		self.hidden_dim = hidden_dim
 		self.nm_class = nm_class
-		self.conv1 = GCNConv(self.input_dim, self.hidden_dim)
-		self.conv2 = GCNConv(self.hidden_dim, self.hidden_dim)
-		self.clf = nn.Linear(self.hidden_dim, self.nm_class)
+		self.conv1 = GCNConv(self.input_dim, 2*self.hidden_dim)
+		self.conv2 = GCNConv(2*self.hidden_dim, 4*self.hidden_dim)
+		self.clf = nn.Linear(4*self.hidden_dim, self.nm_class)
+		self.dropout = nn.Dropout(0.3)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
-		x = F.relu(x)
+		x = self.dropout(F.relu(x))
 		x = self.conv2(x, edge_index, edge_weight)
+		# x = global_sort_pool(x, batch, k=500)
+		# x = x.view(-1, self.hidden_dim)
+		# batch_size = batch.max().item() + 1
+		# new_batch = torch.arange(batch_size).repeat_interleave(500).to(batch.device)
+		# x = global_mean_pool(x, new_batch)
 		x = global_mean_pool(x, batch)
 		return self.clf(x), x
 
 	def forward(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
-		x = F.relu(x)
+		x = self.dropout(F.relu(x))
 		x = self.conv2(x, edge_index, edge_weight)
+		# x = global_sort_pool(x, batch, k=100)
+		# x = x.view(-1, self.hidden_dim)
+		# batch_size = batch.max().item() + 1
+		# x = global_mean_pool(x, new_batch)
 		x = global_mean_pool(x, batch)
 		return self.clf(x)
+
+	def induced_subgraph(self,  x, edge_index, edge_weight, batch):
+		x = self.conv1(x, edge_index, edge_weight)
+		x = self.dropout(F.relu(x))
+		x = self.conv2(x, edge_index, edge_weight)
+		x_pooled, perm = global_sort_pool(x, batch, k=50, return_perm=True)
+		import pdb
+		pdb.set_trace()
+		mask_0 = torch.eq(edge_index[0].unsqueeze(1), topk_node_indices).any(dim=1)  # Check for source node
+		mask_1 = torch.eq(edge_index[1].unsqueeze(1), topk_node_indices).any(dim=1)  # Check for target node
+
+		# Create a mask for edges where both nodes are in the top k
+		mask = mask_0 & mask_1
+
+		# Select only the edges that connect top k nodes
+		edge_index_subgraph = edge_index[:, mask]
+		return edge_index_subgraph
 
 class SSGCN(nn.Module):
 	"""
@@ -71,8 +136,10 @@ class SSGCN(nn.Module):
 		self.input_dim = input_dim
 		self.hidden_dim = hidden_dim
 		self.nm_class = nm_class
-		self.conv1 = SSGConv(self.input_dim, self.hidden_dim, self.K, self.alpha)
-		self.conv2 = SSGConv(self.hidden_dim, self.hidden_dim, self.K, self.alpha)
+		self.K = int(K)
+		self.alpha = alpha
+		self.conv1 = SSGConv(self.input_dim, self.hidden_dim, self.alpha, self.K)
+		self.conv2 = SSGConv(self.hidden_dim, self.hidden_dim, self.alpha, self.K)
 		self.clf = nn.Linear(self.hidden_dim, self.nm_class)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
@@ -136,19 +203,13 @@ class GraphConvolutionalNetwork:
 		self.device = torch.device(device)
 		gcn_params = kwargs.get(self.gconv, None)	
 		self.model = GCN_DICT[self.gconv](**gcn_params).to(self.device)
-		self.optim = torch.optim.Adam(self.model.parameters(), lr=lr)
+		self.optim = torch.optim.Adam(self.model.parameters(), lr=lr, weight_decay=1e-4)
 		if class_weight is None:
 			weights = None
 		else:
 			weights = [weight for target, weight in class_weight.items()]
 			weights = torch.tensor(weights, dtype=torch.float32).to(self.device)
 		self.criterion = nn.CrossEntropyLoss(weight=weights)
-		if self.batch_correct:
-			#self.batch_tf = nn.Sequential(nn.Linear(gcn_params['input_dim'], gcn_params['input_dim']),
-			#							nn.ReLU()).to(self.device)
-			self.batch_pred = AdversarialClassifier(gcn_params['hidden_dim'], self.nm_batch).to(self.device)
-			self.optim_b = torch.optim.Adam(self.batch_pred.parameters(), lr=lr)
-			#self.optim_b = torch.optim.Adam(list(self.batch_pred.parameters())+list(self.batch_tf.parameters()), lr=lr)
 
 	def to_pyg(self, data_dict):
 		"""
@@ -222,19 +283,8 @@ class GraphConvolutionalNetwork:
 				self.optim.zero_grad()
 				logits, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				loss = self.criterion(logits, x_batch.y)
-				if self.batch_correct and epoch<50:
-					self.optim_b.zero_grad()
-					pred_batch = self.batch_pred(latent_z)
-					loss_adv_batch = self.batch_pred.loss(pred_batch, x_batch.stain_y)
-					loss_f = loss + loss_adv_batch
-					loss_f.backward()
-					self.optim_b.step()
-					self.logger.log({'GCN Adversarial Batch Loss': loss_adv_batch.item()})
-					self.logger.log({'GCN Full Loss': loss_f.item()})
-					loss_epoch += loss_f.item()
-				else:
-					loss.backward()
-					loss_epoch += loss.item()
+				loss.backward()
+				loss_epoch += loss.item()
 
 				self.optim.step()
 				self.logger.log({'GCN Iteration Loss': loss.item()})
@@ -260,19 +310,13 @@ class GraphConvolutionalNetwork:
 			dataset = self.to_pyg(data)
 			loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
 			preds = np.array([])
-			b_preds = np.array([]) if self.batch_correct else None
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				preds_i = F.softmax(preds_i, dim=1)
 				preds_i = preds_i.argmax(dim=1).cpu().numpy()
 				preds = np.concatenate([preds, preds_i])
-				if self.batch_correct:
-					b_preds_i = self.batch_pred(latent_z)
-					b_preds_i = F.softmax(b_preds_i, dim=1)
-					b_preds_i = b_preds_i.argmax(dim=1).cpu().numpy()
-					b_preds = np.concatenate([b_preds, b_preds_i])
-			return preds, b_preds
+			return preds
 
 	def predict_proba(self, data):
 		"""
@@ -294,20 +338,14 @@ class GraphConvolutionalNetwork:
 			pyg_dataset = self.to_pyg(data)
 			loader = DataLoader(pyg_dataset, batch_size=self.batch_size, shuffle=False)
 			preds = []
-			b_preds = [] if self.batch_correct else None
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				score, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				score = F.softmax(score, dim=1)
 				preds.append(score)
-				if self.batch_correct:
-					b_score = self.batch_pred(latent_z)
-					b_score = F.softmax(b_score, dim=1)
-					b_preds.append(b_score)
+
 			preds = torch.cat(preds, dim=0).cpu().numpy()
-			if self.batch_correct:
-				b_preds = torch.cat(b_preds, dim=0).cpu().numpy()
-			return preds, b_preds
+			return preds
 
 	def visualize_latent_space(self, data, method='PCA'):
 		from sklearn.decomposition import PCA
@@ -348,7 +386,6 @@ class GraphConvolutionalNetwork:
 		ax.set_xlabel(f"{method} 1")
 		ax.set_ylabel(f"{method} 2")
 		ax.legend()
-		#fig.savefig('Latent_Encoding_withoutadversary_umap.png')
 		buffer = io.BytesIO()
 		buffer.seek(0)
 		fig.savefig(buffer, format='png')
@@ -369,9 +406,11 @@ class GraphConvolutionalNetwork:
 						return_type='log_probs',
 						),
 					)
+
 		pyg_dataset = self.to_pyg(data)
 		loader = DataLoader(pyg_dataset, batch_size=1, shuffle=False)
 		feature_names = np.array(data['markers'])
+		top_k_count_celltypespositive, top_k_count_celltypesnegative = {name: 0 for name in data['celltypes']}, {name: 0 for name in data['celltypes']}
 		top_k_count_positive, top_k_count_negative = {name: 0 for name in feature_names}, {name: 0 for name in feature_names}
 		labels_dict = {1:'Responder', 0:'Non-Responder'}
 		for i, x_batch in enumerate(loader):
@@ -384,7 +423,6 @@ class GraphConvolutionalNetwork:
 			edge_mask = (explanation.edge_mask>torch.quantile(explanation.edge_mask, 0.85))
 
 			sub_graph = x_batch.edge_index[:,edge_mask]
-
 			scores = explanation.node_mask.mean(0).cpu().numpy()
 			sorted_indices = scores.argsort()[::-1]
 			sorted_indices = sorted_indices[:topk]
@@ -404,55 +442,63 @@ class GraphConvolutionalNetwork:
 			mask = torch.tensor(mask)
 			filtered_sub_graph = sub_graph[:, mask]
 			unique_nodes = torch.unique(filtered_sub_graph)
+
 			import torch_geometric.utils as utils
-			if i<40:
-				fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 12))
-				coo_adj_full = utils.to_scipy_sparse_matrix(x_batch.edge_index, edge_attr=x_batch.edge_attr, num_nodes=x_batch.x.shape[0])
-				csr_adj_full = coo_adj_full.tocsr()
 
-				_, _, pos, label_to_color = visualise_cellgraph(csr_adj_full, random_state=42, node_labels=x_batch.cell_labels, show=False, spatial_coords=data['coords'][i], ax=ax1, add_legend=True)
+			fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 12))
+			coo_adj_full = utils.to_scipy_sparse_matrix(x_batch.edge_index, edge_attr=x_batch.edge_attr, num_nodes=x_batch.x.shape[0])
+			csr_adj_full = coo_adj_full.tocsr()
 
-				coo_adj_sub = utils.to_scipy_sparse_matrix(filtered_sub_graph, edge_attr= torch.ones(filtered_sub_graph.size(1), dtype=torch.float), num_nodes=x_batch.x.shape[0])
-				csr_adj_sub = coo_adj_sub.tocsr()
+			_, _, pos, label_to_color, _ = visualise_cellgraph(csr_adj_full, random_state=42, node_labels=x_batch.cell_labels, show=False, spatial_coords=data['coords'][i], ax=ax1, add_legend=True)
 
-				_, _, _, _ = visualise_cellgraph(csr_adj_sub, random_state=42, node_labels=x_batch.cell_labels, show=False, ax=ax2, pos=pos, label_to_color=label_to_color, largest_comp=True)
+			coo_adj_sub = utils.to_scipy_sparse_matrix(filtered_sub_graph, edge_attr= torch.ones(filtered_sub_graph.size(1), dtype=torch.float), num_nodes=x_batch.x.shape[0])
+			csr_adj_sub = coo_adj_sub.tocsr()
 
-				buffer = io.BytesIO()
-				buffer.seek(0)
-				plt.savefig(buffer, format='png')
-				self.logger.log({f"results/SubGraph_{i}_{data['patient'][i]}_{labels_dict[x_batch.y.cpu().int().item()]}": wandb.Image(Image.open(buffer))})
+			_, _, _, _, freq = visualise_cellgraph(csr_adj_sub, random_state=42, node_labels=x_batch.cell_labels, show=False, ax=ax2, pos=pos, label_to_color=label_to_color, largest_comp=True)
 
-				plt.cla()
-				plt.clf()
-				plt.close()
+			if int(x_batch.y.cpu().item()) == 1:
+				for celltype, count in freq.items():
+					top_k_count_celltypespositive[celltype] += count
+			else:
+				for celltype, count in freq.items():
+					top_k_count_celltypesnegative[celltype] += count			
 
-				plt.figure(figsize=(32, 10))
-				# Full Graph
-				plt.subplot(1, 2, 1)
-				plt.bar(range(len(sorted_scores)), sorted_scores, tick_label=sorted_feature_names)
-				plt.xlabel('Proteins', fontsize=28)
-				plt.ylabel('Importance Score', fontsize=28)
-				plt.title(f"GCN {labels_dict[x_batch.y.cpu().int().item()]} {data['patient'][i]}", fontsize=32)
-				plt.xticks(rotation=45, ha='right', fontsize=28)
-				plt.subplots_adjust(bottom=0.2)
-				plt.tight_layout()
+			buffer = io.BytesIO()
+			buffer.seek(0)
+			plt.savefig(buffer, format='png')
+			self.logger.log({f"results/SubGraph_{data['leapid'][i]}_{data['patient'][i]}_{labels_dict[x_batch.y.cpu().int().item()]}": wandb.Image(Image.open(buffer))})
 
-				# Subgraph
-				plt.subplot(1, 2, 2)
-				plt.bar(range(len(sorted_scores)), sorted_expression, tick_label=sorted_feature_names)
-				plt.xlabel('Proteins', fontsize=28)
-				plt.ylabel('Average Expression Across Cells', fontsize=28)
-				plt.title(f"GCN {labels_dict[x_batch.y.cpu().int().item()]} {data['patient'][i]}", fontsize=32)
-				plt.xticks(rotation=45, ha='right', fontsize=28)
-				plt.subplots_adjust(bottom=0.2)
-				plt.tight_layout()
+			plt.cla()
+			plt.clf()
+			plt.close()
+
+			plt.figure(figsize=(32, 10))
+			# Full Graph
+			plt.subplot(1, 2, 1)
+			plt.bar(range(len(sorted_scores)), sorted_scores, tick_label=sorted_feature_names)
+			plt.xlabel('Proteins', fontsize=28)
+			plt.ylabel('Importance Score', fontsize=28)
+			plt.title(f"GCN {labels_dict[x_batch.y.cpu().int().item()]} {data['patient'][i]}", fontsize=32)
+			plt.xticks(rotation=45, ha='right', fontsize=28)
+			plt.subplots_adjust(bottom=0.2)
+			plt.tight_layout()
+
+			# Subgraph
+			plt.subplot(1, 2, 2)
+			plt.bar(range(len(sorted_scores)), sorted_expression, tick_label=sorted_feature_names)
+			plt.xlabel('Proteins', fontsize=28)
+			plt.ylabel('Average Expression Across Cells', fontsize=28)
+			plt.title(f"GCN {labels_dict[x_batch.y.cpu().int().item()]} {data['patient'][i]}", fontsize=32)
+			plt.xticks(rotation=45, ha='right', fontsize=28)
+			plt.subplots_adjust(bottom=0.2)
+			plt.tight_layout()
 
 
-				buffer = io.BytesIO()
-				buffer.seek(0)
-				plt.savefig(buffer, format='png')
-				self.logger.log({f"GNNExplainer ROI {i} {data['patient'][i]}": wandb.Image(Image.open(buffer))})
-				plt.close()
+			buffer = io.BytesIO()
+			buffer.seek(0)
+			plt.savefig(buffer, format='png')
+			self.logger.log({f"GNNExplainer ROI {data['leapid'][i]} {data['patient'][i]}": wandb.Image(Image.open(buffer))})
+			plt.close()
 
 		fig, ax = plt.subplots(figsize=(12, 6))
 		indices = np.arange(len(top_k_count_positive))
@@ -474,6 +520,30 @@ class GraphConvolutionalNetwork:
 		plt.savefig(buffer, format='png')
 		self.logger.log({'Most Frequent Marker GNNExplainer across ROIs': wandb.Image(Image.open(buffer))})
 		plt.close()
+
+		fig, ax = plt.subplots(figsize=(12, 6))
+		indices = np.arange(len(top_k_count_celltypespositive))
+		# Plot the bars
+		val_pos = [el/(i+1) for el in list(top_k_count_celltypespositive.values())]
+		val_neg = [el/(i+1) for el in list(top_k_count_celltypespositive.values())]
+		bars_positive = ax.bar(indices, val_pos, 0.35, label='Responder', color='skyblue')
+		bars_negative = ax.bar(indices + 0.35, val_neg, 0.35, label='Non-responder', color='salmon')
+
+		# Add some text for labels, title and axes ticks
+		ax.set_xlabel('Features', fontsize=14)
+		ax.set_ylabel(f"Top  {topk} Frequency", fontsize=14)
+		ax.set_title(f"Top {topk} Markers for Responder vs Non-Responder", fontsize=16)
+		ax.set_xticks(indices + 0.35 / 2)
+		ax.set_xticklabels(list(top_k_count_celltypespositive.keys()), rotation=45, ha='right')
+		ax.legend()
+		plt.tight_layout()
+
+		buffer = io.BytesIO()
+		buffer.seek(0)
+		plt.savefig(buffer, format='png')
+		self.logger.log({'Most Frequent Celltypes GNNExplainer across ROIs': wandb.Image(Image.open(buffer))})
+
+
 
 	def gradient_attribution(self, data, topk=10, target_class=1):
 		feature_names = data['markers']
