@@ -33,7 +33,9 @@ class SpatialCellToFeatures:
 		# Old file
 		#filename = f"{self.config['DATA_PATH']}/RCB_cellcell_processed_{self.config['datasplit']}_{self.seed}.pkl"
 		# New file
-		filename = f"{self.config['DATA_PATH']}/RCB_cellcell_processed_new_{self.config['datasplit']}_{self.seed}.pkl"
+		#filename = f"{self.config['DATA_PATH']}/RCB_cellcell_processed_new_qcpass7_{self.config['datasplit']}_{self.seed}.pkl"
+
+		filename = f"{self.config['DATA_PATH']}/{self.config['cell_filename']}_{self.config['response_filename']}_{self.config['datasplit']}_{self.seed}.pkl"
 
 		if os.path.exists(f"{filename}"):		
 			self.data = self.load_split_data(filename)
@@ -86,8 +88,9 @@ class SpatialCellToFeatures:
 		# Old Data
 		#datafile = f"{self.config['DATA_PATH']}/RCB_processed_data_cellcell.pkl"
 		# New Data
-		datafile = f"{self.config['DATA_PATH']}/RCB_processed_data_cellcell_new.pkl"
+		#datafile = f"{self.config['DATA_PATH']}/RCB_processed_data_cellcell_new_qcpass7.pkl"
 
+		datafile = f"{self.config['DATA_PATH']}/{self.config['cell_filename']}_{self.config['response_filename']}.pkl"
 		if os.path.exists(datafile):
 			data = self.load_data(datafile)
 		else:

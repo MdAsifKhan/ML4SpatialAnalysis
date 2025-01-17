@@ -21,8 +21,7 @@ ALLMARKERS = ['Alpha-SMA', 'B7-H4', 'Beta-Catenin', 'CD107a', 'CD11b', 'CD14', '
 			'Ki-67', 'PD-1', 'PD-L1', 'PD-L2', 'Pan-keratin', 'Tbet', 'VEGF', 
 			'Vimentin', 'p53']
 
-EXCLUDE_MARKERS = ['Carboplatin', 'Collage-Type_I', 'DNA1', 'DNA2', 'p53', 'VEGF', 
-				'EGFR', 'Ki-67', 'PD-1', 'PD-L1', 'PD-L2']
+EXCLUDE_MARKERS = ['Carboplatin']
 
 MARKERS = list(filter(lambda x: x not in EXCLUDE_MARKERS, ALLMARKERS))
 
@@ -86,6 +85,8 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 	cell_table = cell_table[cell_table.fov.isin(fovs)]
 	cell_table[MARKERS] = cell_table[MARKERS].fillna(0)
 	cell_table = cell_table.dropna(subset=['Stain'])
+	cell_table = filter_data(cell_table, use_core=True)
+	cell_table.dropna(subset=['NACT_treatment _group'], inplace=True)
 	return cell_table
 
 
@@ -125,7 +126,7 @@ def process_roi(roi, cell_table, min_cells):
 	label = label.pop()
 	patient = roi_cells.Patient.iloc[0]
 	stain = int(roi_cells.Stain.iloc[0]) - 1 #Offset by 1 for labels
-	return expressions, coords, label, patient, cell_labels, stain
+	return expressions, coords, label, patient, cell_labels, stain, roi
 
 
 def cellcell_to_features(cell_table, min_cells=10, filename='./data.pkl', num_cores=4):
@@ -155,7 +156,8 @@ def cellcell_to_features(cell_table, min_cells=10, filename='./data.pkl', num_co
 		'cell_labels': [],
 		'stain': [],
 		'markers': MARKERS,
-		'celltypes': celltypes
+		'celltypes': celltypes,
+		'leapid': []
 		}
 	semaphore = threading.Semaphore()
 	with semaphore:
@@ -166,13 +168,14 @@ def cellcell_to_features(cell_table, min_cells=10, filename='./data.pkl', num_co
 
 	for result in results:
 		if result is not None:
-			expressions, coords, label, patient, cell_labels, stain = result
+			expressions, coords, label, patient, cell_labels, stain, leapid = result
 			dataset['expressions'].append(expressions)
 			dataset['coords'].append(coords)
 			dataset['labels'].append(label)
 			dataset['patient'].append(patient)
 			dataset['cell_labels'].append(cell_labels)
 			dataset['stain'].append(stain)
+			dataset['leapid'].append(leapid)
 
 	with open(filename, 'wb') as f:
 		pickle.dump(dataset, f)
