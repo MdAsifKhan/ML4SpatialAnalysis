@@ -14,28 +14,33 @@ def run(config):
 		config (dict): Configuration dictionary containing model and dataset settings.
 	"""
 
-	if config['model']['name'] == 'gcn':
+	if config['model']['name'] == 'gnn':
 		config['model']['gcriterion'] = 'gcn'
 
-	logname = f"_model_{config['model']['name']}"\
-				f"_graphtype_{config['dataset']['gmethod']}"\
+	logname = f"model_{config['model']['name']}"\
+				f"_graphtype_{config['model']['gnn']['gmethod']}"\
+				f"_gmode_{config['model']['gnn']['gmode']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
 				f"_seed_{config['seed']}_balanced_train_{config['balanced_train']}"
 
-	logger = wandb.init(project=f"ML on TNBC Data", config=config, name=logname, resume=True)
+	# Initialize W&B logger with project name, entity, configuration, and log name
+	logger = wandb.init(entity="maximentropy", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
-	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
-	config['model']['gtype'] = config['dataset']['gtype']
+	if config['dataset']['datasplit'] == 'leaveOneOut':
+		config['model']['feature_dim'] = len(dataset.data['markers'])
+	else:
+		config['model']['feature_dim'] = len(dataset.data['train']['markers'])
 	config['model']['eval'] = config['dataset']['datasplit']
 
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
+
 	print('Configuring models')
 	explainer = ModelEvaluation(config['model'], logname, logger)
-	explainer.run(dataset.data['test'], logname)
+	explainer.run(dataset.data, logname)
 	wandb.finish()
 
 if __name__ == '__main__':
