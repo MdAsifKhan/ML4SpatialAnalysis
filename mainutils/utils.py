@@ -2,7 +2,7 @@ import yaml
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import eigs
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, coo_matrix
 from sklearn.neighbors import radius_neighbors_graph, kneighbors_graph, NearestNeighbors
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,10 +11,17 @@ from scipy.sparse import csr_matrix
 from matplotlib.cm import ScalarMappable
 import matplotlib.patches as patches
 from collections import Counter
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, f1_score
+from sklearn.metrics import (
+	accuracy_score, 
+	balanced_accuracy_score, 
+	roc_auc_score, 
+	roc_curve
+	)
 from scipy.spatial.distance import pdist, cdist
 from scipy.spatial import Delaunay
 from scipy.spatial import KDTree
+import pandas as pd
+import wandb
 
 def load_config(filename):
 	"""
@@ -36,6 +43,50 @@ def edge_index_to_adj(edge_index, num_nodes):
 	data = np.ones_like(row)
 	adj = csr_matrix((data, (row, col)), shape=(num_nodes, num_nodes))
 	return adj
+
+import numpy as np
+import scipy.sparse as sp
+
+def distance_to_similarity(
+	G, 
+	method='inverse', 
+	eps=1e-9, 
+	sigma=1.0,
+	copy=True
+):
+	"""
+	Converts the nonzero distances in a CSR matrix G into similarity values, 
+	using either an inverse or Gaussian transform (or others, if extended).
+
+	Args:
+		G (sp.csr_matrix): A sparse matrix whose .data hold distance values.
+		method (str): 'inverse' or 'Gaussian'. Defaults to 'inverse'.
+		eps (float): Small constant to avoid division by zero in 'inverse'.
+		sigma (float): Gaussian sigma. Used only if method='Gaussian'.
+		copy (bool): If True, make a copy of G before modifying. 
+	     If False, do in-place transformation.
+
+	Returns:
+		sp.csr_matrix: The same shape NxN matrix with .data now storing similarity values.
+	"""
+	# If desired, create a copy so we don't overwrite the original
+	if copy:
+		G = G.copy()
+
+	# Ensure we're working with CSR format
+	G_csr = G.tocsr()
+
+	# Pull out the distance data
+	distances = G_csr.data
+
+	# Apply the requested similarity transform
+	if method == 'inverse':
+		G_csr.data = 1.0 / (distances + eps)
+	elif method == 'Gaussian':
+		G_csr.data = np.exp(-(distances**2) / (2.0 * sigma**2))
+	else:
+		raise ValueError(f"Unsupported similarity method: {method}")
+	return G_csr
 
 
 def adjacency_to_laplacian(A, normalised=True):
@@ -61,81 +112,173 @@ def adjacency_to_laplacian(A, normalised=True):
 	return Lnorm
 
 
-def delaunay_graph(coords, mode='connectivity'):
+def delaunay_graph(coords, mode='connectivity', dtype=np.float32):
 	"""
-		Constructs a Delaunay graph based on given coordinates.
+	Build an NxN adjacency matrix from the Delaunay triangulation of coordinates.
 
-	Args:
-		coords: A NumPy array of shape (n_points, n_dims) containing coordinates.
-		mode: Either 'connectivity' (for adjacency matrix) or 'distance' (for distance matrix).
-				Defaults to 'connectivity'.
-
+	Parameters:
+	-----------
+		coords : array-like, shape (n_points, n_dimensions)
+				The coordinates of points to triangulate
+		mode : {'connectivity', 'distance'}, default='connectivity'
+				The type of adjacency matrix to construct:
+				- 'connectivity': Binary adjacency matrix (1 for connected points)
+				- 'distance': Weighted adjacency matrix with Euclidean distances
+		dtype : numpy.dtype, default=np.float32
+		Data type for the output matrix
 	Returns:
-		A scipy.sparse.csr_matrix (connectivity mode) or a NumPy array (distance mode)
-		representing the Delaunay graph.
+	--------
+	scipy.sparse.csr_matrix
+	The adjacency matrix in CSR format
 	"""
-	nm_nodes = len(coords)
-	triangluation = Delaunay(coords)
-	indptr, indices = triangluation.vertex_neighbor_vertices
-	if mode=='connectivity':
-		return csr_matrix((np.ones_like(indices, dtype=np.float64), indices, indptr), shape=(nm_nodes, nm_nodes))
-	if mode=='distance':
-		distances = cdist(coords, coords)
-		A = distances[indptr[:-1], indices].reshape(nm_nodes, -1)
-		return csr_matrix(A)
+	# Input validation
+	if mode not in ['connectivity', 'distance']:
+		raise ValueError(f"Unsupported mode: {mode}")
 
+	coords = np.asarray(coords)
+	if coords.ndim != 2:
+		raise ValueError("coords must be a 2D array")
 
-def atmostk_neighbors_graph(coords, k, mode='connectivity', include_self=False):
+	# Compute triangulation
+	triangulation = Delaunay(coords)
+	n_points = len(coords)
+
+	# Pre-allocate arrays for COO matrix construction
+	# Each triangle (in 2D) has 3 edges, and we add each edge twice (i->j, j->i) => 6 entries
+	n_triangles = len(triangulation.simplices)
+	rows = np.zeros(n_triangles * 6, dtype=np.int32)
+	cols = np.zeros(n_triangles * 6, dtype=np.int32)
+	data = np.zeros(n_triangles * 6, dtype=dtype)
+
+	idx = 0
+	for simplex in triangulation.simplices:
+		# Process each edge in the triangle
+		for i in range(3):
+			for j in range(i+1, 3):
+				p1, p2 = simplex[i], simplex[j]
+				if mode == 'connectivity':
+					val = 1.0
+				else:  # mode == 'distance'
+					diff = coords[p1] - coords[p2]
+					val = np.sqrt(np.sum(diff * diff))
+	
+		# Add edge in both directions for a symmetric adjacency
+		rows[idx] = p1
+		cols[idx] = p2
+		data[idx] = val
+		idx += 1
+
+		rows[idx] = p2
+		cols[idx] = p1
+		data[idx] = val
+		idx += 1
+
+	# Trim arrays to the actual size used
+	rows = rows[:idx]
+	cols = cols[:idx]
+	data = data[:idx]
+
+	# Create a COO matrix (potentially with duplicate edges)
+	A_coo = sp.coo_matrix((data, (rows, cols)), shape=(n_points, n_points), dtype=dtype)
+
+	# Convert to CSR format (this sums duplicates at each (i, j))
+	A = A_coo.tocsr()
+
+	# Ensure a clean symmetric matrix and handle duplicates via .maximum(A.T)/2:
+	#   - If an edge (i, j) appears multiple times, they get summed in .tocsr().
+	#   - For a typical 2D Delaunay, each interior edge is shared by exactly 2 triangles => 
+	#       that sums to 2*val. Taking .maximum(A.T) => 2*val, dividing by 2 => val again.
+	#   - On boundary edges (shared by only 1 triangle), we still added i->j and j->i => sum=2*val => /2 => val.
+	A = A.maximum(A.T) / 2
+	return A
+
+def atmostk_neighbors_graph(
+	coords,
+	k,
+	mode='connectivity',
+	include_self=False,
+	):
 	"""
-		Constructs an "at-most-k" nearest neighbor graph based on Euclidean distances.
-
-	Args:
-		coords: A NumPy array of shape (n_samples, 2) representing data points.
-		k: The maximum number of neighbors allowed for each vertex (at most k).
-
-	Returns:
-		A scipy.sparse.csr_matrix representing the adjacency matrix of the "at-most-k" nearest neighbor graph.
+	Constructs a k-nearest neighbor graph where each node has at most k neighbors,
+	and edges are only created if they're within a global distance threshold.
+	...
 	"""
-	# Construct a k-nearest neighbor graph
+	if not isinstance(coords, np.ndarray):
+		coords = np.asarray(coords)
+
+	if coords.ndim != 2:
+		raise ValueError("coords must be a 2D array")
+
+	n_samples = coords.shape[0]
+	if k >= n_samples:
+		raise ValueError("k must be less than number of samples")
+
+	# 1) Get more neighbors than needed initially (k*2) for threshold filtering
+	n_neighbors = min(n_samples - 1, k * 2)
 	tree = KDTree(coords)
-	indices = tree.query(coords, k + 1)[1][:, 1:]  # Exclude the first nearest neighbor (itself)
+	distances, indices = tree.query(coords, n_neighbors + 1)
 
-	G = nx.Graph()
-	for i, neighbors in enumerate(indices):
-		# Add self-loop if specified
-		if include_self:
-			G.add_edge(i, i, weight=1)
+	# 2) Remove or keep self references
+	if not include_self:
+		distances = distances[:, 1:]
+		indices = indices[:, 1:]
+	else:
+		distances = distances[:, :n_neighbors]
+		indices = indices[:, :n_neighbors]
 
-		for j in neighbors:
-			dist = np.linalg.norm(coords[i] - coords[j])
-			if mode == 'distance':
-				G.add_edge(i, j, weight=1.0/(dist + 1e-6))
-			else:
-				G.add_edge(i, j, weight=1)
+	# 3) Global threshold via percentile
+	all_distances = distances.ravel()
+	threshold = np.percentile(
+		all_distances,
+		100 * (1 - k / n_samples),
+		interpolation='higher'
+	)
 
-	# Sparsify based on threshold
-	threshold = np.percentile([G[i][j]['weight'] for i, j in G.edges()], 100 * (1 - k / len(coords)), interpolation='higher')
-	edges_to_remove = [(i, j) for i, j in G.edges() if G[i][j]['weight'] > threshold]
-	G.remove_edges_from(edges_to_remove)
+	# 4) Build adjacency in COO format
+	rows = []
+	cols = []
+	data = []
 
-	# Ensure each node is connected to at least one neighbor
-	for i in range(len(coords)):
-		if len(list(G.neighbors(i))) == 0:
-			j = indices[i][0]  # Connect to the nearest neighbor
-			dist = np.linalg.norm(coords[i] - coords[j])
-			if mode == 'distance':
-				G.add_edge(i, j, weight=1.0/(dist + 1e-6))
-			else:
-				G.add_edge(i, j, weight=1)
-	return nx.adjacency_matrix(G)
+	for i in range(n_samples):
+		# Filter neighbors by threshold
+		valid_mask = distances[i] <= threshold
+		valid_neighbors = indices[i][valid_mask]
+		valid_dists = distances[i][valid_mask]
+
+		# Keep only up to k of the closest among those within threshold
+		if len(valid_neighbors) > k:
+		    valid_neighbors = valid_neighbors[:k]
+		    valid_dists = valid_dists[:k]
+		# Ensure at least one connection if no valid neighbors
+		elif len(valid_neighbors) == 0 and len(indices[i]) > 0:
+			valid_neighbors = indices[i][:1]
+			valid_dists = distances[i][:1]
+
+		rows.extend([i] * len(valid_neighbors))
+		cols.extend(valid_neighbors)
+
+		if mode == 'distance':
+		    data.extend(valid_dists)
+		else:  # 'connectivity'
+			data.extend([1.0] * len(valid_neighbors))
 
 
-def coords_to_graph(coords, gmethod='knn', radius=7):
+	adjacency = coo_matrix(
+		(data, (rows, cols)),
+		shape=(n_samples, n_samples)
+	)
+
+	adjacency = adjacency.maximum(adjacency.T)
+	return adjacency.tocsr()
+
+
+def coords_to_graph(coords, gmethod='knn', mode='connectivity', radius=7):
 	"""
 	Constructs a graph from coordinates using specified method (k-nearest neighbors, k-atmost neighbors or radius-based).
 
 	Args:
 		coords (numpy.ndarray): Array of coordinates representing nodes.
+		mode: ‘connectivity’, ‘distance’
 		gmethod (str, optional): Graph construction method, either 'knn' or 'radius'. Defaults to 'knn'.
 		radius (float, optional): Radius for radius-based graph construction. Used only if gmethod='radius'.
 									Defaults to 7.
@@ -144,16 +287,31 @@ def coords_to_graph(coords, gmethod='knn', radius=7):
 		G (scipy.sparse.csr_matrix): The constructed graph adjacency matrix.
 	"""
 	if gmethod == 'radius':
-		G = radius_neighbors_graph(coords, radius, mode='connectivity',
-									include_self=True)
+		G = radius_neighbors_graph(
+			coords, 
+			radius, 
+			mode=mode,
+			include_self=False) 
 	elif gmethod == 'knn':
-		G = kneighbors_graph(coords, radius, mode='connectivity', include_self=True)
+		G = kneighbors_graph(
+			coords, 
+			radius, 
+			mode=mode, 
+			include_self=False)
 	elif gmethod == 'atmostk':
-		G = atmostk_neighbors_graph(coords, radius, mode='connectivity', include_self=True)
+		G = atmostk_neighbors_graph(
+			coords, 
+			radius, 
+			mode=mode, 
+			include_self=False)
 	elif gmethod == 'delaunay':
-		G = delaunay_graph(coords, mode='connectivity')
+		G = delaunay_graph(
+			coords, 
+			mode=mode)
 	else:
 		assert 0, f"{gmethod} Not Implemented"
+	if mode == 'distance':
+		G.data = distance_to_similarity(G.data)
 	return G
 
 def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
@@ -255,7 +413,7 @@ def compute_scores_train(y_train, y_pred_train, y_test, y_pred_test):
 
 
 
-def compute_scores(y, y_pred, y_proba, mode='Train', multi_class='raise'):
+def compute_scores(y, y_pred, y_proba, mode='Train'):
 	"""
 	Computes evaluation scores for a single test set.
 
@@ -267,13 +425,11 @@ def compute_scores(y, y_pred, y_proba, mode='Train', multi_class='raise'):
 		metrics (dict): Dictionary containing evaluation metrics.
 	"""
 	accuracy_ = accuracy_score(y, y_pred)
-	auc_ = roc_auc_score(y, y_proba, multi_class=multi_class)
-	f1_ = f1_score(y, y_pred, average='weighted')
+	auc_ = roc_auc_score(y, y_proba)
 	bal_acc_ = balanced_accuracy_score(y, y_pred)
 	metrics = {
 			f"{mode} Accuracy": accuracy_,
 			f"{mode} AUC": auc_,
-			f"{mode} F1 Score": f1_,
 			f"{mode} Balanced Accuracy": bal_acc_,
 
 	}
@@ -286,10 +442,6 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 	patients_preds = {patient : [] for patient in unique_patients}
 	patients_labels = {patient : [] for patient in unique_patients}
 	patients_probs = {patient : [] for patient in unique_patients}
-	true_positives = 0
-	true_negatives = 0
-	false_positives = 0
-	false_negatives = 0
 
 	for patient, label, pred, prob in zip(patients, y, y_pred, y_proba):
 		patients_preds[patient].append(pred)
@@ -298,33 +450,59 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 
 	unique_pred_patients_prob, unique_pred_patients_label, unique_patients_label = [], [], []
 	for patient in unique_patients:
-		correct_predictions = [1 if pred == label == 1 else 0 for pred, label in zip(patients_preds[patient], patients_labels[patient])]
+		correct_predictions = [1 if (pred == label == 1) else 0 
+								for pred, label in zip(patients_preds[patient], patients_labels[patient])]
 		if pcriterion == 'majority':
 			# Check if the majority of predictions match the majority of labels
 			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
-			prob_patient = np.mean(patients_probs[patient])
+			prob_patient = np.median(patients_probs[patient])			
 		else:
 			assert 0,f"{pcriterion} Not Implemented"
 
 		# Assign patient as true positive or true negative based on majority correct predictions
-		if vote_patient == 1:
-			unique_pred_patients_label.append(1)
-		else:
-			unique_pred_patients_label.append(0)
+		unique_pred_patients_label.append(1 if vote_patient == 1 else 0)
+		
 		unique_patients_label.append(patients_labels[patient][0])
 		unique_pred_patients_prob.append(prob_patient)
 
-	aucroc = roc_auc_score(unique_patients_label, unique_pred_patients_prob)
+	patient_auc = roc_auc_score(unique_patients_label, unique_pred_patients_prob)
 	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
-	f1_ = f1_score(unique_patients_label, unique_pred_patients_label)
 	bal_acc_ = balanced_accuracy_score(unique_patients_label, unique_pred_patients_label)
 
 	metrics = {
 			f"{mode} Accuracy {pcriterion}": accuracy,
-			f"{mode} AUC {pcriterion}": aucroc,
-			f"{mode} F1 Score {pcriterion}": f1_,
+			f"{mode} AUC {pcriterion}": patient_auc,
 			f"{mode} Balanced Accuracy {pcriterion}": bal_acc_,
 	}
+
+	# ---------------- Plot & log Patient-level ROC ----------------
+	fpr_patient, tpr_patient, _ = roc_curve(unique_patients_label, unique_pred_patients_prob)
+
+	plt.figure()
+	plt.plot(fpr_patient, tpr_patient, label=f"Patient-Level ROC (AUC={patient_auc:.3f})")
+	plt.plot([0, 1], [0, 1], 'r--')
+	plt.xlabel('False Positive Rate')
+	plt.ylabel('True Positive Rate')
+	plt.title(f"{mode} Patient-Level ROC Curve")
+	plt.legend(loc="lower right")
+	wandb.log({f"{mode}_Patient_Level_ROC": wandb.Image(plt)})
+	plt.close()
+
+	# ---------------- ROI-level metrics & ROC (Optional) ----------------
+	#  The question specifically mentions plotting AUC-ROC at ROI level as well.
+	roi_auc = roc_auc_score(y, y_proba)
+	fpr_roi, tpr_roi, _ = roc_curve(y, y_proba)
+
+	# Plot & log ROI-level ROC
+	plt.figure()
+	plt.plot(fpr_roi, tpr_roi, label=f"ROI-Level ROC (AUC={roi_auc:.3f})")
+	plt.plot([0, 1], [0, 1], 'r--')
+	plt.xlabel('False Positive Rate')
+	plt.ylabel('True Positive Rate')
+	plt.title(f"{mode} ROI-Level ROC Curve")
+	plt.legend(loc="lower right")
+	wandb.log({f"{mode}_ROI_Level_ROC": wandb.Image(plt)})
+	plt.close()
 	return metrics
 
 
@@ -345,14 +523,24 @@ def train_test_split(dataset, test_size=0.2, random_state=None):
 	np.random.seed(random_state)
 
 	nm_samples =  len(dataset['labels'])
-
 	patient_ids = dataset['patient']
-	unique_patient_ids = np.unique(patient_ids)
-	test_size = int(test_size * len(unique_patient_ids))
-	unique_patient_ids = np.random.permutation(unique_patient_ids)
+	df = pd.DataFrame({'patient_id': dataset['patient'], 'label': dataset['labels']})
 
-	train_patient_ids = unique_patient_ids[test_size:]
-	test_patient_ids = unique_patient_ids[:test_size]
+	unique_patients = df.groupby('patient_id')['label'].agg(lambda x: x.iloc[0])
+	unique_patient_ids = unique_patients.index
+	unique_patient_labels = unique_patients.values
+
+	# Determine the test size based on the proportion of unique patients
+	test_size = int(test_size * len(unique_patient_ids))
+
+	from sklearn.model_selection import train_test_split as sk_split
+	# Split the unique patients into training and test sets with stratification
+	train_patient_ids, test_patient_ids = sk_split(
+		unique_patient_ids, 
+		test_size=test_size, 
+		stratify=unique_patient_labels,  # Ensure the split is proportional based on labels
+		random_state=random_state
+		)
 
 	train_indices = [i for i, patient in enumerate(patient_ids) if patient in train_patient_ids]
 	test_indices = [i for i, patient in enumerate(patient_ids) if patient in test_patient_ids]
@@ -424,20 +612,20 @@ def leave_one_out_split(data):
 	for leave_out_patient in unique_patients:
 		print(f"Leave One Out Validation on a patient {leave_out_patient}")
 		train_patients = [patient for patient in unique_patients if patient != leave_out_patient]
-		train_idx = [idx for idx, patient in enumerate(data['patients']) if patient != leave_out_patient]
-		test_idx = [idx for idx, patient in enumerate(data['patients']) if patient == leave_out_patient]
+		train_idx = [idx for idx, patient in enumerate(data['patient']) if patient != leave_out_patient]
+		test_idx = [idx for idx, patient in enumerate(data['patient']) if patient == leave_out_patient]
 
 		train_set, test_set = {}, {}
-		for key, data in data.items():
-			if data is None:
+		for key, values in data.items():
+			if values is None:
 				train_set[key] = None
 				test_set[key] = None
 			elif key in ['markers', 'celltypes']:
-				train_set[key] = data
-				test_set[key] = data
+				train_set[key] = values
+				test_set[key] = values
 			else:
-				train_set[key] = [data[i] for i in train_idx]
-				test_set[key] = [data[i] for i in test_set]
+				train_set[key] = [values[i] for i in train_idx]
+				test_set[key] = [values[i] for i in test_idx]
 
 		yield train_set, test_set
 
@@ -512,8 +700,7 @@ def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True, spa
 	# Create a color mapper for normalization
 	unique_labels = list(set(node_labels))
 	if node_labels is not None and label_to_color is None:
-		# Choose a colormap (modify as needed)
-		cmap = plt.cm.tab20  # Select a colormap from matplotlib.cm
+		cmap = plt.cm.tab20  
 		norm = plt.Normalize(vmin=0, vmax=len(unique_labels) - 1) 
 		sm = ScalarMappable(cmap=cmap, norm=norm)
 		label_to_color = {label: sm.to_rgba(i) for i, label in enumerate(unique_labels)}
@@ -521,6 +708,13 @@ def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True, spa
 	if node_labels is not None:
 		# Draw nodes with colors based on labels and colormap
 		node_colors = [label_to_color[label] for label in node_labels]
+		node_freq =  {}
+		for label in node_labels:
+			if label in node_freq:
+				node_freq[label] += 1
+			else:
+				node_freq[label] = 1
+		node_freq = {k: v*1.0/len(node_labels) for k,v in node_freq.items()}
 		nx.draw_networkx_nodes(G, pos, node_size=5, node_color=node_colors, ax=ax)
 	else:
 		nx.draw_networkx_nodes(G, pos, node_size=5, ax=ax)
@@ -533,4 +727,4 @@ def visualise_cellgraph(graph, random_state=42, node_labels=None, show=True, spa
 	ax.axis('off')
 	if show:
 		plt.show()
-	return fig, ax, pos, label_to_color
+	return fig, ax, pos, label_to_color, node_freq

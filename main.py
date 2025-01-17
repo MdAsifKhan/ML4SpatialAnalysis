@@ -32,8 +32,9 @@ def run(config):
 	if config['model']['name'] == 'gnn':
 		config['model']['gcriterion'] = 'gcn'
 
-	logname = f"_model_{config['model']['name']}"\
+	logname = f"model_{config['model']['name']}"\
 				f"_graphtype_{config['model']['gnn']['gmethod']}"\
+				f"_gmode_{config['model']['gnn']['gmode']}"\
 				f"_fnorm_{config['model']['fnorm']}"\
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
@@ -43,13 +44,16 @@ def run(config):
 	logger = wandb.init(entity="maximentropy", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')
 	dataset = SpatialCellToFeatures(config['dataset'], random_state=config['seed'])
-	config['model']['feature_dim'] = len(dataset.data['train']['markers'])
+	if config['dataset']['datasplit'] == 'leaveOneOut':
+		config['model']['feature_dim'] = len(dataset.data['markers'])
+	else:
+		config['model']['feature_dim'] = len(dataset.data['train']['markers'])
 	config['model']['eval'] = config['dataset']['datasplit']
 
 	print('Feature Class Labels')
 	print(dataset.unique_labels)
 
-	if config['balanced_train']:
+	if config['balanced_train'] and config['dataset']['datasplit']=='split':
 		class_weight = compute_class_weight('balanced', classes=np.unique(dataset.data['train']['labels']), y=dataset.data['train']['labels'])
 		class_weight = dict(zip(np.unique(dataset.data['train']['labels']), class_weight))
 	else:
@@ -63,9 +67,7 @@ def run(config):
 							seed=config['seed'])
 	
 	# Train the model and get evaluation metrics
-	model.optimise(dataset.data)
-	print(f"Saving the {config['model']['name']} Model")
-	model.save_model(logname=logname)
+	model.optimise(dataset.data, logname)
 	wandb.finish()
 
 
