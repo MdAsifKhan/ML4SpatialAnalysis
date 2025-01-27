@@ -282,7 +282,7 @@ class GraphConvolutionalNetwork:
 				x_batch = x_batch.to(self.device)
 				self.optim.zero_grad()
 				logits, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
-				loss = self.criterion(logits, x_batch.y)
+				loss = self.criterion(logits, x_batch.y.to(torch.int64))
 				loss.backward()
 				loss_epoch += loss.item()
 

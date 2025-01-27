@@ -6,6 +6,7 @@ from mainutils.utils import load_config
 from models.trainer import ModelTrainer
 from datautils.dataset import SpatialCellToFeatures
 from sklearn.utils.class_weight import compute_class_weight
+import os
 
 def log_features(features, labels, logger):
 	"""
@@ -39,7 +40,7 @@ def run(config):
 				f"_graphfeats_{config['model']['gcriterion']}"\
 				f"_eval_{config['dataset']['datasplit']}"\
 				f"_seed_{config['seed']}_balanced_train_{config['balanced_train']}"
-
+	os.environ['WANDB_DIR'] = config['model']['LOG_PATH']
 	# Initialize W&B logger with project name, entity, configuration, and log name
 	logger = wandb.init(entity="maximentropy", project="ML on TNBC Data", config=config, name=logname)
 	print('Preparing Features')

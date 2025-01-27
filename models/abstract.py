@@ -187,7 +187,7 @@ class AbstractModel(ABC):
 		filename = f"{self.config['LOG_PATH']}/{self.config['name']}_{logname}.pkl"
 
 		if not os.path.exists(self.config['LOG_PATH']):
-			os.makedirs(path)
+			os.makedirs(self.config['LOG_PATH'])
 		
 		out = {
 				'model': self.classifier,
@@ -208,7 +208,7 @@ class AbstractModel(ABC):
 		filename = f"{self.config['LOG_PATH']}/{logname}.pkl"
 
 		if not os.path.exists(self.config['LOG_PATH']):
-			os.makedirs(path)
+			os.makedirs(self.config['LOG_PATH'])
 		
 		out = {
 				'model': self.classifier,

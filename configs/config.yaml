@@ -1,4 +1,4 @@
-seed: 43 # Random seed for reproducibility
+seed: 42 # Random seed for reproducibility
 balanced_train: False
 model:
   name: 'gnn' # Name of the model (choices: gnn, logistic, randomforest, xgboost)
@@ -8,7 +8,7 @@ model:
   # Data splitting parameters
   eval: ??? # Evaluation method ('split' for train/test split, 'LeaveOneOut' for LeaveOneOut evaluation)
   pcriterion: 'majority'
-  LOG_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/logs'  # Path to save model logs
+  LOG_PATH: '/n/data1/hms/cellbio/sander/asif/ML4SA_Results'  # Path to save model logs
   tok_k_attr: 10
   # Graph construction parameters
   # Feature selection criteria
@@ -30,9 +30,9 @@ model:
     gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
     lr: 0.001       # Learning rate
     nm_epochs: 100    # Number of training epochs
-    device: 'mps'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
+    device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
     logger: ???
-    batch_size: 64   # Batch size for training
+    batch_size: 128   # Batch size for training
     fnorm: ???  # Normalisation criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
     class_weight: null
     batch_correct: False
@@ -78,7 +78,7 @@ model:
 
 # Dataset parameters
 dataset:
-  DATA_PATH: '/Users/asifkhan/workspace/SpatialCellAnalysis/ML4SpatialAnalysis/data'  # Path to the data directory
+  DATA_PATH: '/n/data1/hms/cellbio/sander/asif/KCLData/data'  # Path to the data directory
   #cell_filename: 'cell_table_contrast_adj/updated_cell_table'  # Filename containing cell table data cell_table_size_normalized_cell_labels
   cell_filename: 'updated_cell_table'  # Filename containing cell table data cell_table_size_normalized_cell_labels
   response_filename: 'processed_response_RCB'  # Filename containing response labels
