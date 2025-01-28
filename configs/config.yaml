@@ -28,8 +28,8 @@ model:
   # GCN hyperparameters
   gnn:
     gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
-    lr: 0.001       # Learning rate
-    nm_epochs: 100    # Number of training epochs
+    lr: 0.0001       # Learning rate
+    nm_epochs: 40    # Number of training epochs
     device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'cuda' or 'mps' for Apple Metal)
     logger: ???
     batch_size: 128   # Batch size for training

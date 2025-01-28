@@ -37,8 +37,8 @@ class GCN(nn.Module):
 						nn.Dropout(0.5),
 						nn.Linear(self.hidden_dim //2, 1)
 					)
-		self.dropout1 = nn.Dropout(0.2)
-		self.dropout2 = nn.Dropout(0.2)
+		self.dropout1 = nn.Dropout(0.5)
+		self.dropout2 = nn.Dropout(0.5)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)

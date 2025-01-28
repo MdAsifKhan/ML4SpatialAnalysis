@@ -76,7 +76,7 @@ class GraphConvolutionalNetwork:
 		self.optim = torch.optim.AdamW(
 					self.model.parameters(), 
 					lr=lr, 
-					weight_decay=1e-3,
+					weight_decay=1e-4,
 					betas=(0.9, 0.999)
 			)
 
