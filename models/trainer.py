@@ -61,7 +61,7 @@ class ModelTrainer(AbstractModel):
 			self.config['gnn']['fnorm'] = self.config['fnorm']
 			self.config['gnn']['logger'] = self.logger
 			self.config[self.config['name']][self.config[self.config['name']]['gconv']]['input_dim'] = self.config['feature_dim']
-			self.config[self.config['name']][self.config[self.config['name']]['gconv']] ['hidden_dim'] = self.config['feature_dim']
+			#self.config[self.config['name']][self.config[self.config['name']]['gconv']] ['hidden_dim'] = self.config['feature_dim']
 
 		self.classifier = MODELS_DICT[self.config['name']](**self.config[self.config['name']])
 

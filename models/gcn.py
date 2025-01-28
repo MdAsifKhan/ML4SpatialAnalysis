@@ -82,11 +82,12 @@ class GraphConvolutionalNetwork:
 
 
 		weights = None if class_weight is None else torch.tensor(
-				[weight for target, weight in class_weight.items()],
+				[weight for target, weight in class_weight[1]],
 				dtype=torch.float32
 				).to(self.device)
 
-		self.criterion = nn.CrossEntropyLoss(weight=weights)
+		#self.criterion = nn.CrossEntropyLoss(weight=weights)
+		self.criterion = nn.BCEWithLogitsLos(pos_weight=weights)
 
 	def to_pyg(self, data_dict):
 		"""
@@ -193,9 +194,11 @@ class GraphConvolutionalNetwork:
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
-				preds_i = F.softmax(preds_i, dim=1)
-				preds_i = preds_i.argmax(dim=1).cpu().numpy()
+				#preds_i = F.softmax(preds_i, dim=1)
+				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
+				preds_i = F.sigmoid(preds_i).cpu().numpy()
 				preds = np.concatenate([preds, preds_i])
+			preds = (preds>=threshold).astype(int)
 			return preds
 
 	def predict_proba(self, data):
@@ -216,15 +219,15 @@ class GraphConvolutionalNetwork:
 		with torch.no_grad():
 			pyg_dataset = self.to_pyg(data)
 			loader = DataLoader(pyg_dataset, batch_size=self.batch_size, shuffle=False)
-			preds = []
+			probs = []
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				score, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
-				score = F.softmax(score, dim=1)
-				preds.append(score)
-
-			preds = torch.cat(preds, dim=0).cpu().numpy()
-			return preds
+				#score = F.softmax(score, dim=1)
+				probs = F.sigmoid(score)
+				probs.append(score)
+			probs = torch.cat(probs, dim=0).cpu().numpy()
+			return probs
 
 	def wandb_log_figure(self, fig, name):
 		"""
