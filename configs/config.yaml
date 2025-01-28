@@ -30,7 +30,7 @@ model:
     gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
     lr: 0.001       # Learning rate
     nm_epochs: 100    # Number of training epochs
-    device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'mps' for Apple Metal)
+    device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'cuda' or 'mps' for Apple Metal)
     logger: ???
     batch_size: 128   # Batch size for training
     fnorm: ???  # Normalisation criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
@@ -41,23 +41,19 @@ model:
     gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
     gmode: 'connectivity'
     gcn:
-      hidden_dim: 128  # Dimensionality of hidden layer (needs to be specified)
+      hidden_dim: 64  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
-      nm_class: 2
     gcnattn:
       hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
-      nm_class: 2
     ssgcn:
       hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
       K: 4
       alpha: 0.4
-      nm_class: 2
     sagegcn:
       hidden_dim: ???
       input_dim: ???
-      nm_class: 2
       drop_p: 0.3
   randomforest:
     n_estimators: 100          # Number of trees in the forest
