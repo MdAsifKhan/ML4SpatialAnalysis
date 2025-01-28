@@ -43,18 +43,22 @@ model:
     gcn:
       hidden_dim: 64  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
+    edgegcn:
+      hidden_dim: 64
+      input_dim: ???
+    hiergcn:
+      hidden_dim: 64
+      input_dim: ???
+      k: 8
     gcnattn:
-      hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+      heads: 4
+      hidden_dim: 64  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
     ssgcn:
       hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
       K: 4
       alpha: 0.4
-    sagegcn:
-      hidden_dim: ???
-      input_dim: ???
-      drop_p: 0.3
   randomforest:
     n_estimators: 100          # Number of trees in the forest
     criterion: 'gini'          # Criterion for splitting: 'gini' (Gini impurity) or 'entropy' (information gain)

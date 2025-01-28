@@ -21,13 +21,15 @@ from mainutils.utils import coords_to_graph
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.graph_networks import GCN, SSGCN #, SAGEAttentionNet, GCNWithAttention
+from models.graph_networks import GCN, SSGCN, EdgeWeightedGCN, HierarchicalGCN, AttentionGCN
 
 GCN_DICT = {
 			'gcn': GCN,
 			'ssgcn': SSGCN,
-# 			'sagegcn': SAGEAttentionNet,
-# 			'gcnattn': GCNWithAttention,
+			'edgegcn': EdgeWeightedGCN,
+			'hiergcn': HierarchicalGCN,
+			'attngcn': AttentionGCN
+
 }
 
 class GraphConvolutionalNetwork:
@@ -82,13 +84,13 @@ class GraphConvolutionalNetwork:
 
 
 		weights = None if class_weight is None else torch.tensor(
-				class_weight[1],
+				[weight for target, weight in class_weight[1]],
 				dtype=torch.float32
 				).to(self.device)
 
-		# self.criterion = nn.CrossEntropyLoss(weight=weights)
-		self.criterion = nn.BCEWithLogitsLoss(pos_weight=weights)
-        
+		#self.criterion = nn.CrossEntropyLoss(weight=weights)
+		self.criterion = nn.BCEWithLogitsLos(pos_weight=weights)
+
 	def to_pyg(self, data_dict):
 		"""
 			Converts input data (gene expression, graphs, and optional labels) into PyTorch Geometric Data objects.
@@ -107,12 +109,12 @@ class GraphConvolutionalNetwork:
 		num_samples = len(data_dict['labels'])
 		for i in range(num_samples):
 			graph_attributes = torch.tensor(data_dict['expressions'][i]).float()
-			if self.fnorm == 'minmax':
+			if self.fnorm == 'log1p_minmax':
 				graph_attributes = torch.log1p(graph_attributes)
 				min_marker, _ = torch.min(graph_attributes, dim=0)
 				max_marker, _ = torch.max(graph_attributes, dim=0)
 				graph_attributes = (graph_attributes - min_marker)/(max_marker - min_marker + 1e-8)
-			elif self.fnorm == 'log1p':
+			elif self.fnorm == 'log1p_zscore':
 				graph_attributes = torch.log1p(graph_attributes)
 				graph_attributes = (graph_attributes - torch.mean(graph_attributes, dim=0, keepdim=True))/(torch.std(graph_attributes, dim=0, keepdim=True) + 1e-8)
 			elif self.fnorm == 'arctan':
@@ -161,8 +163,8 @@ class GraphConvolutionalNetwork:
 					x_batch.edge_attr, 
 					x_batch.batch
 				)
-
-				loss = self.criterion(logits, x_batch.y.unsqueeze(1))
+				
+				loss = self.criterion(logits, x_batch.y.to(torch.int64))
 
 				loss.backward()
 				torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
@@ -196,8 +198,8 @@ class GraphConvolutionalNetwork:
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
-				preds_i = torch.sigmoid(preds_i).cpu().numpy()
-				preds = np.concatenate([preds, preds_i.squeeze()])
+				preds_i = F.sigmoid(preds_i).cpu().numpy()
+				preds = np.concatenate([preds, preds_i])
 			preds = (preds>=threshold).astype(int)
 			return preds
 
@@ -224,10 +226,10 @@ class GraphConvolutionalNetwork:
 				x_batch = x_batch.to(self.device)
 				score, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				#score = F.softmax(score, dim=1)
-				prob = torch.sigmoid(score)
-				probs.append(prob)
+				probs = F.sigmoid(score)
+				probs.append(score)
 			probs = torch.cat(probs, dim=0).cpu().numpy()
-			return probs.squeeze()
+			return probs
 
 	def wandb_log_figure(self, fig, name):
 		"""
