@@ -469,7 +469,7 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 
 		elif pcriterion == 'weighted_mean': 
 			confidences = np.abs(roi_probs - 0.5) + 0.5
-			weights = softmax(confidences)
+			weights = confidences / confidences.sum()
 			prob_patient = np.average(roi_probs, weights=weights)
 			pred_patient = int(prob_patient >= 0.5)
 			unique_pred_patients_label.append(pred_patient)
@@ -498,8 +498,6 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 
 		else:
 			assert 0,f"{pcriterion} Not Implemented"
-
-		unique_pred_patients_prob.append(prob_patient)
 
 	unique_pred_patients_prob = np.array(unique_pred_patients_prob)
 	unique_patients_label = np.array(unique_patients_label)
