@@ -106,7 +106,7 @@ class EdgeWeightedGCN(nn.Module):
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		# Edge weights from edge features
-		edge_weights = self.edge_mlp(edge_attr)
+		edge_weights = self.edge_mlp(edge_weight)
 
 		# Graph convolutions with edge weights
 		x = self.conv1(x, edge_index, edge_weight=edge_weights)
@@ -124,9 +124,9 @@ class EdgeWeightedGCN(nn.Module):
 
 		return self.classifier(x), x
 
-	def forward(self, x, edge_index, edge_attr, batch):
+	def forward(self, x, edge_index, edge_weight, batch):
 		# Edge weights from edge features
-		edge_weights = self.edge_mlp(edge_attr)
+		edge_weights = self.edge_mlp(edge_weight)
 
 		# Graph convolutions with edge weights
 		x = self.conv1(x, edge_index, edge_weight=edge_weights)
@@ -189,7 +189,7 @@ class HierarchicalGCN(nn.Module):
 
 		return self.classifier(x), x
 
-	def forward(self, x, edge_index, batch):
+	def forward(self, x, edge_index, edge_weight, batch):
 		# Initial feature processing
 		x = self.conv1(x, edge_index)
 		x = F.relu(x)
@@ -221,7 +221,7 @@ class AttentionGCN(nn.Module):
 			nn.Linear(hidden_dim, 1)
 		)
 		self.dropout = nn.Dropout(0.2)
-		
+
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		# Multi-head attention
 		x = self.conv1(x, edge_index)
