@@ -37,7 +37,7 @@ class GCN(nn.Module):
 						nn.Linear(self.hidden_dim, self.hidden_dim //2),
 						nn.ReLU(),
 						nn.Dropout(0.5),
-						nn.Linear(self.hidden_dim, 1)
+						nn.Linear(self.hidden_dim //2, 1)
 					)
 		self.dropout1 = nn.Dropout(0.2)
 		self.dropout2 = nn.Dropout(0.2)

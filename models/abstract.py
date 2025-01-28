@@ -126,7 +126,7 @@ class AbstractModel(ABC):
 		"""
 		y_pred = self.predict(data)
 		y_proba = self.predict_proba(data)
-		y_proba = y_proba[:, 1]
+		#y_proba = y_proba[:, 1]
 		metrics_roi = compute_scores(data['labels'], y_pred, y_proba, mode)
 		self.log_metrics(metrics_roi,  mode=f"ROILevel{mode}")
 		print('Metrics at ROI Level', metrics_roi)

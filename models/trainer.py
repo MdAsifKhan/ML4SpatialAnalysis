@@ -83,7 +83,7 @@ class ModelTrainer(AbstractModel):
 			print(f"Evaluating on Test Set")
 			self.evaluate(dataset['test'], mode='Test')
 			
-			print(f"Saving the {self.config['model']['name']} Model")
+			print(f"Saving the {self.config['name']} Model")
 			self.save_model(logname=logname)
 
 		elif self.config['eval'] == 'leaveOneOut':

@@ -21,13 +21,13 @@ from mainutils.utils import coords_to_graph
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.graph_networks import GCN, SSGCN, SAGEAttentionNet, GCNWithAttention
+from models.graph_networks import GCN, SSGCN #, SAGEAttentionNet, GCNWithAttention
 
 GCN_DICT = {
 			'gcn': GCN,
 			'ssgcn': SSGCN,
-			'sagegcn': SAGEAttentionNet,
-			'gcnattn': GCNWithAttention,
+# 			'sagegcn': SAGEAttentionNet,
+# 			'gcnattn': GCNWithAttention,
 }
 
 class GraphConvolutionalNetwork:
@@ -82,13 +82,13 @@ class GraphConvolutionalNetwork:
 
 
 		weights = None if class_weight is None else torch.tensor(
-				[weight for target, weight in class_weight[1]],
+				class_weight[1],
 				dtype=torch.float32
 				).to(self.device)
 
-		#self.criterion = nn.CrossEntropyLoss(weight=weights)
-		self.criterion = nn.BCEWithLogitsLos(pos_weight=weights)
-
+		# self.criterion = nn.CrossEntropyLoss(weight=weights)
+		self.criterion = nn.BCEWithLogitsLoss(pos_weight=weights)
+        
 	def to_pyg(self, data_dict):
 		"""
 			Converts input data (gene expression, graphs, and optional labels) into PyTorch Geometric Data objects.
@@ -161,8 +161,8 @@ class GraphConvolutionalNetwork:
 					x_batch.edge_attr, 
 					x_batch.batch
 				)
-				
-				loss = self.criterion(logits, x_batch.y.to(torch.int64))
+
+				loss = self.criterion(logits, x_batch.y.unsqueeze(1))
 
 				loss.backward()
 				torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
@@ -197,7 +197,7 @@ class GraphConvolutionalNetwork:
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
 				preds_i = F.sigmoid(preds_i).cpu().numpy()
-				preds = np.concatenate([preds, preds_i])
+				preds = np.concatenate([preds, preds_i.squeeze()])
 			preds = (preds>=threshold).astype(int)
 			return preds
 
@@ -226,8 +226,8 @@ class GraphConvolutionalNetwork:
 				#score = F.softmax(score, dim=1)
 				probs = F.sigmoid(score)
 				probs.append(score)
-			probs = torch.cat(probs, dim=0).cpu().numpy()
-			return probs
+			preds = torch.cat(preds, dim=0).cpu().numpy()
+			return preds
 
 	def wandb_log_figure(self, fig, name):
 		"""
