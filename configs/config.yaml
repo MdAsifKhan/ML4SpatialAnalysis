@@ -41,7 +41,7 @@ model:
     gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
     gmode: 'connectivity'
     gcn:
-      hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+      hidden_dim: 128  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
       nm_class: 2
     gcnattn:
