@@ -69,6 +69,9 @@ class GCNWithAttention(nn.Module):
 		nm_class=2
 		):
 		super().__init__()
+		self.input_dim = input_dim
+		self.hidden_dim = hidden_dim
+		self.nm_class = nm_class
 		self.conv1 = GCNConv(self.input_dim, 2*self.hidden_dim)
 		self.conv2 = GCNConv(2*self.hidden_dim, 4*self.hidden_dim)
 
@@ -150,6 +153,9 @@ class SAGEAttentionNet(nn.Module):
 		nm_class=2, 
 		drop_p=0.3):
 		super().__init__()
+		self.input_dim = input_dim
+		self.hidden_dim = hidden_dim
+		self.nm_class = nm_class        
 		# Use SAGEConv or GINConv
 		self.conv1 = SAGEConv(input_dim, hidden_dim)
 		self.conv2 = SAGEConv(hidden_dim, hidden_dim*2)

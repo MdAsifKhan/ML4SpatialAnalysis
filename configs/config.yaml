@@ -12,7 +12,7 @@ model:
   tok_k_attr: 10
   # Graph construction parameters
   # Feature selection criteria
-  fnorm: 'znorm'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
+  fnorm: 'minmax'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
   gcriterion: null   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
   gf_dim: 32      # Dimensionality of graph features
 
@@ -38,9 +38,13 @@ model:
     batch_correct: False
     nm_batch: 5
     k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' or 'atmostk' method)
-    gmethod: 'delaunay'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
+    gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
     gmode: 'connectivity'
     gcn:
+      hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
+      input_dim: ???  # Input feature dimensionality (needs to be specified)
+      nm_class: 2
+    gcnattn:
       hidden_dim: ???  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
       nm_class: 2
@@ -50,6 +54,11 @@ model:
       K: 4
       alpha: 0.4
       nm_class: 2
+    sagegcn:
+      hidden_dim: ???
+      input_dim: ???
+      nm_class: 2
+      drop_p: 0.3
   randomforest:
     n_estimators: 100          # Number of trees in the forest
     criterion: 'gini'          # Criterion for splitting: 'gini' (Gini impurity) or 'entropy' (information gain)
@@ -82,6 +91,6 @@ dataset:
   #cell_filename: 'cell_table_contrast_adj/updated_cell_table'  # Filename containing cell table data cell_table_size_normalized_cell_labels
   cell_filename: 'updated_cell_table'  # Filename containing cell table data cell_table_size_normalized_cell_labels
   response_filename: 'processed_response_RCB'  # Filename containing response labels
-  datasplit: 'leaveOneOut' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
+  datasplit: 'split' # Evaluation method ('split' for train/test split, 'kfold' for KFold evaluation)
   test_ratio: 0.3  # Proportion of data used for testing
   folds: 5           # Number of folds for cross-validation
