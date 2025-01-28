@@ -104,6 +104,26 @@ class EdgeWeightedGCN(nn.Module):
 		)
 		self.dropout = nn.Dropout(0.2)
 
+	def hidden_representation(self, x, edge_index, edge_weight, batch):
+		# Edge weights from edge features
+		edge_weights = self.edge_mlp(edge_attr)
+
+		# Graph convolutions with edge weights
+		x = self.conv1(x, edge_index, edge_weight=edge_weights)
+		x = F.relu(x)
+		x = self.dropout(x)
+
+		x = self.conv2(x, edge_index, edge_weight=edge_weights)
+
+		# Multiple pooling strategies
+		x_mean = global_mean_pool(x, batch)
+		x_max = global_max_pool(x, batch)
+
+		# Concatenate different pooling results
+		x = torch.cat([x_mean, x_max], dim=1)
+
+		return self.classifier(x), x
+
 	def forward(self, x, edge_index, edge_attr, batch):
 		# Edge weights from edge features
 		edge_weights = self.edge_mlp(edge_attr)
@@ -152,6 +172,23 @@ class HierarchicalGCN(nn.Module):
 			nn.Linear(hidden_dim, 1)
 		)
 
+	def hidden_representation(self, x, edge_index, edge_weight, batch):
+		# Initial feature processing
+		x = self.conv1(x, edge_index)
+		x = F.relu(x)
+
+		# Hierarchical structure learning
+		x = self.dynamic_edge_conv(x, batch)
+
+		# Multiple pooling
+		x_mean = global_mean_pool(x, batch)
+		x_max = global_max_pool(x, batch)
+
+		# Combine pooled features
+		x = torch.cat([x_mean, x_max], dim=1)
+
+		return self.classifier(x), x
+
 	def forward(self, x, edge_index, batch):
 		# Initial feature processing
 		x = self.conv1(x, edge_index)
@@ -184,6 +221,24 @@ class AttentionGCN(nn.Module):
 			nn.Linear(hidden_dim, 1)
 		)
 		self.dropout = nn.Dropout(0.2)
+		
+	def hidden_representation(self, x, edge_index, edge_weight, batch):
+		# Multi-head attention
+		x = self.conv1(x, edge_index)
+		x = F.elu(x)
+		x = self.dropout(x)
+
+		x = self.conv2(x, edge_index)
+
+		# Multiple pooling strategies
+		x_mean = global_mean_pool(x, batch)
+		x_max = global_max_pool(x, batch)
+		x_sum = global_add_pool(x, batch)
+
+		# Combine different pooling results
+		x = torch.cat([x_mean, x_max, x_sum], dim=1)
+
+		return self.classifier(x), x
 
 	def forward(self, x, edge_index, batch):
 		# Multi-head attention
