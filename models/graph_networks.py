@@ -20,12 +20,10 @@ class GCN(nn.Module):
 	def __init__(self, 
 					input_dim, 
 					hidden_dim, 
-					nm_class,
 					drop_p=0.3):
 		super(GCN, self).__init__()
 		self.input_dim = input_dim
 		self.hidden_dim = hidden_dim
-		self.nm_class = nm_class
 		self.conv1 = GCNConv(self.input_dim, self.hidden_dim)
 		self.conv2 = GCNConv(self.hidden_dim, self.hidden_dim)
 		self.conv3 = GCNConv(self.hidden_dim, self.hidden_dim)
@@ -99,17 +97,15 @@ class SSGCN(nn.Module):
 					hidden_dim,
 					K,
 					alpha, 
-					nm_class=2,
 					drop_p=0.3):
 		super(SSGCN, self).__init__()
 		self.input_dim = input_dim
 		self.hidden_dim = hidden_dim
-		self.nm_class = nm_class
 		self.K = int(K)
 		self.alpha = alpha
 		self.conv1 = SSGConv(self.input_dim, self.hidden_dim, self.alpha, self.K)
 		self.conv2 = SSGConv(self.hidden_dim, self.hidden_dim, self.alpha, self.K)
-		self.clf = nn.Linear(self.hidden_dim, self.nm_class)
+		self.clf = nn.Linear(self.hidden_dim, 1)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)

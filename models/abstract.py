@@ -134,7 +134,6 @@ class AbstractModel(ABC):
 		metrics_patient = patient_level_scores(data['labels'], y_pred, y_proba, data['patient'], mode=mode, pcriterion=self.config['pcriterion'])
 		self.log_metrics(metrics_patient, mode=f"Patient Level {mode}")
 		print('Metrics at Patient Level', metrics_patient)
-
 		# if mode == 'Test':
 		# 	self.attribution(data)
 

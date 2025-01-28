@@ -76,7 +76,7 @@ class GraphConvolutionalNetwork:
 		self.optim = torch.optim.AdamW(
 					self.model.parameters(), 
 					lr=lr, 
-					weight_decay=1e-4,
+					weight_decay=1e-3,
 					betas=(0.9, 0.999)
 			)
 
@@ -196,7 +196,7 @@ class GraphConvolutionalNetwork:
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
-				preds_i = F.sigmoid(preds_i).cpu().numpy()
+				preds_i = torch.sigmoid(preds_i).cpu().numpy()
 				preds = np.concatenate([preds, preds_i.squeeze()])
 			preds = (preds>=threshold).astype(int)
 			return preds
@@ -224,10 +224,10 @@ class GraphConvolutionalNetwork:
 				x_batch = x_batch.to(self.device)
 				score, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				#score = F.softmax(score, dim=1)
-				probs = F.sigmoid(score)
-				probs.append(score)
-			preds = torch.cat(preds, dim=0).cpu().numpy()
-			return preds
+				prob = torch.sigmoid(score)
+				probs.append(prob)
+			probs = torch.cat(probs, dim=0).cpu().numpy()
+			return probs.squeeze()
 
 	def wandb_log_figure(self, fig, name):
 		"""
