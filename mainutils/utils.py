@@ -435,7 +435,7 @@ def compute_scores(y, y_pred, y_proba, mode='Train'):
 	}
 	return metrics
 
-
+from scipy.special import softmax
 
 def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='majority'):
 	unique_patients = list(set(patients))
@@ -450,21 +450,52 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 
 	unique_pred_patients_prob, unique_pred_patients_label, unique_patients_label = [], [], []
 	for patient in unique_patients:
-		correct_predictions = [1 if (pred == label == 1) else 0 
-								for pred, label in zip(patients_preds[patient], patients_labels[patient])]
+		#correct_predictions = [1 if (pred == label == 1) else 0 
+		#						for pred, label in zip(patients_preds[patient], patients_labels[patient])]
+		roi_probs = np.array(patients_probs[patient])
+		roi_labels = np.array(patients_probs[patient])
+
+		patient_label = Counter(roi_labels).most_common(1)[0][0]
+		unique_patients_label.append(patient_label)
+
 		if pcriterion == 'majority':
 			# Check if the majority of predictions match the majority of labels
-			vote_patient = Counter(correct_predictions).most_common(1)[0][0]
-			prob_patient = np.median(patients_probs[patient])			
+			roi_preds = (roi_probs >= 0.5).astype(int)
+			vote_patient = Counter(roi_preds).most_common(1)[0][0]
+			prob_patient = np.mean(roi_probs[roi_preds == vote_patient])
+			prob_patient = np.median(patients_probs[patient])
+			unique_pred_patients_label.append(vote_patient)
+		elif pcriterion == 'weighted_mean': 
+			confidences = np.abs(roi_probs - 0.5) + 0.5
+			weights = softmax(confidences)
+			prob_patient = np.average(roi_probs, weights=weights)
+			pred_patient = int(prob_patient >= 0.5)
+			unique_pred_patients_label.append(pred_patient)
+		elif pcriterion == 'geometric_mean':
+			# Use geometric mean of odds ratios
+			eps = 1e-7  # Small epsilon to prevent division by zero
+			odds = (roi_probs + eps) / (1 - roi_probs + eps)
+			geometric_odds = np.exp(np.mean(np.log(odds)))
+			prob_patient = geometric_odds / (1 + geometric_odds)
+			pred_patient = int(prob_patient >= 0.5)
+			unique_pred_patients_label.append(pred_patient)
+		elif pcriterion == 'consensus':
+			# Require strong consensus for positive prediction
+			consensus_threshold = 0.75
+			roi_preds = (roi_probs >= 0.5).astype(int)
+			positive_ratio = np.mean(roi_preds)
+			pred_patient = int(positive_ratio >= consensus_threshold)
+			# Use mean probability of the consensus class
+			prob_patient = np.mean(roi_probs[roi_preds == pred_patient])
+			unique_pred_patients_label.append(pred_patient)
 		else:
 			assert 0,f"{pcriterion} Not Implemented"
 
-		# Assign patient as true positive or true negative based on majority correct predictions
-		unique_pred_patients_label.append(1 if vote_patient == 1 else 0)
-		
-		unique_patients_label.append(patients_labels[patient][0])
 		unique_pred_patients_prob.append(prob_patient)
 
+	unique_pred_patients_prob = np.array(unique_pred_patients_prob)
+	unique_patients_label = np.array(unique_patients_label)
+	
 	patient_auc = roc_auc_score(unique_patients_label, unique_pred_patients_prob)
 	accuracy = accuracy_score(unique_patients_label, unique_pred_patients_label)
 	bal_acc_ = balanced_accuracy_score(unique_patients_label, unique_pred_patients_label)
