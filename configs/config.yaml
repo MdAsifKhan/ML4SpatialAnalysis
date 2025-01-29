@@ -12,7 +12,7 @@ model:
   tok_k_attr: 10
   # Graph construction parameters
   # Feature selection criteria
-  fnorm: 'log1p_minmax'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
+  fnorm: 'asinh'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
   gcriterion: null   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
   gf_dim: 32      # Dimensionality of graph features
 

@@ -89,7 +89,7 @@ class GraphConvolutionalNetwork:
 				).to(self.device)
 
 		#self.criterion = nn.CrossEntropyLoss(weight=weights)
-		self.criterion = nn.BCEWithLogitsLos(pos_weight=weights)
+		self.criterion = nn.BCEWithLogitsLoss(pos_weight=weights)
 
 	def to_pyg(self, data_dict):
 		"""
@@ -203,7 +203,7 @@ class GraphConvolutionalNetwork:
 					x_batch.batch
 				)
 				
-				loss = self.criterion(logits, x_batch.y.to(torch.int64))
+				loss = self.criterion(logits, x_batch.y.unsqueeze(1))
 
 				loss.backward()
 				torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
@@ -237,7 +237,7 @@ class GraphConvolutionalNetwork:
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
-				preds_i = F.sigmoid(preds_i).cpu().numpy()
+				preds_i = torch.sigmoid(preds_i).cpu().numpy()
 				preds = np.concatenate([preds, preds_i])
 			preds = (preds>=threshold).astype(int)
 			return preds
@@ -263,12 +263,12 @@ class GraphConvolutionalNetwork:
 			probs = []
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
-				score, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
+				prob, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				#score = F.softmax(score, dim=1)
-				probs = F.sigmoid(score)
-				probs.append(score)
+				prob = F.sigmoid(prob)
+				probs.append(prob)
 			probs = torch.cat(probs, dim=0).cpu().numpy()
-			return probs
+			return probs.squeeze()
 
 	def wandb_log_figure(self, fig, name):
 		"""
