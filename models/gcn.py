@@ -127,8 +127,8 @@ class GraphConvolutionalNetwork:
 				graph_attributes = torch.asinh(graph_attributes / cofactor)
 			elif self.fnorm == 'robust_scale':
 				median = torch.median(graph_attributes, dim=0)[0]
-				q75, _ = torch.quantile(graph_attributes, 0.75, dim=0)
-				q25, _ = torch.quantile(graph_attributes, 0.25, dim=0)
+				q75 = torch.quantile(graph_attributes, 0.75, dim=0)
+				q25 = torch.quantile(graph_attributes, 0.25, dim=0)
 				iqr = q75 - q25
 				graph_attributes = (graph_attributes - median) / (iqr + 1e-8)
 			elif self.fnorm == 'log2_mad':
@@ -147,8 +147,8 @@ class GraphConvolutionalNetwork:
 
 			elif self.fnorm == 'percentile':
 				# Percentile normalization (rescale to 0-1 based on percentiles)
-				q99, _ = torch.quantile(graph_attributes, 0.99, dim=0)
-				q1, _ = torch.quantile(graph_attributes, 0.01, dim=0)
+				q99 = torch.quantile(graph_attributes, 0.99, dim=0)
+				q1 = torch.quantile(graph_attributes, 0.01, dim=0)
 				graph_attributes = torch.clamp(graph_attributes, q1, q99)
 				graph_attributes = (graph_attributes - q1) / (q99 - q1 + 1e-8)
 
@@ -237,7 +237,7 @@ class GraphConvolutionalNetwork:
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
-				preds_i = torch.sigmoid(preds_i).cpu().numpy()
+				preds_i = torch.sigmoid(preds_i).squeeze().cpu().numpy()
 				preds = np.concatenate([preds, preds_i])
 			preds = (preds>=threshold).astype(int)
 			return preds
