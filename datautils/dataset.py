@@ -1,4 +1,3 @@
-import scanpy as sc
 import numpy as np
 from .utils import load_cell_data, cellcell_to_features
 import os

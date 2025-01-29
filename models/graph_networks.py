@@ -26,10 +26,9 @@ class GCN(nn.Module):
 		self.hidden_dim = hidden_dim
 		self.conv1 = GCNConv(self.input_dim, self.hidden_dim)
 		self.conv2 = GCNConv(self.hidden_dim, self.hidden_dim)
-		self.conv3 = GCNConv(self.hidden_dim, self.hidden_dim)
 		
-		self.bn1 = BatchNorm(self.hidden_dim)
-		self.bn2 = BatchNorm(self.hidden_dim)
+# 		self.bn1 = BatchNorm(self.hidden_dim)
+# 		self.bn2 = BatchNorm(self.hidden_dim)
 
 		self.clf = nn.Sequential(
 						nn.Linear(self.hidden_dim, self.hidden_dim //2),
@@ -38,18 +37,18 @@ class GCN(nn.Module):
 						nn.Linear(self.hidden_dim //2, 1)
 					)
 		self.dropout1 = nn.Dropout(0.5)
-		self.dropout2 = nn.Dropout(0.5)
+# 		self.dropout2 = nn.Dropout(0.5)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
-		x = self.bn1(x)
+# 		x = self.bn1(x)
 		x = self.dropout1(F.relu(x))
 		
 		x = self.conv2(x, edge_index, edge_weight)
-		x = self.bn2(x)
-		x = self.dropout2(F.relu(x))
+# 		x = self.bn2(x)
+# 		x = self.dropout2(F.relu(x))
 
-		x = self.conv3(x, edge_index, edge_weight)
+# 		x = self.conv3(x, edge_index, edge_weight)
 		x = global_mean_pool(x, batch)
 		return self.clf(x), x
 
@@ -90,7 +89,7 @@ class EdgeWeightedGCN(nn.Module):
 		self.conv2 = GCNConv(hidden_dim, hidden_dim)
 
 		self.edge_mlp = nn.Sequential(
-			nn.Linear(2, hidden_dim),
+			nn.Linear(1, hidden_dim),
 			nn.ReLU(),
 			nn.Linear(hidden_dim, 1),
 			nn.Sigmoid()
@@ -106,7 +105,7 @@ class EdgeWeightedGCN(nn.Module):
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		# Edge weights from edge features
-		edge_weights = self.edge_mlp(edge_weight)
+		edge_weights = self.edge_mlp(edge_weight.unsqueeze(-1))
 
 		# Graph convolutions with edge weights
 		x = self.conv1(x, edge_index, edge_weight=edge_weights)

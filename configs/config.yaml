@@ -1,4 +1,4 @@
-seed: 42 # Random seed for reproducibility
+seed: 43 # Random seed for reproducibility
 balanced_train: False
 model:
   name: 'gnn' # Name of the model (choices: gnn, logistic, randomforest, xgboost)
@@ -27,21 +27,21 @@ model:
 
   # GCN hyperparameters
   gnn:
-    gconv: 'edgegcn'   # Two choices here: 'gcn', 'ssgcn'
-    lr: 0.0001       # Learning rate
-    nm_epochs: 40    # Number of training epochs
+    gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
+    lr: 0.001       # Learning rate
+    nm_epochs: 20    # Number of training epochs
     device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'cuda' or 'mps' for Apple Metal)
     logger: ???
-    batch_size: 128   # Batch size for training
+    batch_size: 64   # Batch size for training
     fnorm: ???  # Normalisation criterion for cell features ('avgcellexpression' - averages marker intensities in a ROI)
     class_weight: null
     batch_correct: False
     nm_batch: 5
     k: 7              # Number of nearest neighbors (used for 'cellcell' graphs with 'knn' or 'atmostk' method)
-    gmethod: 'knn'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
-    gmode: 'distance'
+    gmethod: 'delaunay'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
+    gmode: 'connectivity'
     gcn:
-      hidden_dim: 64  # Dimensionality of hidden layer (needs to be specified)
+      hidden_dim: 1024  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
     edgegcn:
       hidden_dim: 64
@@ -50,7 +50,7 @@ model:
       hidden_dim: 64
       input_dim: ???
       k: 8
-    gcnattn:
+    attngcn:
       heads: 4
       hidden_dim: 64  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
