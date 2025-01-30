@@ -44,8 +44,6 @@ def edge_index_to_adj(edge_index, num_nodes):
 	adj = csr_matrix((data, (row, col)), shape=(num_nodes, num_nodes))
 	return adj
 
-import numpy as np
-import scipy.sparse as sp
 
 def distance_to_similarity(
 	G, 
@@ -102,7 +100,7 @@ def adjacency_to_laplacian(A, normalised=True):
 		Lnorm (numpy.ndarray or scipy.sparse.csr_matrix): The computed Laplacian matrix.
 	"""
 	D = np.squeeze(np.asarray(A.sum(axis=1)))
-	L = sp.diags(D) - A if sp.issparse(A) else np.diag(deg) - A
+	L = sp.diags(D) - A if sp.issparse(A) else np.diag(D) - A
 	if not normalised:
 		return L
 	Dsqrt = 1.0/ np.sqrt(D)
@@ -162,16 +160,16 @@ def delaunay_graph(coords, mode='connectivity', dtype=np.float32):
 					diff = coords[p1] - coords[p2]
 					val = np.sqrt(np.sum(diff * diff))
 	
-		# Add edge in both directions for a symmetric adjacency
-		rows[idx] = p1
-		cols[idx] = p2
-		data[idx] = val
-		idx += 1
+				# Add edge in both directions for a symmetric adjacency
+				rows[idx] = p1
+				cols[idx] = p2
+				data[idx] = val
+				idx += 1
 
-		rows[idx] = p2
-		cols[idx] = p1
-		data[idx] = val
-		idx += 1
+				rows[idx] = p2
+				cols[idx] = p1
+				data[idx] = val
+				idx += 1
 
 	# Trim arrays to the actual size used
 	rows = rows[:idx]
@@ -311,7 +309,7 @@ def coords_to_graph(coords, gmethod='knn', mode='connectivity', radius=7):
 	else:
 		assert 0, f"{gmethod} Not Implemented"
 	if mode == 'distance':
-		G.data = distance_to_similarity(G.data)
+		G.data = distance_to_similarity(G)
 	return G
 
 def graph_feature_vector(graph, gcriterion='heat_trace', feature_dim=10):
