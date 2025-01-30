@@ -12,7 +12,7 @@ model:
   tok_k_attr: 10
   # Graph construction parameters
   # Feature selection criteria
-  fnorm: 'robust_scale'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
+  fnorm: 'log1p_zscore'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
   gcriterion: null   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
   gf_dim: 32      # Dimensionality of graph features
 
@@ -29,7 +29,7 @@ model:
   gnn:
     gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
     lr: 0.001       # Learning rate
-    nm_epochs: 20    # Number of training epochs
+    nm_epochs: 5    # Number of training epochs
     device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'cuda' or 'mps' for Apple Metal)
     logger: ???
     batch_size: 64   # Batch size for training
@@ -41,7 +41,7 @@ model:
     gmethod: 'delaunay'     # Method for constructing the graph adjacency matrix ('knn' 'atmostk', 'delaunay' or 'radius')
     gmode: 'connectivity'
     gcn:
-      hidden_dim: 1024  # Dimensionality of hidden layer (needs to be specified)
+      hidden_dim: 512  # Dimensionality of hidden layer (needs to be specified)
       input_dim: ???  # Input feature dimensionality (needs to be specified)
     edgegcn:
       hidden_dim: 64

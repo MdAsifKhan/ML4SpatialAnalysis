@@ -157,8 +157,8 @@ class GraphConvolutionalNetwork:
 				cofactor = 5.0
 				graph_attributes = torch.asinh(graph_attributes / cofactor)
 				median = torch.median(graph_attributes, dim=0)[0]
-				q75, _ = torch.quantile(graph_attributes, 0.75, dim=0)
-				q25, _ = torch.quantile(graph_attributes, 0.25, dim=0)
+				q75 = torch.quantile(graph_attributes, 0.75, dim=0)
+				q25 = torch.quantile(graph_attributes, 0.25, dim=0)
 				iqr = q75 - q25
 				graph_attributes = (graph_attributes - median) / (iqr + 1e-8)
 			elif self.fnorm == 'raw':
@@ -214,6 +214,7 @@ class GraphConvolutionalNetwork:
 				
 			loss_epoch = loss_epoch/(len(loader))
 			self.logger.log({'GCN Epoch Loss': loss.item()})
+            
 
 	def predict(self, data, threshold=0.5):
 		"""
@@ -265,7 +266,7 @@ class GraphConvolutionalNetwork:
 				x_batch = x_batch.to(self.device)
 				prob, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_attr, x_batch.batch)
 				#score = F.softmax(score, dim=1)
-				prob = F.sigmoid(prob)
+				prob = torch.sigmoid(prob)
 				probs.append(prob)
 			probs = torch.cat(probs, dim=0).cpu().numpy()
 			return probs.squeeze()
