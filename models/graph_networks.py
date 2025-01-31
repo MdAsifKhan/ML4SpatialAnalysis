@@ -43,14 +43,10 @@ class GCN(nn.Module):
 
 	def forward(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
-		x = self.bn1(x)
-		x = self.dropout1(F.relu(x))
+		x = self.dropout1(F.relu(self.norm1(x)))
 		
 		x = self.conv2(x, edge_index, edge_weight)
-		x = self.bn2(x)
-		x = self.dropout2(F.relu(x))
 
-		x = self.conv3(x, edge_index, edge_weight)
 		x = global_mean_pool(x, batch)
 		
 		return self.clf(x)
