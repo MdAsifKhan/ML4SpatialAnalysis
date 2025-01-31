@@ -36,8 +36,6 @@ class GCN(nn.Module):
 		x = self.conv1(x, edge_index, edge_weight)
 		x = self.dropout1(F.relu(self.norm1(x)))
 		
-		x = self.conv2(x, edge_index, edge_weight)
-
 		x = global_mean_pool(x, batch)
 		return self.clf(x), x
 
@@ -45,8 +43,6 @@ class GCN(nn.Module):
 		x = self.conv1(x, edge_index, edge_weight)
 		x = self.dropout1(F.relu(self.norm1(x)))
 		
-		x = self.conv2(x, edge_index, edge_weight)
-
 		x = global_mean_pool(x, batch)
 		
 		return self.clf(x)
