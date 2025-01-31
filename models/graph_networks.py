@@ -6,7 +6,7 @@ from torch_geometric.nn import GCNConv, EdgeConv, SAGEConv, GATConv, DynamicEdge
 from torch_geometric.nn import global_mean_pool, global_add_pool, global_max_pool
 from torch_geometric.nn import TopKPooling, SAGPooling, EdgePooling
 from torch_geometric.nn import MLP
-from torch_geometric.nn import GraphNorm, BatchNorm
+from torch_geometric.nn import GraphNorm, BatchNorm, LayerNorm
 
 class GCN(nn.Module):
 	"""
@@ -25,30 +25,19 @@ class GCN(nn.Module):
 		self.input_dim = input_dim
 		self.hidden_dim = hidden_dim
 		self.conv1 = GCNConv(self.input_dim, self.hidden_dim)
-		self.conv2 = GCNConv(self.hidden_dim, self.hidden_dim)
-		
-# 		self.bn1 = BatchNorm(self.hidden_dim)
-# 		self.bn2 = BatchNorm(self.hidden_dim)
-
+		self.norm1 = LayerNorm(self.hidden_dim)
 		self.clf = nn.Sequential(
-						nn.Linear(self.hidden_dim, self.hidden_dim //2),
-						nn.ReLU(),
-						nn.Dropout(0.5),
-						nn.Linear(self.hidden_dim //2, 1)
+						nn.Linear(self.hidden_dim, 1)
 					)
 		self.dropout1 = nn.Dropout(0.5)
 # 		self.dropout2 = nn.Dropout(0.5)
 
 	def hidden_representation(self, x, edge_index, edge_weight, batch):
 		x = self.conv1(x, edge_index, edge_weight)
-# 		x = self.bn1(x)
-		x = self.dropout1(F.relu(x))
+		x = self.dropout1(F.relu(self.norm1(x)))
 		
 		x = self.conv2(x, edge_index, edge_weight)
-# 		x = self.bn2(x)
-# 		x = self.dropout2(F.relu(x))
 
-# 		x = self.conv3(x, edge_index, edge_weight)
 		x = global_mean_pool(x, batch)
 		return self.clf(x), x
 
