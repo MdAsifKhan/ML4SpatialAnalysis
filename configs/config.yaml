@@ -14,8 +14,9 @@ model:
   # Feature selection criteria
   fnorm: 'log1p_minmax'  # Normalisation criterion for cell features ('minmax', 'log1p', 'raw', 'arctan', 'znorm' - averages marker intensities in a ROI)
   gcriterion: null   # Feature selection criterion for graph features (choices: null, laplacian_spectrum, heat_trace, graphproperties or gcn)
-  gf_dim: 32      # Dimensionality of graph features
-
+  nm_epochs: 20    # Number of training epochs
+  test_every: 1
+  save_every: 5
   logistic:
     penalty: null     # L1 or L2 regularization penalty (None for no regularization)
     l1_ratio: 0.5    # Ratio of L1 to L2 penalty (if penalty is not None)
@@ -29,7 +30,6 @@ model:
   gnn:
     gconv: 'gcn'   # Two choices here: 'gcn', 'ssgcn'
     lr: 0.001       # Learning rate
-    nm_epochs: 5    # Number of training epochs
     device: 'cuda'    # Device to use for training (e.g., 'cpu' or 'cuda' or 'mps' for Apple Metal)
     logger: ???
     batch_size: 64   # Batch size for training
