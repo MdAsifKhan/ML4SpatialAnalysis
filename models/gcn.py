@@ -245,14 +245,15 @@ class GraphConvolutionalNetwork:
 		with torch.no_grad():
 			dataset = self.to_pyg(data)
 			loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
-			preds = np.array([])
+			preds = []
 			for x_batch in loader:
 				x_batch = x_batch.to(self.device)
 				preds_i, latent_z = self.model.hidden_representation(x_batch.x, x_batch.edge_index, x_batch.edge_weight, x_batch.batch)
 				#preds_i = F.softmax(preds_i, dim=1)
 				#preds_i = preds_i.argmax(dim=1).cpu().numpy()
 				preds_i = torch.sigmoid(preds_i).squeeze().cpu().numpy()
-				preds = np.concatenate([preds, preds_i])
+				preds.append(preds_i)
+			preds = np.concatenate(preds)
 			preds = (preds>=threshold).astype(int)
 			return preds
 
