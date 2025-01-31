@@ -204,30 +204,28 @@ class GraphConvolutionalNetwork:
 		self.model.train()
 		dataset = self.to_pyg(data)
 		loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
-		for epoch in range(self.nm_epochs):
-			loss_epoch = 0.
-			for x_batch in loader:
-				x_batch = x_batch.to(self.device)
-				self.optim.zero_grad()
-				logits, latent_z = self.model.hidden_representation(
-					x_batch.x, 
-					x_batch.edge_index, 
-					x_batch.edge_attr, 
-					x_batch.batch
-				)
-				
-				loss = self.criterion(logits, x_batch.y.unsqueeze(1))
+		loss_epoch = 0.
+		for x_batch in loader:
+			x_batch = x_batch.to(self.device)
+			self.optim.zero_grad()
+			logits, latent_z = self.model.hidden_representation(
+				x_batch.x, 
+				x_batch.edge_index, 
+				x_batch.edge_attr, 
+				x_batch.batch
+			)
+			
+			loss = self.criterion(logits, x_batch.y.unsqueeze(1))
 
-				loss.backward()
-				torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-				self.optim.step()
+			loss.backward()
+			torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+			self.optim.step()
 
-				loss_epoch += loss.item()
-				self.logger.log({'GCN Iteration Loss': loss.item()})
-				
-			loss_epoch = loss_epoch/(len(loader))
-			self.logger.log({'GCN Epoch Loss': loss.item()})
-            
+			loss_epoch += loss.item()
+			self.logger.log({'GCN Iteration Loss': loss.item()})
+			
+		loss_epoch = loss_epoch/(len(loader))
+		self.logger.log({'GCN Epoch Loss': loss.item()})
 
 	def predict(self, data, threshold=0.5):
 		"""
@@ -576,4 +574,6 @@ class GraphConvolutionalNetwork:
 		buffer.seek(0)
 		plt.savefig(buffer, format='png')
 		self.logger.log({'Average gradients across ROIs': wandb.Image(Image.open(buffer))})
+
+
 

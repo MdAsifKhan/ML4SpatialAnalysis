@@ -78,13 +78,15 @@ class ModelTrainer(AbstractModel):
 
 		print(f"Fitting {self.config['name']} with {self.config['eval']} training")
 		if self.config['eval'] == 'split':
-			self.fit(dataset['train'])
-			self.evaluate(dataset['train'], mode='Train')
-			print(f"Evaluating on Test Set")
-			self.evaluate(dataset['test'], mode='Test')
-			
-			print(f"Saving the {self.config['name']} Model")
-			self.save_model(logname=logname)
+			for epoch in range(self.config['nm_epochs']):
+				self.fit(dataset['train'])
+				if (epoch + 1) % self.config['test_every'] == 0:
+					self.evaluate(dataset['train'], mode='Train')
+					print(f"Evaluating on Test Set")
+					self.evaluate(dataset['test'], mode='Test')
+				if (epoch + 1) % self.config['save_every'] == 0:			
+					print(f"Saving the {self.config['name']} Model")
+					self.save_model(logname=logname)
 
 		elif self.config['eval'] == 'leaveOneOut':
 			y_test = np.array([])
@@ -92,7 +94,8 @@ class ModelTrainer(AbstractModel):
 			y_pred_test_prob = np.array([])
 			patient_label = np.array([])
 			for i, (train_i, test_i) in enumerate(leave_one_out_split(dataset)):
-				self.fit(train_i)
+				for epoch in range(self.config['nm_epochs']):
+					self.fit(train_i)
 
 				y_pred_train_i = self.predict(train_i)
 				y_pred_train_prob_i = self.predict_proba(train_i)[:, 1]
