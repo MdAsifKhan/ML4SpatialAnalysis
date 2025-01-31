@@ -32,6 +32,18 @@ GCN_DICT = {
 
 }
 
+class FocalLoss(nn.Module):
+	def __init__(self, alpha=0.25, gamma=2):
+		super(FocalLoss, self).__init__()
+		self.alpha = alpha
+		self.gamma = gamma
+
+	def forward(self, logits, targets):
+		bce_loss = F.binary_cross_entropy_with_logits(logits, targets, reduction='none')
+		p_t = torch.exp(-bce_loss)
+		focal_loss = self.alpha * (1 - p_t) ** self.gamma * bce_loss
+		return focal_loss.mean()
+
 class GraphConvolutionalNetwork:
 	"""
 	Class for training GCN models on TNBC (Triple-Negative Breast Cancer) expression and spatial data.
@@ -89,7 +101,8 @@ class GraphConvolutionalNetwork:
 				).to(self.device)
 
 		#self.criterion = nn.CrossEntropyLoss(weight=weights)
-		self.criterion = nn.BCEWithLogitsLoss(pos_weight=weights)
+		#self.criterion = nn.BCEWithLogitsLoss(pos_weight=weights)
+		self.criterion = FocalLoss(alpha=0.25, gamma=2)
 
 	def to_pyg(self, data_dict):
 		"""
