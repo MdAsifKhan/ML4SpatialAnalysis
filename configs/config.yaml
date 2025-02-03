@@ -7,7 +7,7 @@ model:
   normalise_features: True
   # Data splitting parameters
   eval: ??? # Evaluation method ('split' for train/test split, 'LeaveOneOut' for LeaveOneOut evaluation)
-  pcriterion: 'majority'
+  pcriterion: 'weighted_mean'
   LOG_PATH: '/n/data1/hms/cellbio/sander/asif/ML4SA_Results'  # Path to save model logs
   tok_k_attr: 10
   # Graph construction parameters

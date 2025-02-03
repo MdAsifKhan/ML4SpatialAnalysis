@@ -55,7 +55,6 @@ class GraphConvolutionalNetwork:
 	def __init__(self,
 				gconv, 
 				lr,
-				nm_epochs,
 				batch_size,
 				fnorm,
 				logger=None,
@@ -73,7 +72,6 @@ class GraphConvolutionalNetwork:
 			logger (optional, Logger): Logger object for logging training information.
 		"""
 		self.gconv = gconv
-		self.nm_epochs = nm_epochs
 		self.batch_size = batch_size
 		self.fnorm = fnorm
 		self.logger = logger
