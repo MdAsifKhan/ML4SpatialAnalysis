@@ -433,8 +433,6 @@ def compute_scores(y, y_pred, y_proba, mode='Train'):
 	}
 	return metrics
 
-from scipy.special import softmax
-
 def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='majority'):
 	unique_patients = list(set(patients))
 	patients_preds = {patient : [] for patient in unique_patients}
