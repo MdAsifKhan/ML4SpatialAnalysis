@@ -81,7 +81,7 @@ def load_cell_data(datapath, filename_celldata, filename_biosamples):
 	cell_table = cell_table.reset_index().merge(biosamples, left_on='LEAP_ID', right_on= 'LEAP_ID').drop(['LEAP_ID'], axis = 1).set_index('index')
 
 	# get fovs having more than 1000 cells
-	fovs = cell_table.fov.value_counts()[cell_table.fov.value_counts()>=1000].index
+	#fovs = cell_table.fov.value_counts()[cell_table.fov.value_counts()>=1000].index
 	cell_table = cell_table[cell_table.fov.isin(fovs)]
 	cell_table[MARKERS] = cell_table[MARKERS].fillna(0)
 	cell_table = cell_table.dropna(subset=['Stain'])
