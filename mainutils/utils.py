@@ -501,8 +501,6 @@ def patient_level_scores(y, y_pred, y_proba, patients, mode='Test', pcriterion='
 
 	unique_pred_patients_prob, unique_pred_patients_label, unique_patients_label = [], [], []
 	for patient in unique_patients:
-		#correct_predictions = [1 if (pred == label == 1) else 0 
-		#						for pred, label in zip(patients_preds[patient], patients_labels[patient])]
 		roi_probs = np.array(patients_probs[patient])
 		roi_labels = np.array(patients_labels[patient])
 
